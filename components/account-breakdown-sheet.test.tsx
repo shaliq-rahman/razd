@@ -9,6 +9,8 @@ const acct = (name: string, balance: number): AccountBalance => ({
   name,
   type: 'bank',
   opening_balance: 0,
+  card_limit: null,
+  due_day: null,
   color: '#5B8DEF',
   is_archived: false,
   created_at: '',

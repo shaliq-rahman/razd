@@ -12,6 +12,8 @@ function fields(formData: FormData) {
     type: formData.get('type'),
     opening_balance: formData.get('opening_balance'),
     color: formData.get('color'),
+    card_limit: formData.get('card_limit'),
+    due_day: formData.get('due_day'),
   }
 }
 

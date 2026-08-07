@@ -20,7 +20,7 @@ export const viewport: Viewport = {
   // Lets the app paint under the notch and home indicator, which the safe-area
   // insets in the layout and navbar then account for.
   viewportFit: 'cover',
-  themeColor: '#eef2ff',
+  themeColor: '#f4f3f7',
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {

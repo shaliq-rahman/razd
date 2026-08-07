@@ -9,9 +9,9 @@ import { createAccount, updateAccount, deleteAccount, type ActionState } from '.
 import type { AccountBalance } from '@/lib/types'
 
 const field =
-  'w-full min-h-[48px] rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100'
+  'ios-field w-full min-h-[52px] rounded-[18px] px-4 py-3 text-base text-[#24202a] outline-none transition focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
 
-const label = 'mb-1.5 block text-xs font-semibold text-slate-600'
+const label = 'eyebrow mb-2 block'
 
 export function AccountFormSheet({
   open,
@@ -29,6 +29,7 @@ export function AccountFormSheet({
   )
   const [deleteState, deleteAction] = useActionState<ActionState, FormData>(deleteAccount, {})
   const [color, setColor] = useState(account?.color ?? ACCOUNT_COLORS[0])
+  const [accountType, setAccountType] = useState(account?.type ?? 'bank')
   const [confirmDelete, setConfirmDelete] = useState(false)
 
   const done = state.ok || deleteState.ok
@@ -65,7 +66,8 @@ export function AccountFormSheet({
             id="account-type"
             className={field}
             name="type"
-            defaultValue={account?.type ?? 'bank'}
+            value={accountType}
+            onChange={(event) => setAccountType(event.target.value as AccountBalance['type'])}
           >
             {ACCOUNT_TYPES.map((t) => (
               <option key={t.value} value={t.value}>
@@ -74,6 +76,46 @@ export function AccountFormSheet({
             ))}
           </select>
         </div>
+
+        {accountType === 'card' && (
+          <div className="grid grid-cols-2 gap-3 rounded-[22px] border border-violet-100 bg-violet-50/60 p-4">
+            <div>
+              <label htmlFor="card_limit" className={label}>Total limit</label>
+              <input
+                id="card_limit"
+                className={field}
+                name="card_limit"
+                type="number"
+                min="0.01"
+                step="0.01"
+                inputMode="decimal"
+                defaultValue={account?.card_limit ?? Math.max(account?.opening_balance ?? 0, 0)}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="due_day" className={label}>Due day</label>
+              <input
+                id="due_day"
+                className={field}
+                name="due_day"
+                type="number"
+                min="1"
+                max="31"
+                inputMode="numeric"
+                defaultValue={account?.due_day ?? 1}
+                required
+              />
+            </div>
+          </div>
+        )}
+
+        {accountType !== 'card' && (
+          <>
+            <input type="hidden" name="card_limit" value="" />
+            <input type="hidden" name="due_day" value="" />
+          </>
+        )}
 
         <div>
           <label htmlFor="opening_balance" className={label}>
@@ -91,7 +133,9 @@ export function AccountFormSheet({
             aria-describedby="opening-balance-help"
           />
           <p id="opening-balance-help" className="mt-1.5 text-xs text-slate-600">
-            The balance before any transactions you log here.
+            {accountType === 'card'
+              ? 'Enter the currently available card balance.'
+              : 'The balance before any transactions you log here.'}
           </p>
         </div>
 

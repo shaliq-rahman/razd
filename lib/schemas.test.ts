@@ -42,6 +42,16 @@ describe('accountSchema', () => {
   it('rejects a non-numeric opening balance', () => {
     expect(accountSchema.safeParse({ ...valid, opening_balance: 'abc' }).success).toBe(false)
   })
+
+  it('requires a limit and due day for card accounts', () => {
+    expect(accountSchema.safeParse({ ...valid, type: 'card' }).success).toBe(false)
+    expect(accountSchema.safeParse({
+      ...valid,
+      type: 'card',
+      card_limit: '100000',
+      due_day: '12',
+    }).success).toBe(true)
+  })
 })
 
 describe('transactionSchema', () => {

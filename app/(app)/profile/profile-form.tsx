@@ -5,14 +5,14 @@ import { SubmitButton } from '@/components/submit-button'
 import { updateProfile, type ProfileState } from './actions'
 
 const field =
-  'w-full min-h-[48px] rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100'
+  'ios-field w-full min-h-[52px] rounded-[18px] px-4 py-3 text-base text-[#24202a] outline-none transition focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
 
 export function ProfileForm({ displayName }: { displayName: string }) {
   const [state, action] = useActionState<ProfileState, FormData>(updateProfile, {})
 
   return (
     <form action={action} className="space-y-3">
-      <label htmlFor="display_name" className="block text-xs font-semibold text-slate-600">
+      <label htmlFor="display_name" className="eyebrow block">
         Display name
       </label>
       <input

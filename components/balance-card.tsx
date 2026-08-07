@@ -21,20 +21,20 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
 
   return (
     <>
-      <section className="glass glass-lit animate-rise relative overflow-hidden rounded-[30px] px-6 pt-5 pb-5">
+      <section className="hero-card animate-rise relative overflow-hidden rounded-[32px] px-6 pt-6 pb-6 text-white">
         {/* Two offset colour blooms give the pane something to refract, which is
             what makes frosted glass read as glass rather than as flat white. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-24 -right-20 h-56 w-56 rounded-full bg-gradient-to-br from-indigo-500/40 via-violet-500/30 to-transparent blur-3xl"
+          className="pointer-events-none absolute -top-20 -right-16 h-56 w-56 rounded-full bg-gradient-to-br from-violet-400/35 via-fuchsia-400/10 to-transparent blur-3xl"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-24 -left-16 h-48 w-48 rounded-full bg-gradient-to-tr from-teal-400/30 to-transparent blur-3xl"
+          className="pointer-events-none absolute -bottom-24 -left-16 h-52 w-52 rounded-full bg-gradient-to-tr from-emerald-300/25 to-transparent blur-3xl"
         />
 
         <div className="relative -mt-1.5 flex items-start justify-between">
-          <p className="mt-2.5 text-[13px] font-semibold tracking-wide text-slate-600 uppercase">
+          <p className="mt-2.5 text-[11px] font-semibold tracking-[0.14em] text-white/55 uppercase">
             Total balance
           </p>
           {/* 44px tap targets with an 8px gap, per platform minimums. */}
@@ -43,7 +43,7 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
               onClick={() => setHideAmounts(!hidden)}
               aria-label={hidden ? 'Show amounts' : 'Hide amounts'}
               aria-pressed={hidden}
-              className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-slate-600 transition hover:bg-white/70 active:scale-90 ${focusRing}`}
+              className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white/65 transition hover:bg-white/10 hover:text-white active:scale-90 ${focusRing}`}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -62,7 +62,7 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
               onClick={() => setOpen(true)}
               aria-label="Show balance by account"
               aria-haspopup="dialog"
-              className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-slate-600 transition hover:bg-white/70 active:scale-90 ${focusRing}`}
+              className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white/65 transition hover:bg-white/10 hover:text-white active:scale-90 ${focusRing}`}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -82,7 +82,7 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
         <p
           data-testid="total-balance"
           className={`relative -mt-1 font-bold tracking-[-0.02em] tabular-nums ${
-            total < 0 ? 'text-rose-700' : 'text-slate-900'
+            total < 0 ? 'text-rose-300' : 'text-white'
           } ${hidden ? 'text-3xl' : 'text-[clamp(2rem,9.5vw,2.75rem)]'}`}
         >
           {hidden ? '••••••' : formatINR(total)}
@@ -91,7 +91,7 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
         <button
           onClick={() => setOpen(true)}
           aria-haspopup="dialog"
-          className={`relative -mb-1 -ml-2 inline-flex min-h-[44px] cursor-pointer items-center gap-1 rounded-full px-2 text-xs font-medium text-slate-700 transition hover:bg-white/70 active:scale-95 ${focusRing}`}
+          className={`relative -mb-1 -ml-2 inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-full px-2 text-xs font-medium text-white/60 transition hover:bg-white/10 hover:text-white active:scale-95 ${focusRing}`}
         >
           Across {accounts.length} {accounts.length === 1 ? 'account' : 'accounts'}
           <svg

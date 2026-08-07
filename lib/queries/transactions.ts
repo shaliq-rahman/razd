@@ -1,9 +1,9 @@
 import 'server-only'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { sumAmounts } from '@/lib/money'
-import type { TransactionWithRefs } from '@/lib/types'
+import type { CardExpenseSummary, TransactionWithRefs } from '@/lib/types'
 
-const WITH_REFS = '*, accounts(name, color), categories(name, icon)'
+const WITH_REFS = '*, accounts(name, color, type), categories(name, icon)'
 
 function normalise(rows: unknown[]): TransactionWithRefs[] {
   return (rows as TransactionWithRefs[]).map((t) => ({ ...t, amount: Number(t.amount) }))
@@ -56,5 +56,27 @@ export async function getMonthTotals(): Promise<{ income: number; expense: numbe
   return {
     income: sumAmounts(rows.filter((r) => r.kind === 'income').map((r) => Number(r.amount))),
     expense: sumAmounts(rows.filter((r) => r.kind === 'expense').map((r) => Number(r.amount))),
+  }
+}
+
+/** Current-month expenses paid specifically from card-type accounts. */
+export async function getCardExpenseSummary(): Promise<CardExpenseSummary> {
+  const supabase = await createServerSupabase()
+  const { data, error } = await supabase
+    .from('transactions')
+    .select('*, accounts!inner(name, color, type), categories(name, icon)')
+    .eq('kind', 'expense')
+    .eq('accounts.type', 'card')
+    .gte('occurred_at', monthStart(new Date()))
+    .order('occurred_at', { ascending: false })
+    .order('created_at', { ascending: false })
+
+  if (error) throw new Error(`Failed to load card expenses: ${error.message}`)
+
+  const rows = normalise(data ?? [])
+  return {
+    total: sumAmounts(rows.map((row) => row.amount)),
+    count: rows.length,
+    recent: rows.slice(0, 3),
   }
 }

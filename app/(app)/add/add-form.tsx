@@ -7,9 +7,9 @@ import { focusRing } from '@/lib/ui'
 import type { Category, TxKind } from '@/lib/types'
 
 const field =
-  'w-full min-h-[48px] rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100'
+  'ios-field w-full min-h-[52px] rounded-[18px] px-4 py-3 text-base text-[#24202a] outline-none transition focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
 
-const labelClass = 'mb-1.5 block text-xs font-semibold text-slate-600'
+const labelClass = 'eyebrow mb-2 block'
 
 /** Today as YYYY-MM-DD in local time — toISOString() would shift the date in IST. */
 function todayIso() {
@@ -33,13 +33,16 @@ export function AddForm({
   const visible = categories.filter((c) => c.kind === kind)
 
   return (
-    <form action={action} className="space-y-5">
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900">Add transaction</h1>
+    <form action={action} className="space-y-6 pt-1">
+      <header>
+        <p className="eyebrow mb-1">New entry</p>
+        <h1 className="text-[1.75rem] font-bold tracking-[-0.035em] text-[#1d1a24]">Add transaction</h1>
+      </header>
 
       <input type="hidden" name="kind" value={kind} />
       <input type="hidden" name="category_id" value={categoryId} />
 
-      <div className="grid grid-cols-2 gap-1 rounded-2xl bg-slate-100 p-1">
+      <div className="grid grid-cols-2 gap-1 rounded-[18px] bg-[#e8e6eb]/80 p-1">
         {(['expense', 'income'] as const).map((k) => (
           <button
             key={k}
@@ -49,8 +52,8 @@ export function AddForm({
               setKind(k)
               setCategoryId('')
             }}
-            className={`min-h-[44px] cursor-pointer rounded-xl text-sm font-semibold capitalize transition ${
-              kind === k ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'
+            className={`min-h-[44px] cursor-pointer rounded-[14px] text-sm font-semibold capitalize transition ${
+              kind === k ? 'bg-white text-[#24202a] shadow-sm' : 'text-[#777180]'
             } ${focusRing}`}
           >
             {k}
@@ -58,12 +61,13 @@ export function AddForm({
         ))}
       </div>
 
-      <div className="glass glass-lit relative overflow-hidden rounded-[30px] px-5 py-6 text-center">
-        <label htmlFor="amount" className="text-xs font-semibold text-slate-600">
+      <div className="hero-card relative overflow-hidden rounded-[32px] px-5 py-7 text-center text-white">
+        <div aria-hidden="true" className="absolute -top-16 -right-12 h-40 w-40 rounded-full bg-violet-400/30 blur-3xl" />
+        <label htmlFor="amount" className="relative text-[11px] font-semibold tracking-[0.14em] text-white/55 uppercase">
           Amount
         </label>
         <div className="mt-1 flex items-center justify-center gap-1">
-          <span className="text-2xl font-bold text-slate-600" aria-hidden="true">₹</span>
+          <span className="relative text-2xl font-bold text-white/60" aria-hidden="true">₹</span>
           <input
             id="amount"
             name="amount"
@@ -74,7 +78,7 @@ export function AddForm({
             placeholder="0.00"
             required
             autoFocus
-            className="min-h-[44px] w-full max-w-[220px] bg-transparent text-center text-4xl font-bold tabular-nums text-slate-900 outline-none placeholder:text-slate-500"
+            className="relative min-h-[44px] w-full max-w-[220px] bg-transparent text-center text-4xl font-bold tracking-tight tabular-nums text-white outline-none placeholder:text-white/30"
           />
         </div>
       </div>
@@ -90,8 +94,8 @@ export function AddForm({
               onClick={() => setCategoryId(c.id)}
               className={`min-h-[44px] cursor-pointer rounded-full border px-4 text-sm transition ${
                 categoryId === c.id
-                  ? 'border-indigo-600 bg-indigo-50 font-semibold text-indigo-800'
-                  : 'border-slate-300 bg-white text-slate-700'
+                  ? 'border-violet-500 bg-violet-100/70 font-semibold text-violet-800 shadow-sm'
+                  : 'border-white/80 bg-white/60 text-[#645f6b]'
               } ${focusRing}`}
             >
               <span className="mr-1" aria-hidden="true">{c.icon}</span>

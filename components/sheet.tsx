@@ -66,7 +66,7 @@ export function Sheet({
         aria-label="Close"
         tabIndex={-1}
         onClick={onClose}
-        className="animate-scrim-in absolute inset-0 cursor-pointer bg-slate-900/50 backdrop-blur-[2px]"
+        className="animate-scrim-in absolute inset-0 cursor-pointer bg-[#17141e]/55 backdrop-blur-[4px]"
       />
       {/* Opaque, not translucent: the bottom nav sits behind the sheet and would
           otherwise read through the panel. */}
@@ -75,11 +75,11 @@ export function Sheet({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="animate-sheet-in relative w-full max-w-[480px] rounded-t-[28px] border-t border-white/80 bg-white px-5 pt-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-[0_-20px_60px_-20px_rgba(30,41,59,0.45)]"
+        className="animate-sheet-in relative w-full max-w-[480px] rounded-t-[34px] border-t border-white/90 bg-[#faf9f8] px-5 pt-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-[0_-24px_70px_-24px_rgba(25,21,34,0.55)]"
       >
-        <div className="mx-auto mb-3 h-1.5 w-11 rounded-full bg-slate-400" aria-hidden="true" />
+        <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-[#c3bec8]" aria-hidden="true" />
         <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 className="text-lg font-bold text-slate-900">{title}</h2>
+          <h2 className="text-xl font-bold tracking-tight text-[#24202a]">{title}</h2>
           <button
             onClick={onClose}
             aria-label="Close"

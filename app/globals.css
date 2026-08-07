@@ -1,32 +1,27 @@
 @import "tailwindcss";
 
-/* Light glass. The app commits to a single light look, so the scaffold's
-   prefers-color-scheme dark override is deliberately gone — frosted surfaces
-   over a soft gradient only read correctly against a light backdrop. */
 :root {
-  /* A vibrant, slightly mottled backdrop. Glass needs something with colour and
-     variation behind it, otherwise the blur has nothing to work with. */
   --app-bg:
-    radial-gradient(90% 55% at 12% 0%, rgba(129, 140, 248, 0.28) 0%, transparent 60%),
-    radial-gradient(75% 50% at 92% 8%, rgba(45, 212, 191, 0.20) 0%, transparent 62%),
-    radial-gradient(85% 60% at 50% 100%, rgba(167, 139, 250, 0.22) 0%, transparent 65%),
-    linear-gradient(180deg, #f6f8ff 0%, #fbfcff 45%, #f3f6ff 100%);
+    radial-gradient(80% 50% at 6% -5%, rgba(188, 166, 255, 0.34) 0%, transparent 68%),
+    radial-gradient(70% 48% at 102% 4%, rgba(150, 228, 211, 0.24) 0%, transparent 62%),
+    radial-gradient(70% 45% at 55% 105%, rgba(255, 205, 148, 0.18) 0%, transparent 65%),
+    linear-gradient(180deg, #f4f3f7 0%, #f8f7f4 52%, #f1f2f6 100%);
 
   /* Surfaces */
-  --glass-fill: rgba(255, 255, 255, 0.55);
-  --glass-fill-strong: rgba(255, 255, 255, 0.72);
-  --glass-stroke: rgba(255, 255, 255, 0.85);
-  --glass-blur: 24px;
+  --glass-fill: rgba(255, 255, 255, 0.58);
+  --glass-fill-strong: rgba(255, 255, 255, 0.76);
+  --glass-stroke: rgba(255, 255, 255, 0.78);
+  --glass-blur: 28px;
 
   /* Translucent chrome — deliberately lighter than cards so content reads
      through it, the way an iOS tab bar does. */
-  --nav-fill: rgba(255, 255, 255, 0.62);
-  --nav-blur: 34px;
+  --nav-fill: rgba(248, 248, 250, 0.72);
+  --nav-blur: 30px;
 
   /* Elevation scale. One ramp, used everywhere; no ad-hoc shadow values. */
-  --shadow-1: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px -4px rgba(15, 23, 42, 0.08);
-  --shadow-2: 0 2px 6px rgba(15, 23, 42, 0.05), 0 12px 32px -12px rgba(15, 23, 42, 0.18);
-  --shadow-3: 0 8px 24px -8px rgba(15, 23, 42, 0.16), 0 28px 60px -24px rgba(15, 23, 42, 0.28);
+  --shadow-1: 0 1px 2px rgba(28, 25, 38, 0.04), 0 5px 16px -6px rgba(28, 25, 38, 0.1);
+  --shadow-2: 0 2px 8px rgba(28, 25, 38, 0.05), 0 20px 44px -22px rgba(28, 25, 38, 0.22);
+  --shadow-3: 0 12px 30px -12px rgba(28, 25, 38, 0.2), 0 34px 70px -30px rgba(28, 25, 38, 0.34);
 }
 
 html,
@@ -37,10 +32,29 @@ body {
 body {
   background: var(--app-bg);
   background-attachment: fixed;
-  color: #0f172a;
+  color: #1b1922;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overscroll-behavior-y: none;
+}
+
+::selection {
+  background: rgba(108, 77, 246, 0.2);
+}
+
+button,
+a,
+input,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The soft noise-free treatment keeps the UI feeling like a real native
+   product rather than a collection of white cards on a gradient. */
+.app-surface {
+  background: rgba(250, 249, 248, 0.66);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
 }
 
 /* Frosted surfaces ------------------------------------------------------- */
@@ -50,6 +64,14 @@ body {
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
   border: 1px solid var(--glass-stroke);
   box-shadow: var(--shadow-2);
+}
+
+.surface-card {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  box-shadow: var(--shadow-1);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
 }
 
 /* A brighter top edge reads as a light source catching the pane. */
@@ -75,9 +97,11 @@ body {
   background: var(--nav-fill);
   backdrop-filter: blur(var(--nav-blur)) saturate(200%);
   -webkit-backdrop-filter: blur(var(--nav-blur)) saturate(200%);
-  /* iOS uses a hairline, not a 1px rule. */
-  border-top: 0.5px solid rgba(255, 255, 255, 0.7);
-  box-shadow: 0 -1px 0 rgba(15, 23, 42, 0.04), 0 -12px 40px -16px rgba(15, 23, 42, 0.2);
+  border: 0.5px solid rgba(255, 255, 255, 0.92);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 10px 32px -12px rgba(31, 26, 48, 0.32),
+    0 2px 8px rgba(31, 26, 48, 0.08);
 }
 
 /* Content dissolves into the bar instead of colliding with it. */
@@ -85,10 +109,122 @@ body {
   content: "";
   position: absolute;
   inset-inline: 0;
-  bottom: 100%;
-  height: 32px;
-  background: linear-gradient(to top, rgba(249, 250, 255, 0.92), transparent);
+  bottom: calc(100% + 10px);
+  height: 44px;
+  background: linear-gradient(to top, rgba(244, 243, 247, 0.7), transparent);
+  filter: blur(8px);
   pointer-events: none;
+}
+
+.hero-card {
+  background:
+    radial-gradient(90% 130% at 100% 0%, rgba(143, 112, 255, 0.62) 0%, transparent 54%),
+    radial-gradient(70% 90% at 0% 100%, rgba(73, 203, 177, 0.26) 0%, transparent 60%),
+    linear-gradient(145deg, #24202e 0%, #17151d 72%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 22px 50px -22px rgba(23, 20, 35, 0.72);
+}
+
+.eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #777281;
+}
+
+.ios-field {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(120, 113, 135, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+/* Light wallet carousel: the selected card is centered while its neighbours
+   peek from both sides, echoing a physical deck without darkening the app. */
+.account-carousel {
+  margin-inline: -1.25rem;
+  overflow: hidden;
+  padding-top: 0.25rem;
+}
+
+.account-carousel-scroll {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding: 1.2rem calc(50% - 140px) 1.8rem;
+  touch-action: pan-x;
+}
+
+.account-carousel-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.account-carousel-item {
+  width: 280px;
+  min-width: 280px;
+  scroll-snap-align: center;
+  transform-origin: center bottom;
+  transition:
+    transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 350ms ease,
+    filter 350ms ease;
+}
+
+.account-carousel-item + .account-carousel-item {
+  margin-left: -2.6rem;
+}
+
+.account-carousel-item-center {
+  transform: translateY(-0.2rem) scale(1);
+  opacity: 1;
+  filter: saturate(1.06);
+}
+
+.account-carousel-item-left {
+  transform: translateY(0.65rem) rotate(-4deg) scale(0.9);
+  opacity: 0.82;
+}
+
+.account-carousel-item-right {
+  transform: translateY(0.65rem) rotate(4deg) scale(0.9);
+  opacity: 0.82;
+}
+
+@media (min-width: 640px) {
+  .account-carousel {
+    margin-inline: -1.5rem;
+  }
+}
+
+@media (min-width: 640px) {
+  body::before,
+  body::after {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    border-radius: 999px;
+    filter: blur(70px);
+    pointer-events: none;
+  }
+  body::before {
+    width: 22rem;
+    height: 22rem;
+    top: 4%;
+    left: 7%;
+    background: rgba(137, 105, 246, 0.15);
+  }
+  body::after {
+    width: 24rem;
+    height: 24rem;
+    right: 5%;
+    bottom: 3%;
+    background: rgba(77, 205, 179, 0.13);
+  }
 }
 
 /* Browsers without backdrop-filter get opaque surfaces, never unreadable ones. */
@@ -129,7 +265,7 @@ body {
 @keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(12px) scale(0.985);
   }
   to {
     opacity: 1;

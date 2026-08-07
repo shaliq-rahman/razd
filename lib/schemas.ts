@@ -10,6 +10,22 @@ export const accountSchema = z.object({
   type: z.enum(['bank', 'cash', 'card', 'wallet', 'investment']),
   opening_balance: z.coerce.number('Enter a valid amount').finite('Enter a valid amount'),
   color: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Pick a colour'),
+  card_limit: z.preprocess(
+    (value) => (value === '' || value == null ? null : value),
+    z.coerce.number('Enter a valid card limit').positive('Card limit must be greater than zero').nullable()
+  ).optional(),
+  due_day: z.preprocess(
+    (value) => (value === '' || value == null ? null : value),
+    z.coerce.number('Enter a valid due day').int().min(1).max(31).nullable()
+  ).optional(),
+}).superRefine((account, context) => {
+  if (account.type !== 'card') return
+  if (!account.card_limit) {
+    context.addIssue({ code: 'custom', path: ['card_limit'], message: 'Enter the total card limit' })
+  }
+  if (!account.due_day) {
+    context.addIssue({ code: 'custom', path: ['due_day'], message: 'Choose a due day from 1 to 31' })
+  }
 })
 
 export const transactionSchema = z.object({

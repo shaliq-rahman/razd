@@ -7,15 +7,16 @@ import { SubmitButton } from '@/components/submit-button'
 import { focusRing } from '@/lib/ui'
 
 const field =
-  'w-full min-h-[48px] rounded-2xl border border-slate-300 bg-white px-4 py-3.5 text-base text-slate-900 outline-none transition placeholder:text-slate-500 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100'
+  'ios-field w-full min-h-[52px] rounded-[18px] px-4 py-3.5 text-base text-[#24202a] outline-none transition placeholder:text-[#99939e] focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
 
 export default function LoginPage() {
   const [state, action] = useActionState<AuthState, FormData>(signIn, {})
 
   return (
     <>
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900">Welcome back</h1>
-      <p className="mt-1 mb-6 text-sm text-slate-600">Sign in to your Razd account.</p>
+      <p className="eyebrow mb-1">Private & simple</p>
+      <h1 className="text-[1.75rem] font-bold tracking-[-0.035em] text-[#1d1a24]">Welcome back</h1>
+      <p className="mt-1 mb-6 text-sm text-[#777180]">Sign in to your Razd account.</p>
 
       <form action={action} className="space-y-3">
         <input
@@ -46,7 +47,7 @@ export default function LoginPage() {
 
       <p className="mt-5 text-center text-sm text-slate-600">
         New here?{' '}
-        <Link href="/signup" className={`font-semibold text-indigo-700 ${focusRing} rounded`}>
+        <Link href="/signup" className={`font-semibold text-violet-700 ${focusRing} rounded`}>
           Create an account
         </Link>
       </p>

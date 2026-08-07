@@ -1,18 +1,24 @@
 import Link from 'next/link'
 import { getAccountBalances } from '@/lib/queries/balances'
-import { getRecentTransactions, getMonthTotals } from '@/lib/queries/transactions'
+import {
+  getCardExpenseSummary,
+  getRecentTransactions,
+  getMonthTotals,
+} from '@/lib/queries/transactions'
 import { BalanceCard } from '@/components/balance-card'
 import { EmptyState } from '@/components/empty-state'
 import { BankIcon, ReceiptIcon } from '@/components/icons'
 import { focusRing } from '@/lib/ui'
 import { TransactionRow } from '@/components/transaction-row'
 import { formatINR } from '@/lib/format'
+import { CardExpenses } from '@/components/card-expenses'
 
 export default async function HomePage() {
-  const [accounts, recent, month] = await Promise.all([
+  const [accounts, recent, month, cardExpenses] = await Promise.all([
     getAccountBalances(),
     getRecentTransactions(5),
     getMonthTotals(),
+    getCardExpenseSummary(),
   ])
 
   const now = new Date()
@@ -24,10 +30,15 @@ export default async function HomePage() {
   }).format(now)
 
   return (
-    <div className="space-y-6">
-      <header>
-        <p className="text-sm text-slate-600">{today}</p>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Your money</h1>
+    <div className="space-y-7">
+      <header className="flex items-end justify-between pt-1">
+        <div>
+          <p className="eyebrow mb-1">{today}</p>
+          <h1 className="text-[1.75rem] font-bold tracking-[-0.035em] text-[#1d1a24]">Your money</h1>
+        </div>
+        <div className="flex h-10 w-10 items-center justify-center rounded-[15px] bg-[#1d1a24] text-[11px] font-bold tracking-[0.08em] text-white shadow-lg shadow-slate-900/15" aria-label="Razd">
+          R
+        </div>
       </header>
 
       {accounts.length === 0 ? (
@@ -49,39 +60,44 @@ export default async function HomePage() {
       )}
 
       <section className="grid grid-cols-2 gap-3">
-        <div className="glass glass-lit animate-rise rounded-3xl px-4 py-3.5 [animation-delay:60ms]">
-          <p className="flex items-center gap-1.5 text-xs font-medium text-slate-600">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+        <div className="surface-card animate-rise rounded-[24px] px-4 py-4 [animation-delay:60ms]">
+          <p className="flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[#777281] uppercase">
+            <span className="flex h-7 w-7 items-center justify-center rounded-[10px] bg-emerald-100 text-emerald-700">
               <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M12 19V5M5 12l7-7 7 7" />
               </svg>
             </span>
             In · {monthName}
           </p>
-          <p className="mt-1.5 text-lg font-bold tabular-nums text-emerald-700">
+          <p className="mt-2 text-[17px] font-bold tracking-tight tabular-nums text-[#25212b]">
             {formatINR(month.income)}
           </p>
         </div>
-        <div className="glass glass-lit animate-rise rounded-3xl px-4 py-3.5 [animation-delay:110ms]">
-          <p className="flex items-center gap-1.5 text-xs font-medium text-slate-600">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-rose-100 text-rose-700">
+        <div className="surface-card animate-rise rounded-[24px] px-4 py-4 [animation-delay:110ms]">
+          <p className="flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[#777281] uppercase">
+            <span className="flex h-7 w-7 items-center justify-center rounded-[10px] bg-rose-100 text-rose-700">
               <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M12 5v14M5 12l7 7 7-7" />
               </svg>
             </span>
             Out · {monthName}
           </p>
-          <p className="mt-1.5 text-lg font-bold tabular-nums text-rose-700">
+          <p className="mt-2 text-[17px] font-bold tracking-tight tabular-nums text-[#25212b]">
             {formatINR(month.expense)}
           </p>
         </div>
       </section>
 
+      <CardExpenses summary={cardExpenses} month={monthName} />
+
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-[15px] font-semibold text-slate-900">Recent</h2>
+          <div>
+            <p className="eyebrow">Activity</p>
+            <h2 className="mt-0.5 text-lg font-bold tracking-tight text-[#201d27]">Recent transactions</h2>
+          </div>
           {recent.length > 0 && (
-            <Link href="/transactions" className={`-mr-2 inline-flex min-h-[44px] items-center rounded-xl px-2 text-sm font-semibold text-indigo-700 ${focusRing}`}>
+            <Link href="/transactions" className={`-mr-2 inline-flex min-h-[44px] items-center rounded-xl px-2 text-sm font-semibold text-violet-700 ${focusRing}`}>
               See all
             </Link>
           )}
@@ -94,7 +110,7 @@ export default async function HomePage() {
             body="Tap the + button to add your first transaction."
           />
         ) : (
-          <ul className="glass glass-lit animate-rise divide-y divide-slate-200/70 rounded-3xl px-4 [animation-delay:160ms]">
+          <ul className="surface-card animate-rise divide-y divide-[#dedbe3]/70 rounded-[28px] px-4 [animation-delay:160ms]">
             {recent.map((t) => (
               <TransactionRow key={t.id} transaction={t} />
             ))}

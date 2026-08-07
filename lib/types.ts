@@ -17,6 +17,8 @@ export type Account = {
   color: string
   is_archived: boolean
   created_at: string
+  card_limit: number | null
+  due_day: number | null
 }
 
 /** An account row plus its derived balance, from the account_balances view. */
@@ -45,6 +47,20 @@ export type Transaction = {
 
 /** A transaction joined with the display fields of its account and category. */
 export type TransactionWithRefs = Transaction & {
-  accounts: Pick<Account, 'name' | 'color'> | null
+  accounts: Pick<Account, 'name' | 'color' | 'type'> | null
   categories: Pick<Category, 'name' | 'icon'> | null
+}
+
+export type CardExpenseSummary = {
+  total: number
+  count: number
+  recent: TransactionWithRefs[]
+}
+
+export type CardPortfolioItem = AccountBalance & {
+  utilized: number
+  expenseTotal: number
+  repaymentTotal: number
+  transactionCount: number
+  recent: TransactionWithRefs[]
 }

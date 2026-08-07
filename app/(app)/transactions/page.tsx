@@ -23,7 +23,7 @@ export default async function TransactionsPage() {
   const days = groupByDay(transactions)
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <header className="flex items-center gap-2">
         <Link
           href="/"
@@ -32,7 +32,10 @@ export default async function TransactionsPage() {
         >
           <ChevronLeftIcon className="h-6 w-6" />
         </Link>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">History</h1>
+        <div>
+          <p className="eyebrow">Money moves</p>
+          <h1 className="text-[1.75rem] font-bold tracking-[-0.035em] text-[#1d1a24]">History</h1>
+        </div>
       </header>
 
       {days.length === 0 ? (
@@ -44,10 +47,10 @@ export default async function TransactionsPage() {
       ) : (
         days.map(([day, rows]) => (
           <section key={day}>
-            <h2 className="mb-2 px-1 text-xs font-semibold tracking-wide text-slate-600 uppercase">
+            <h2 className="eyebrow mb-2 px-1">
               {formatDayLabel(day)}
             </h2>
-            <ul className="glass glass-lit animate-rise divide-y divide-slate-200/70 rounded-3xl px-4">
+            <ul className="surface-card animate-rise divide-y divide-[#dedbe3]/70 rounded-[28px] px-4">
               {rows.map((t) => (
                 <TransactionRow key={t.id} transaction={t} showDate={false} />
               ))}

@@ -20,9 +20,9 @@ export default async function StatsPage() {
 
   return (
     <div className="space-y-5">
-      <header>
-        <p className="text-sm text-slate-600">{monthName}</p>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Spending</h1>
+      <header className="pt-1">
+        <p className="eyebrow mb-1">{monthName}</p>
+        <h1 className="text-[1.75rem] font-bold tracking-[-0.035em] text-[#1d1a24]">Spending</h1>
       </header>
 
       {spend.length === 0 ? (
@@ -33,16 +33,17 @@ export default async function StatsPage() {
         />
       ) : (
         <>
-          <section className="glass glass-lit animate-rise relative overflow-hidden rounded-[30px] px-6 py-6">
-            <p className="text-sm font-medium text-slate-600">Total spent</p>
+          <section className="hero-card animate-rise relative overflow-hidden rounded-[32px] px-6 py-7 text-white">
+            <div aria-hidden="true" className="absolute -right-16 -bottom-20 h-52 w-52 rounded-full bg-violet-400/30 blur-3xl" />
+            <p className="relative text-[11px] font-semibold tracking-[0.14em] text-white/55 uppercase">Total spent</p>
             <p
               data-testid="total-spent"
-              className="mt-1 text-[clamp(1.7rem,8vw,2.3rem)] font-bold tabular-nums text-slate-900"
+              className="relative mt-2 text-[clamp(2rem,9vw,2.65rem)] font-bold tracking-[-0.03em] tabular-nums text-white"
             >
               {formatINR(total)}
             </p>
 
-            <div className="mt-5 flex h-2.5 gap-0.5 overflow-hidden rounded-full bg-slate-200/80">
+            <div className="relative mt-6 flex h-2.5 gap-0.5 overflow-hidden rounded-full bg-white/12">
               {spend.map((s, i) => (
                 <div
                   key={s.name}
@@ -53,17 +54,17 @@ export default async function StatsPage() {
             </div>
           </section>
 
-          <ul className="glass glass-lit animate-rise divide-y divide-slate-200/70 rounded-3xl px-4 [animation-delay:80ms]">
+          <ul className="surface-card animate-rise divide-y divide-[#dedbe3]/70 rounded-[28px] px-4 [animation-delay:80ms]">
             {spend.map((s, i) => (
               <li key={s.name} className="flex items-center gap-3 py-3.5">
                 <span
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-lg"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[15px] bg-[#f1eff3] text-lg"
                   aria-hidden="true"
                 >
                   {s.icon}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate font-medium text-slate-900">{s.name}</span>
+                  <span className="block truncate font-semibold text-[#25212b]">{s.name}</span>
                   <span className="mt-1.5 block h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
                     <span
                       className="block h-full rounded-full"
