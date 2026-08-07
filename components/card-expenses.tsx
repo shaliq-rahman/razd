@@ -30,7 +30,7 @@ export function CardExpenses({
         )}
       </div>
 
-      <div className="animate-rise overflow-hidden rounded-[28px] border border-violet-200/45 bg-[linear-gradient(135deg,rgba(239,234,255,0.92),rgba(255,255,255,0.76))] shadow-[0_14px_34px_-24px_rgba(79,55,143,0.45)] [animation-delay:130ms]">
+      <div className="animate-rise overflow-hidden rounded-[28px] border-2 border-[#191919] bg-[radial-gradient(90%_120%_at_100%_0%,rgba(196,181,253,0.48),transparent_60%),linear-gradient(145deg,#ffffff,#ecfeff)] shadow-[4px_4px_0_#191919] [animation-delay:130ms]">
         <div className="relative flex items-center gap-4 px-5 py-5">
           <div
             aria-hidden="true"

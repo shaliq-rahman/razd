@@ -6,11 +6,12 @@
      otherwise the blur has nothing to refract and every card reads as flat
      white. Four stops, offset so no two blooms line up. */
   --app-bg:
-    radial-gradient(105% 85% at 2% -5%, rgba(139, 92, 246, 0.24) 0%, transparent 58%),
-    radial-gradient(95% 80% at 100% 2%, rgba(45, 212, 191, 0.20) 0%, transparent 58%),
-    radial-gradient(80% 70% at 78% 45%, rgba(244, 114, 182, 0.13) 0%, transparent 60%),
-    radial-gradient(110% 90% at 25% 105%, rgba(129, 140, 248, 0.20) 0%, transparent 62%),
-    linear-gradient(180deg, #fbfaff 0%, #f5f4fa 52%, #f7f5fb 100%);
+    radial-gradient(70% 55% at 0% 0%, rgba(196, 181, 253, 0.62) 0%, transparent 68%),
+    radial-gradient(65% 50% at 100% 8%, rgba(103, 232, 249, 0.5) 0%, transparent 66%),
+    radial-gradient(70% 50% at 55% 100%, rgba(253, 224, 71, 0.28) 0%, transparent 68%),
+    linear-gradient(rgba(20, 20, 20, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 20, 20, 0.025) 1px, transparent 1px),
+    #fffaf2;
 
   /* ── Semantic text ───────────────────────────────────────────────────────
      Every value below meets WCAG AA (4.5:1) against both the app backdrop
@@ -32,14 +33,14 @@
   --grad-sky: linear-gradient(135deg, #60a5fa 0%, #6366f1 100%);
 
   /* ── Surfaces ────────────────────────────────────────────────────────── */
-  --glass-fill: rgba(255, 255, 255, 0.58);
-  --glass-fill-strong: rgba(255, 255, 255, 0.76);
-  --glass-stroke: rgba(255, 255, 255, 0.78);
-  --glass-blur: 28px;
+  --glass-fill: rgba(255, 255, 255, 0.92);
+  --glass-fill-strong: rgba(255, 255, 255, 0.97);
+  --glass-stroke: #191919;
+  --glass-blur: 22px;
 
   /* Translucent chrome — deliberately lighter than cards so content reads
      through it, the way an iOS tab bar does. */
-  --nav-fill: rgba(248, 248, 250, 0.72);
+  --nav-fill: rgba(255, 255, 255, 0.88);
   --nav-blur: 30px;
 
   /* Elevation scale. One ramp, used everywhere; no ad-hoc shadow values. */
@@ -71,6 +72,8 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overscroll-behavior-y: none;
+  background-size: auto, auto, auto, 24px 24px, 24px 24px;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
 }
 
 ::selection {
@@ -87,7 +90,7 @@ select {
 /* The soft noise-free treatment keeps the UI feeling like a real native
    product rather than a collection of white cards on a gradient. */
 .app-surface {
-  background: rgba(250, 249, 248, 0.66);
+  background: rgba(255, 253, 248, 0.78);
   backdrop-filter: blur(18px) saturate(135%);
   -webkit-backdrop-filter: blur(18px) saturate(135%);
 }
@@ -97,16 +100,30 @@ select {
   background: var(--glass-fill);
   backdrop-filter: blur(var(--glass-blur)) saturate(180%);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-  border: 1px solid var(--glass-stroke);
-  box-shadow: var(--shadow-2);
+  border: 1.5px solid var(--glass-stroke);
+  box-shadow: 3px 3px 0 #191919;
 }
 
 .surface-card {
-  background: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: var(--shadow-1);
+  background:
+    radial-gradient(85% 100% at 100% 0%, rgba(221, 214, 254, 0.28), transparent 58%),
+    rgba(255, 255, 255, 0.96);
+  border: 1.5px solid #191919;
+  box-shadow: 3px 3px 0 #191919;
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
+}
+
+.surface-card:nth-of-type(3n + 2) {
+  background:
+    radial-gradient(85% 100% at 100% 0%, rgba(165, 243, 252, 0.3), transparent 58%),
+    rgba(255, 255, 255, 0.96);
+}
+
+.surface-card:nth-of-type(3n + 3) {
+  background:
+    radial-gradient(85% 100% at 100% 0%, rgba(254, 215, 170, 0.32), transparent 58%),
+    rgba(255, 255, 255, 0.96);
 }
 
 .compact-card {
@@ -150,11 +167,12 @@ select {
   background: var(--nav-fill);
   backdrop-filter: blur(var(--nav-blur)) saturate(200%);
   -webkit-backdrop-filter: blur(var(--nav-blur)) saturate(200%);
-  border: 0.5px solid rgba(255, 255, 255, 0.92);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.72),
-    0 10px 32px -12px rgba(31, 26, 48, 0.32),
-    0 2px 8px rgba(31, 26, 48, 0.08);
+  border: 1.5px solid #191919;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 3px 4px 0 #191919;
+}
+
+.glass-nav a[aria-current="page"] {
+  color: #5b2fe0;
 }
 
 /* Content dissolves into the bar instead of colliding with it. */
@@ -171,14 +189,16 @@ select {
 
 .hero-card {
   background:
-    radial-gradient(120% 130% at 100% -10%, rgba(160, 122, 255, 0.78) 0%, transparent 58%),
-    radial-gradient(90% 110% at -10% 105%, rgba(52, 211, 181, 0.48) 0%, transparent 62%),
-    radial-gradient(70% 80% at 35% 40%, rgba(244, 114, 182, 0.16) 0%, transparent 70%),
-    linear-gradient(148deg, #221c30 0%, #100d17 55%, #0b0910 100%);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 24px 56px -24px rgba(23, 20, 35, 0.78);
+    radial-gradient(100% 130% at 100% 0%, rgba(103, 232, 249, 0.7), transparent 62%),
+    radial-gradient(90% 120% at 0% 100%, rgba(253, 224, 71, 0.42), transparent 64%),
+    linear-gradient(145deg, #ffffff, #f1edff);
+  border: 2px solid #171717;
+  box-shadow: 5px 5px 0 #171717;
+  color: #171717;
+}
+
+.hero-card [class*="text-white"] {
+  color: #171717 !important;
 }
 
 /* A slow specular sweep across the hero, so the surface reads as glass
@@ -188,7 +208,7 @@ select {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.16) 45%, transparent 62%);
+  background: linear-gradient(115deg, transparent 30%, rgba(23, 23, 23, 0.035) 45%, transparent 62%);
   transform: translateX(-120%);
   animation: sheen 7s var(--ease-out) 1.2s infinite;
   pointer-events: none;
@@ -208,9 +228,9 @@ select {
 }
 
 .ios-field {
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(120, 113, 135, 0.16);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  background: #ffffff;
+  border: 1.5px solid #242424;
+  box-shadow: 2px 2px 0 rgba(25, 25, 25, 0.12);
 }
 
 /* Light wallet carousel: the selected card is centered while its neighbours
@@ -269,6 +289,11 @@ select {
   opacity: 0.82;
 }
 
+.account-carousel-item button {
+  border: 2px solid #171717 !important;
+  box-shadow: 4px 4px 0 #171717 !important;
+}
+
 .accounts-viewport {
   display: flex;
   height: calc(100dvh - max(1.25rem, env(safe-area-inset-top)) - 6.5rem);
@@ -308,14 +333,14 @@ select {
     height: 22rem;
     top: 4%;
     left: 7%;
-    background: rgba(137, 105, 246, 0.15);
+    background: rgba(168, 85, 247, 0.18);
   }
   body::after {
     width: 24rem;
     height: 24rem;
     right: 5%;
     bottom: 3%;
-    background: rgba(77, 205, 179, 0.13);
+    background: rgba(34, 211, 238, 0.16);
   }
 }
 

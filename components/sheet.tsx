@@ -75,7 +75,7 @@ export function Sheet({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="animate-sheet-in relative w-full max-w-[480px] rounded-t-[34px] border-t border-white/90 bg-[#faf9f8] px-5 pt-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-[0_-24px_70px_-24px_rgba(25,21,34,0.55)]"
+        className="animate-sheet-in relative w-full max-w-[480px] rounded-t-[34px] border-2 border-b-0 border-[#191919] bg-white px-5 pt-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-[0_-5px_0_#191919]"
       >
         <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-[#c3bec8]" aria-hidden="true" />
         <div className="mb-4 flex items-center justify-between gap-3">
