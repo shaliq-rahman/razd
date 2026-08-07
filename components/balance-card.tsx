@@ -21,11 +21,22 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
 
   return (
     <>
-      <section className="glass relative overflow-hidden rounded-[28px] px-6 pt-5 pb-5">
-        <div className="pointer-events-none absolute -top-20 -right-16 h-52 w-52 rounded-full bg-gradient-to-br from-indigo-400/35 to-violet-400/25 blur-2xl" />
+      <section className="glass glass-lit animate-rise relative overflow-hidden rounded-[30px] px-6 pt-5 pb-5">
+        {/* Two offset colour blooms give the pane something to refract, which is
+            what makes frosted glass read as glass rather than as flat white. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-24 -right-20 h-56 w-56 rounded-full bg-gradient-to-br from-indigo-500/40 via-violet-500/30 to-transparent blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-24 -left-16 h-48 w-48 rounded-full bg-gradient-to-tr from-teal-400/30 to-transparent blur-3xl"
+        />
 
         <div className="relative -mt-1.5 flex items-start justify-between">
-          <p className="mt-2.5 text-sm font-medium text-slate-600">Total balance</p>
+          <p className="mt-2.5 text-[13px] font-semibold tracking-wide text-slate-600 uppercase">
+            Total balance
+          </p>
           {/* 44px tap targets with an 8px gap, per platform minimums. */}
           <div className="-mr-2 flex gap-2">
             <button
@@ -70,9 +81,9 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
 
         <p
           data-testid="total-balance"
-          className={`relative -mt-1 font-bold tracking-tight tabular-nums ${
+          className={`relative -mt-1 font-bold tracking-[-0.02em] tabular-nums ${
             total < 0 ? 'text-rose-700' : 'text-slate-900'
-          } ${hidden ? 'text-3xl' : 'text-[clamp(1.9rem,9vw,2.6rem)]'}`}
+          } ${hidden ? 'text-3xl' : 'text-[clamp(2rem,9.5vw,2.75rem)]'}`}
         >
           {hidden ? '••••••' : formatINR(total)}
         </p>

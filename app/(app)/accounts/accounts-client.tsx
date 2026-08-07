@@ -76,7 +76,7 @@ export function AccountsClient({ accounts }: { accounts: AccountBalance[] }) {
               <button
                 onClick={() => openEdit(a)}
                 aria-label={`Edit ${a.name}`}
-                className={`glass flex w-full cursor-pointer items-center gap-3 rounded-3xl px-4 py-4 text-left transition active:scale-[0.99] ${focusRing}`}
+                className={`glass glass-lit animate-rise flex w-full cursor-pointer items-center gap-3 rounded-3xl px-4 py-4 text-left transition duration-200 hover:-translate-y-0.5 active:scale-[0.99] ${focusRing}`}
               >
                 <span
                   className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl"

@@ -18,11 +18,11 @@ export default async function ProfilePage() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold tracking-tight text-slate-900">Profile</h1>
 
-      <section className="glass rounded-3xl px-5 py-5">
+      <section className="glass glass-lit animate-rise rounded-3xl px-5 py-5">
         <ProfileForm displayName={profile?.display_name ?? ''} />
       </section>
 
-      <section className="glass rounded-3xl px-5 py-4">
+      <section className="glass glass-lit animate-rise rounded-3xl px-5 py-4 [animation-delay:70ms]">
         <dl className="space-y-3 text-sm">
           <div className="flex justify-between gap-4">
             <dt className="text-slate-600">Email</dt>

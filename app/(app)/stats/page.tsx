@@ -33,7 +33,7 @@ export default async function StatsPage() {
         />
       ) : (
         <>
-          <section className="glass rounded-[28px] px-6 py-6">
+          <section className="glass glass-lit animate-rise relative overflow-hidden rounded-[30px] px-6 py-6">
             <p className="text-sm font-medium text-slate-600">Total spent</p>
             <p
               data-testid="total-spent"
@@ -42,7 +42,7 @@ export default async function StatsPage() {
               {formatINR(total)}
             </p>
 
-            <div className="mt-5 flex h-2.5 overflow-hidden rounded-full bg-slate-200">
+            <div className="mt-5 flex h-2.5 gap-0.5 overflow-hidden rounded-full bg-slate-200/80">
               {spend.map((s, i) => (
                 <div
                   key={s.name}
@@ -53,7 +53,7 @@ export default async function StatsPage() {
             </div>
           </section>
 
-          <ul className="glass divide-y divide-slate-100/80 rounded-3xl px-4">
+          <ul className="glass glass-lit animate-rise divide-y divide-slate-200/70 rounded-3xl px-4 [animation-delay:80ms]">
             {spend.map((s, i) => (
               <li key={s.name} className="flex items-center gap-3 py-3.5">
                 <span

@@ -47,7 +47,7 @@ export default async function TransactionsPage() {
             <h2 className="mb-2 px-1 text-xs font-semibold tracking-wide text-slate-600 uppercase">
               {formatDayLabel(day)}
             </h2>
-            <ul className="glass divide-y divide-slate-100/80 rounded-3xl px-4">
+            <ul className="glass glass-lit animate-rise divide-y divide-slate-200/70 rounded-3xl px-4">
               {rows.map((t) => (
                 <TransactionRow key={t.id} transaction={t} showDate={false} />
               ))}

@@ -10,7 +10,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </div>
           <p className="text-sm font-semibold tracking-[0.2em] text-slate-600 uppercase">Razd</p>
         </div>
-        <div className="glass rounded-[28px] p-7">{children}</div>
+        <div className="glass glass-lit animate-rise rounded-[30px] p-7">{children}</div>
       </div>
     </div>
   )

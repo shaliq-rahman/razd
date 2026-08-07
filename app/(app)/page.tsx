@@ -49,15 +49,29 @@ export default async function HomePage() {
       )}
 
       <section className="grid grid-cols-2 gap-3">
-        <div className="glass rounded-3xl px-4 py-4">
-          <p className="text-xs font-medium text-slate-600">In · {monthName}</p>
-          <p className="mt-1 text-lg font-bold tabular-nums text-emerald-700">
+        <div className="glass glass-lit animate-rise rounded-3xl px-4 py-3.5 [animation-delay:60ms]">
+          <p className="flex items-center gap-1.5 text-xs font-medium text-slate-600">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+              <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M12 19V5M5 12l7-7 7 7" />
+              </svg>
+            </span>
+            In · {monthName}
+          </p>
+          <p className="mt-1.5 text-lg font-bold tabular-nums text-emerald-700">
             {formatINR(month.income)}
           </p>
         </div>
-        <div className="glass rounded-3xl px-4 py-4">
-          <p className="text-xs font-medium text-slate-600">Out · {monthName}</p>
-          <p className="mt-1 text-lg font-bold tabular-nums text-rose-700">
+        <div className="glass glass-lit animate-rise rounded-3xl px-4 py-3.5 [animation-delay:110ms]">
+          <p className="flex items-center gap-1.5 text-xs font-medium text-slate-600">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-rose-100 text-rose-700">
+              <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M12 5v14M5 12l7 7 7-7" />
+              </svg>
+            </span>
+            Out · {monthName}
+          </p>
+          <p className="mt-1.5 text-lg font-bold tabular-nums text-rose-700">
             {formatINR(month.expense)}
           </p>
         </div>
@@ -65,7 +79,7 @@ export default async function HomePage() {
 
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-semibold text-slate-900">Recent</h2>
+          <h2 className="text-[15px] font-semibold text-slate-900">Recent</h2>
           {recent.length > 0 && (
             <Link href="/transactions" className={`-mr-2 inline-flex min-h-[44px] items-center rounded-xl px-2 text-sm font-semibold text-indigo-700 ${focusRing}`}>
               See all
@@ -80,7 +94,7 @@ export default async function HomePage() {
             body="Tap the + button to add your first transaction."
           />
         ) : (
-          <ul className="glass divide-y divide-slate-100/80 rounded-3xl px-4">
+          <ul className="glass glass-lit animate-rise divide-y divide-slate-200/70 rounded-3xl px-4 [animation-delay:160ms]">
             {recent.map((t) => (
               <TransactionRow key={t.id} transaction={t} />
             ))}

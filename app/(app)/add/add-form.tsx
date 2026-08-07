@@ -58,7 +58,7 @@ export function AddForm({
         ))}
       </div>
 
-      <div className="glass rounded-3xl px-5 py-6 text-center">
+      <div className="glass glass-lit relative overflow-hidden rounded-[30px] px-5 py-6 text-center">
         <label htmlFor="amount" className="text-xs font-semibold text-slate-600">
           Amount
         </label>

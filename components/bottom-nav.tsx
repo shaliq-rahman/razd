@@ -36,7 +36,7 @@ export function BottomNav() {
     // `sm` up, so the frame's rounded bottom stays visible on a laptop.
     <nav
       aria-label="Primary"
-      className="glass-nav fixed bottom-0 left-1/2 z-30 w-full max-w-[480px] -translate-x-1/2 border-t border-white/60 pb-[env(safe-area-inset-bottom)] sm:absolute sm:left-0 sm:translate-x-0 sm:rounded-b-[36px]"
+      className="glass-nav fixed bottom-0 left-1/2 z-30 w-full max-w-[480px] -translate-x-1/2 pb-[env(safe-area-inset-bottom)] sm:absolute sm:left-0 sm:translate-x-0 sm:rounded-b-[36px]"
     >
       <ul className="flex items-end justify-around gap-1 px-2 pt-1.5 pb-1">
         {TABS.map((tab) => {
@@ -44,15 +44,24 @@ export function BottomNav() {
 
           if (tab.label === 'Add') {
             return (
-              <li key={tab.href} className="-mt-7">
+              <li key={tab.href} className="-mt-8">
                 <Link
                   href={tab.href}
                   aria-current={active ? 'page' : undefined}
-                  className={`flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 text-white shadow-lg shadow-indigo-500/40 transition active:scale-95 ${focusRing}`}
+                  className={`group relative flex h-[58px] w-[58px] cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 via-indigo-500 to-violet-600 text-white ring-[3px] ring-white/70 transition-transform duration-200 ease-out active:scale-90 ${focusRing}`}
+                  style={{
+                    boxShadow:
+                      '0 6px 16px -4px rgba(79,70,229,0.5), 0 16px 32px -12px rgba(79,70,229,0.4)',
+                  }}
                 >
+                  {/* Light catching the top of the sphere. */}
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/35 to-transparent"
+                  />
                   <svg
                     viewBox="0 0 24 24"
-                    className="h-7 w-7"
+                    className="relative h-7 w-7 transition-transform duration-200 group-active:rotate-90"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2.5"
@@ -74,23 +83,34 @@ export function BottomNav() {
                 aria-current={active ? 'page' : undefined}
                 // min-h-[44px] keeps the tap area at the platform minimum even
                 // though the icon and label are smaller than that.
-                className={`flex min-h-[44px] w-16 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-xl transition ${
-                  active ? 'text-indigo-700' : 'text-slate-600'
+                className={`relative flex min-h-[44px] w-16 cursor-pointer flex-col items-center justify-center gap-[3px] rounded-2xl transition-colors duration-200 ${
+                  active ? 'text-indigo-700' : 'text-slate-700'
                 } ${focusRing}`}
               >
+                {/* Soft pill behind the active tab, the way iOS marks selection. */}
+                <span
+                  aria-hidden="true"
+                  className={`absolute inset-x-1 inset-y-0 -z-10 rounded-2xl bg-indigo-500/10 transition-all duration-300 ease-out ${
+                    active ? 'scale-100 opacity-100' : 'scale-75 opacity-0'
+                  }`}
+                />
                 <svg
                   viewBox="0 0 24 24"
-                  className="h-6 w-6"
+                  className="h-[22px] w-[22px] transition-transform duration-200"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="1.75"
+                  strokeWidth={active ? 2.1 : 1.75}
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   aria-hidden="true"
                 >
                   <path d={tab.icon} />
                 </svg>
-                <span className={`text-[11px] tracking-wide ${active ? 'font-semibold' : 'font-medium'}`}>
+                <span
+                  className={`text-[11px] leading-none tracking-wide ${
+                    active ? 'font-semibold' : 'font-medium'
+                  }`}
+                >
                   {tab.label}
                 </span>
               </Link>
