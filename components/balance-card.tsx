@@ -1,29 +1,20 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { formatINR } from '@/lib/format'
 import { sumAmounts } from '@/lib/money'
+import {
+  subscribe,
+  getSnapshot,
+  getServerSnapshot,
+  setHideAmounts,
+} from '@/lib/hide-amounts'
 import { AccountBreakdownSheet } from './account-breakdown-sheet'
 import type { AccountBalance } from '@/lib/types'
 
-const HIDE_KEY = 'razd:hide-amounts'
-
 export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
   const [open, setOpen] = useState(false)
-  const [hidden, setHidden] = useState(false)
-
-  // Read after mount: localStorage is unavailable during server rendering, and
-  // reading it in useState would produce a hydration mismatch.
-  useEffect(() => {
-    setHidden(localStorage.getItem(HIDE_KEY) === '1')
-  }, [])
-
-  function toggleHidden() {
-    setHidden((h) => {
-      localStorage.setItem(HIDE_KEY, h ? '0' : '1')
-      return !h
-    })
-  }
+  const hidden = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
   const total = sumAmounts(accounts.map((a) => a.balance))
 
@@ -36,7 +27,7 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
           <p className="text-sm font-medium text-slate-500">Total balance</p>
           <div className="flex gap-1">
             <button
-              onClick={toggleHidden}
+              onClick={() => setHideAmounts(!hidden)}
               aria-label={hidden ? 'Show amounts' : 'Hide amounts'}
               className="rounded-full p-1.5 text-slate-400 transition active:scale-90"
             >

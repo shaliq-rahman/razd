@@ -24,12 +24,14 @@ export function AccountFormSheet({
     editing ? updateAccount : createAccount,
     {}
   )
+  const [deleteState, deleteAction] = useActionState<ActionState, FormData>(deleteAccount, {})
   const [color, setColor] = useState(account?.color ?? ACCOUNT_COLORS[0])
   const [confirmDelete, setConfirmDelete] = useState(false)
 
+  const done = state.ok || deleteState.ok
   useEffect(() => {
-    if (state.ok) onClose()
-  }, [state.ok, onClose])
+    if (done) onClose()
+  }, [done, onClose])
 
   return (
     <Sheet open={open} onClose={onClose} title={editing ? 'Edit account' : 'New account'}>
@@ -103,12 +105,17 @@ export function AccountFormSheet({
       {editing && (
         <div className="border-t border-slate-100 pt-3">
           {confirmDelete ? (
-            <form action={deleteAccount} className="space-y-2">
+            <form action={deleteAction} className="space-y-2">
               <input type="hidden" name="id" value={account!.id} />
               <p className="text-sm text-slate-600">
                 Delete “{account!.name}”? Its transactions will be deleted too. This cannot be
                 undone.
               </p>
+              {deleteState.error && (
+                <p role="alert" className="rounded-xl bg-rose-50 px-4 py-2.5 text-sm text-rose-600">
+                  {deleteState.error}
+                </p>
+              )}
               <div className="flex gap-2">
                 <button
                   type="button"

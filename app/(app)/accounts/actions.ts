@@ -62,12 +62,17 @@ export async function updateAccount(
   return { ok: true }
 }
 
-export async function deleteAccount(formData: FormData): Promise<void> {
+export async function deleteAccount(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
   const id = String(formData.get('id') ?? '')
-  if (!id) return
+  if (!id) return { error: 'Missing account.' }
 
   const supabase = await createServerSupabase()
-  await supabase.from('accounts').delete().eq('id', id)
+  const { error } = await supabase.from('accounts').delete().eq('id', id)
+  if (error) return { error: 'Could not delete the account. Please try again.' }
 
   revalidateMoney()
+  return { ok: true }
 }
