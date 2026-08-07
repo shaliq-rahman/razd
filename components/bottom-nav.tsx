@@ -31,9 +31,11 @@ export function BottomNav() {
   const pathname = usePathname()
 
   return (
+    // Pinned to the viewport on a handset; docked inside the phone frame from
+    // `sm` up, so the frame's rounded bottom stays visible on a laptop.
     <nav
       aria-label="Primary"
-      className="glass-nav fixed bottom-0 left-1/2 z-30 w-full max-w-[480px] -translate-x-1/2 border-t border-white/60 pb-[env(safe-area-inset-bottom)]"
+      className="glass-nav fixed bottom-0 left-1/2 z-30 w-full max-w-[480px] -translate-x-1/2 border-t border-white/60 pb-[env(safe-area-inset-bottom)] sm:absolute sm:left-0 sm:translate-x-0 sm:rounded-b-[36px]"
     >
       <ul className="flex items-end justify-around px-2 pt-2 pb-1">
         {TABS.map((tab) => {
