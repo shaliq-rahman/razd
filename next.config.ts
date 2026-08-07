@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   turbopack: { root: __dirname },
   // This project documents itself in README.md and docs/; no generated agent files.
   agentRules: false,
+  // The dev badge sits bottom-left, directly on top of the Home tab.
+  devIndicators: false,
 }
 
 export default nextConfig
