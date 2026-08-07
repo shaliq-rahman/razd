@@ -7,7 +7,7 @@ import { SubmitButton } from '@/components/submit-button'
 import { focusRing } from '@/lib/ui'
 
 const field =
-  'ios-field w-full min-h-[52px] rounded-[18px] px-4 py-3.5 text-base text-[#24202a] outline-none transition placeholder:text-[#99939e] focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
+  'ios-field w-full min-h-[52px] rounded-[18px] px-4 py-3.5 text-base text-[#24202a] outline-none transition placeholder:text-[color:var(--text-faint)] focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
 
 export default function LoginPage() {
   const [state, action] = useActionState<AuthState, FormData>(signIn, {})
@@ -16,7 +16,7 @@ export default function LoginPage() {
     <>
       <p className="eyebrow mb-1">Private & simple</p>
       <h1 className="text-[1.75rem] font-bold tracking-[-0.035em] text-[#1d1a24]">Welcome back</h1>
-      <p className="mt-1 mb-6 text-sm text-[#777180]">Sign in to your Razd account.</p>
+      <p className="mt-1 mb-6 text-sm text-[color:var(--text-muted)]">Sign in to your Razd account.</p>
 
       <form action={action} className="space-y-3">
         <input

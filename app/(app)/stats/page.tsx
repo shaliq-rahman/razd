@@ -3,7 +3,7 @@ import { monthStart } from '@/lib/queries/transactions'
 import { formatINR } from '@/lib/format'
 import { sumAmounts } from '@/lib/money'
 import { EmptyState } from '@/components/empty-state'
-import { ChartIcon } from '@/components/icons'
+import { ChartScene } from '@/components/illustrations'
 
 // Non-text contrast >=3:1 against the light surface, and distinguishable
 // without relying on hue alone (each row also shows its value and percentage).
@@ -27,7 +27,7 @@ export default async function StatsPage() {
 
       {spend.length === 0 ? (
         <EmptyState
-          icon={<ChartIcon className="h-7 w-7" />}
+          art={<ChartScene className="h-32 w-32" />}
           title="No spending this month"
           body="Log an expense and your breakdown appears here."
         />

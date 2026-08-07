@@ -25,7 +25,7 @@ export function ItemSpends({
           type="button"
           onClick={() => setOpen(true)}
           aria-label={`Item spends: ${transactions.length} expenses, ${formatINR(total)}`}
-          className={`surface-card flex h-9 w-9 cursor-pointer items-center justify-center rounded-[13px] text-amber-700 transition hover:-translate-y-0.5 active:scale-90 ${focusRing}`}
+          className={`surface-card press flex h-11 w-11 cursor-pointer items-center justify-center rounded-[15px] text-amber-700 ${focusRing}`}
         >
           <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M5 3v18l2-1.5L9 21l2-1.5L13 21l2-1.5L17 21l2-1.5V3l-2 1.5L15 3l-2 1.5L11 3 9 4.5 7 3 5 4.5Z" />
@@ -46,7 +46,7 @@ export function ItemSpends({
           </span>
           <span className="min-w-0 flex-1">
             <span className="block font-semibold text-[#29242f]">Item spends</span>
-            <span className="mt-0.5 block text-xs text-[#777180]">
+            <span className="mt-0.5 block text-xs text-[color:var(--text-muted)]">
               {transactions.length} {transactions.length === 1 ? 'expense' : 'expenses'} · {formatINR(total)}
             </span>
           </span>
@@ -59,7 +59,7 @@ export function ItemSpends({
 
       <Sheet open={open} onClose={() => setOpen(false)} title="Item spends">
         <div className="mb-4 flex items-end justify-between rounded-[20px] bg-[#f1eff3] px-4 py-3">
-          <span className="text-xs font-medium text-[#777180]">Spent this month</span>
+          <span className="text-xs font-medium text-[color:var(--text-muted)]">Spent this month</span>
           <span className="text-lg font-bold tabular-nums text-[#29242f]">{formatINR(total)}</span>
         </div>
 
@@ -74,7 +74,7 @@ export function ItemSpends({
                   <span className="block truncate text-sm font-semibold text-[#29242f]">
                     {transaction.note || transaction.categories?.name || 'Expense'}
                   </span>
-                  <span className="mt-0.5 flex items-center gap-1.5 truncate text-[11px] text-[#777180]">
+                  <span className="mt-0.5 flex items-center gap-1.5 truncate text-[11px] text-[color:var(--text-muted)]">
                     <AccountTypeIcon type={transaction.accounts?.type ?? 'bank'} className="h-3.5 w-3.5" />
                     {transaction.accounts?.name ?? 'Unknown account'} · {accountTypeLabel(transaction.accounts?.type ?? 'bank')} · {formatDayLabel(transaction.occurred_at)}
                   </span>

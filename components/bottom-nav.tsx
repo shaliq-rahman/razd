@@ -82,7 +82,7 @@ export function BottomNav() {
                 // min-h-[44px] keeps the tap area at the platform minimum even
                 // though the icon and label are smaller than that.
                 className={`relative flex min-h-[52px] w-16 cursor-pointer flex-col items-center justify-center gap-1 rounded-[20px] transition-all duration-300 ${
-                  active ? 'text-[#201d28]' : 'text-[#7b7684] hover:text-[#302c38]'
+                  active ? 'text-[#201d28]' : 'text-[color:var(--text-muted)] hover:text-[#302c38]'
                 } ${focusRing}`}
               >
                 {/* Soft pill behind the active tab, the way iOS marks selection. */}
@@ -105,7 +105,7 @@ export function BottomNav() {
                   <path d={tab.icon} />
                 </svg>
                 <span
-                  className={`text-[10px] leading-none tracking-wide ${
+                  className={`text-[11px] leading-none tracking-wide ${
                     active ? 'font-semibold' : 'font-medium'
                   }`}
                 >

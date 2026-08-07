@@ -3,7 +3,8 @@ import { getAllTransactions } from '@/lib/queries/transactions'
 import { formatDayLabel } from '@/lib/format'
 import { TransactionRow } from '@/components/transaction-row'
 import { EmptyState } from '@/components/empty-state'
-import { ReceiptIcon, ChevronLeftIcon } from '@/components/icons'
+import { ChevronLeftIcon } from '@/components/icons'
+import { ReceiptScene } from '@/components/illustrations'
 import { focusRing } from '@/lib/ui'
 import type { TransactionWithRefs } from '@/lib/types'
 
@@ -40,7 +41,7 @@ export default async function TransactionsPage() {
 
       {days.length === 0 ? (
         <EmptyState
-          icon={<ReceiptIcon className="h-7 w-7" />}
+          art={<ReceiptScene className="h-32 w-32" />}
           title="No transactions yet"
           body="Tap the + button to log your first one."
         />

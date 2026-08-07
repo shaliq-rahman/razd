@@ -29,7 +29,7 @@ export function TransactionRow({
         <span className="block truncate text-[15px] font-semibold text-[#25212b]">
           {t.note || t.categories?.name || 'Transaction'}
         </span>
-        <span className="mt-0.5 block truncate text-xs text-[#7b7583]">{meta}</span>
+        <span className="mt-0.5 block truncate text-xs text-[color:var(--text-muted)]">{meta}</span>
       </span>
       <Amount value={t.amount} kind={t.kind} />
     </li>

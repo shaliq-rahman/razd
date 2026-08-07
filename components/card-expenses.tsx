@@ -40,7 +40,7 @@ export function CardExpenses({
             <CardIcon className="h-5 w-5" />
           </span>
           <div className="relative min-w-0 flex-1">
-            <p className="text-xs font-medium text-[#777180]">Spent in {month}</p>
+            <p className="text-xs font-medium text-[color:var(--text-muted)]">Spent in {month}</p>
             <p className="mt-0.5 text-2xl font-bold tracking-[-0.025em] tabular-nums text-[#24202a]">
               {formatINR(summary.total)}
             </p>

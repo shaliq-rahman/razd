@@ -6,6 +6,8 @@ import { sumAmounts } from '@/lib/money'
 import { focusRing } from '@/lib/ui'
 import { describeDueDay, paymentTiming } from '@/lib/recurring'
 import { Sheet } from '@/components/sheet'
+import { EmptyState } from '@/components/empty-state'
+import { RepeatScene } from '@/components/illustrations'
 import { SubmitButton } from '@/components/submit-button'
 import {
   createRecurringPayment,
@@ -119,7 +121,7 @@ export function RecurringClient({
           <ul className="grid grid-cols-2 gap-2">
             {cards.map((card) => (
               <li key={card.id} className="surface-card rounded-[18px] px-3 py-2.5">
-                <p className="truncate text-xs text-[#777180]">{card.name}</p>
+                <p className="truncate text-xs text-[color:var(--text-muted)]">{card.name}</p>
                 <p
                   data-testid={`card-outstanding-${card.id}`}
                   className="mt-1 font-bold tabular-nums text-[#29242f]"
@@ -168,7 +170,7 @@ export function RecurringClient({
                     </span>
                     <span
                       className={`mt-0.5 block truncate text-[11px] ${
-                        timing.overdue ? 'font-semibold text-rose-700' : 'text-[#777180]'
+                        timing.overdue ? 'font-semibold text-rose-700' : 'text-[color:var(--text-muted)]'
                       }`}
                     >
                       {timing.paid
@@ -179,7 +181,7 @@ export function RecurringClient({
                             ? `Overdue · was due ${formatShortDate(timing.occurrence)}`
                             : `Due ${formatShortDate(timing.occurrence)}`}
                     </span>
-                    <span className="mt-0.5 block text-[11px] text-[#99939e]">
+                    <span className="mt-0.5 block text-[11px] text-[color:var(--text-faint)]">
                       {describeDueDay(payment.due_day)}
                       {payment.accounts ? ` · ${payment.accounts.name}` : ''}
                     </span>
@@ -229,26 +231,11 @@ export function RecurringClient({
           })}
         </ul>
       ) : (
-        <div className="surface-card rounded-[30px] px-6 py-10 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-violet-100 text-violet-700">
-            <svg
-              viewBox="0 0 24 24"
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 4v4h-4M21 12a9 9 0 0 1-15 6.7L3 16M3 20v-4h4" />
-            </svg>
-          </div>
-          <h2 className="mt-4 font-bold text-[#29242f]">No recurring payments</h2>
-          <p className="mx-auto mt-1 max-w-[30ch] text-sm text-[#777180]">
-            Add an EMI, card bill, rent, or subscription and track it month by month.
-          </p>
-        </div>
+        <EmptyState
+          art={<RepeatScene className="h-32 w-32" />}
+          title="No recurring payments"
+          body="Add an EMI, card bill, rent, or subscription and track it month by month."
+        />
       )}
 
       <Sheet
@@ -339,7 +326,7 @@ function RecurringForm({
           required
           aria-describedby="due-day-help"
         />
-        <p id="due-day-help" className="mt-1.5 text-xs text-[#777180]">
+        <p id="due-day-help" className="mt-1.5 text-xs text-[color:var(--text-muted)]">
           {validDay
             ? `Repeats on ${describeDueDay(dueDay)}.`
             : 'Pick a day from 1 to 31.'}
@@ -359,7 +346,7 @@ function RecurringForm({
             </option>
           ))}
         </select>
-        <p className="mt-1.5 text-xs text-[#777180]">
+        <p className="mt-1.5 text-xs text-[color:var(--text-muted)]">
           Marking this paid records the payment against the account, so a card&apos;s
           outstanding drops by the amount.
         </p>

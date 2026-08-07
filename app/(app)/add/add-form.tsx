@@ -53,7 +53,7 @@ export function AddForm({
               setCategoryId('')
             }}
             className={`min-h-[44px] cursor-pointer rounded-[14px] text-sm font-semibold capitalize transition ${
-              kind === k ? 'bg-white text-[#24202a] shadow-sm' : 'text-[#777180]'
+              kind === k ? 'bg-white text-[#24202a] shadow-sm' : 'text-[color:var(--text-muted)]'
             } ${focusRing}`}
           >
             {k}

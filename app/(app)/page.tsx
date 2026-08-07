@@ -8,7 +8,7 @@ import {
 } from '@/lib/queries/transactions'
 import { BalanceCard } from '@/components/balance-card'
 import { EmptyState } from '@/components/empty-state'
-import { BankIcon, ReceiptIcon } from '@/components/icons'
+import { WalletScene, ReceiptScene } from '@/components/illustrations'
 import { focusRing } from '@/lib/ui'
 import { TransactionRow } from '@/components/transaction-row'
 import { formatINR } from '@/lib/format'
@@ -56,7 +56,7 @@ export default async function HomePage() {
         </div>
         <div className="flex items-center gap-2 relative z-10">
           <ItemSpends transactions={itemSpends} compact />
-          <div className="flex h-10 w-10 items-center justify-center rounded-[15px] bg-[#1d1a24] text-sm font-bold text-white shadow-lg shadow-slate-900/15" aria-label={`${displayName} profile`}>
+          <div className="flex h-11 w-11 items-center justify-center rounded-[15px] bg-[#1d1a24] text-sm font-bold text-white shadow-lg shadow-slate-900/15" aria-label={`${displayName} profile`}>
             {profileInitial}
           </div>
         </div>
@@ -64,7 +64,7 @@ export default async function HomePage() {
 
       {accounts.length === 0 ? (
         <EmptyState
-          icon={<BankIcon className="h-7 w-7" />}
+          art={<WalletScene className="h-32 w-32" />}
           title="No accounts yet"
           body="Add your first account to see your total balance here."
           action={
@@ -82,7 +82,7 @@ export default async function HomePage() {
 
       <section className="grid grid-cols-2 gap-3 relative">
         <div className="surface-card compact-card animate-rise rounded-[24px] [animation-delay:60ms]">
-          <p className="flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[#777281] uppercase">
+          <p className="flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[color:var(--text-muted)] uppercase">
             <span className="flex h-7 w-7 items-center justify-center rounded-[10px] bg-emerald-100 text-emerald-700">
               <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M12 19V5M5 12l7-7 7 7" />
@@ -95,7 +95,7 @@ export default async function HomePage() {
           </p>
         </div>
         <div className="surface-card compact-card animate-rise rounded-[24px] [animation-delay:110ms]">
-          <p className="flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[#777281] uppercase">
+          <p className="flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[color:var(--text-muted)] uppercase">
             <span className="flex h-7 w-7 items-center justify-center rounded-[10px] bg-rose-100 text-rose-700">
               <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M12 5v14M5 12l7 7 7-7" />
@@ -126,7 +126,7 @@ export default async function HomePage() {
 
         {recent.length === 0 ? (
           <EmptyState
-            icon={<ReceiptIcon className="h-7 w-7" />}
+            art={<ReceiptScene className="h-32 w-32" />}
             title="Nothing logged yet"
             body="Tap the + button to add your first transaction."
           />

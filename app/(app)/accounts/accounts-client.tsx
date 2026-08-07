@@ -5,20 +5,26 @@ import { formatINR } from '@/lib/format'
 import { AccountTypeIcon, accountTypeLabel } from '@/lib/account-types'
 import { focusRing } from '@/lib/ui'
 import { EmptyState } from '@/components/empty-state'
-import { BankIcon, ReceiptIcon } from '@/components/icons'
+import { ReceiptIcon } from '@/components/icons'
+import { WalletScene } from '@/components/illustrations'
 import { TransactionRow } from '@/components/transaction-row'
 import { AccountFormSheet } from './account-form-sheet'
 import type { AccountBalance, AccountMonthActivity, CardPortfolioItem } from '@/lib/types'
 
+/**
+ * Deep, saturated card faces. Pastels forced grey labels that measured barely
+ * 2:1; white on these measures 5.0:1 at worst, so the cards read as real cards
+ * and the text is legible. Hierarchy comes from size and weight, never opacity.
+ */
 const CARD_GRADIENTS = [
-  ['#bbf7d0', '#67e8f9'],
-  ['#fde68a', '#fdba74'],
-  ['#bfdbfe', '#c4b5fd'],
-  ['#fbcfe8', '#ddd6fe'],
-  ['#a7f3d0', '#bae6fd'],
-  ['#fed7aa', '#fda4af'],
-  ['#d9f99d', '#99f6e4'],
-  ['#e9d5ff', '#f0abfc'],
+  ['#7c3aed', '#4338ca'],
+  ['#0f766e', '#0e7490'],
+  ['#b45309', '#9f1239'],
+  ['#1d4ed8', '#6d28d9'],
+  ['#047857', '#115e59'],
+  ['#be123c', '#86198f'],
+  ['#4338ca', '#7e22ce'],
+  ['#0369a1', '#0f766e'],
 ] as const
 
 type SheetState =
@@ -124,7 +130,7 @@ export function AccountsClient({
 
       {accounts.length === 0 ? (
         <EmptyState
-          icon={<BankIcon className="h-7 w-7" />}
+          art={<WalletScene className="h-32 w-32" />}
           title="No accounts yet"
           body="Add your bank, cash, or card to start tracking your balance."
           action={
@@ -143,7 +149,7 @@ export function AccountsClient({
             <p className="mt-2 text-[2.35rem] font-bold tracking-[-0.045em] tabular-nums text-[#24202a]">
               {formatINR(selected.balance)}
             </p>
-            <p className="mt-1 text-sm text-[#777180]">
+            <p className="mt-1 text-sm text-[color:var(--text-muted)]">
               {selected.type === 'card'
                 ? `${Math.round(utilization)}% utilized · ${formatINR(Math.max(0, cardLimit - utilized))} available`
                 : `${accountTypeLabel(selected.type)} · ${selected.name}`}
@@ -174,7 +180,7 @@ export function AccountsClient({
                       onClick={() => selectAccount(account.id)}
                       aria-label={`Select ${account.name}`}
                       aria-pressed={active}
-                      className={`relative h-[224px] w-full cursor-pointer overflow-hidden rounded-[30px] border border-white/85 p-5 text-left text-[#25212b] transition-all duration-500 active:scale-[0.98] ${active ? 'ring-2 ring-white/90' : ''} ${focusRing}`}
+                      className={`press relative h-[212px] w-full cursor-pointer overflow-hidden rounded-[30px] border border-white/25 p-5 text-left text-white transition-all duration-500 ${active ? 'ring-2 ring-white/70' : ''} ${focusRing}`}
                       style={{
                         background: `radial-gradient(110% 100% at ${index % 2 === 0 ? '0% 0%' : '100% 0%'}, rgba(255,255,255,.72) 0%, transparent 58%), linear-gradient(${125 + (index % 4) * 12}deg, ${gradientFrom}, ${gradientTo})`,
                         boxShadow: active
@@ -182,34 +188,50 @@ export function AccountsClient({
                           : '0 15px 32px -24px rgba(42,36,48,.4)',
                       }}
                     >
-                      <span aria-hidden="true" className="absolute -top-16 -right-14 h-44 w-44 rounded-full bg-white/35 blur-3xl" />
+                      <span aria-hidden="true" className="absolute -top-20 -right-16 h-48 w-48 rounded-full bg-white/25 blur-3xl" />
+                      <span aria-hidden="true" className="absolute -bottom-16 -left-12 h-40 w-40 rounded-full bg-black/20 blur-3xl" />
+                      {/* Engraved arcs, the way a real card catches light */}
+                      <svg aria-hidden="true" viewBox="0 0 280 212" className="pointer-events-none absolute inset-0 h-full w-full" fill="none">
+                        <path d="M-40 150C40 90 120 190 320 70" stroke="white" strokeOpacity="0.14" strokeWidth="26" />
+                        <path d="M-40 186C60 130 150 210 320 110" stroke="white" strokeOpacity="0.09" strokeWidth="18" />
+                      </svg>
                       <span className="relative flex h-full flex-col justify-between">
                         <span className="flex items-start justify-between gap-3">
                           <span>
-                            <span className="block text-[10px] font-bold tracking-[0.17em] text-[#5f5865]/65 uppercase">
+                            <span className="block text-[10px] font-bold tracking-[0.17em] text-white uppercase">
                               {isCard ? 'Credit card' : accountTypeLabel(account.type)}
                             </span>
                             <span className="mt-2 block max-w-[13rem] truncate text-xl font-black tracking-[-0.03em] uppercase">{account.name}</span>
                           </span>
-                          <span className="flex h-11 w-11 items-center justify-center rounded-[15px] bg-white/38 shadow-[inset_0_0_0_1px_rgba(255,255,255,.45)]" style={{ color: account.color }}>
+                          <span className="flex h-11 w-11 items-center justify-center rounded-[15px] bg-white/20 text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.4)] backdrop-blur-sm">
                             <AccountTypeIcon type={account.type} className="h-5 w-5" />
                           </span>
                         </span>
 
+                        <span
+                          aria-hidden="true"
+                          className="flex h-7 w-10 items-center justify-center rounded-[7px] bg-gradient-to-br from-amber-200/90 to-amber-400/80 shadow-[inset_0_0_0_1px_rgba(255,255,255,.35)]"
+                        >
+                          <svg viewBox="0 0 24 16" className="h-3.5 w-5" fill="none" stroke="rgba(120,80,10,.55)" strokeWidth="1.2">
+                            <rect x="0.6" y="0.6" width="22.8" height="14.8" rx="2.4" />
+                            <path d="M0 5.5h7M0 10.5h7M17 5.5h7M17 10.5h7M7 0v16M17 0v16" />
+                          </svg>
+                        </span>
+
                         <span className="grid grid-cols-2 gap-4">
                           <span>
-                            <span className="block text-[10px] font-semibold tracking-[0.12em] text-[#5f5865]/65 uppercase">
+                            <span className="block text-[10px] font-semibold tracking-[0.12em] text-white uppercase">
                               {isCard ? 'Used' : 'Balance'}
                             </span>
-                            <span className={`mt-1 block text-lg font-bold tabular-nums ${!isCard && account.balance < 0 ? 'text-rose-700' : ''}`}>
+                            <span className="mt-1 block text-lg font-bold tabular-nums text-white">
                               {formatINR(isCard ? (card?.utilized ?? 0) : account.balance)}
                             </span>
                           </span>
                           <span className="text-right">
-                            <span className="block text-[10px] font-semibold tracking-[0.12em] text-[#5f5865]/65 uppercase">
+                            <span className="block text-[10px] font-semibold tracking-[0.12em] text-white uppercase">
                               {isCard ? 'Total limit' : 'Opening'}
                             </span>
-                            <span className="mt-1 block text-lg font-bold tabular-nums">
+                            <span className="mt-1 block text-lg font-bold tabular-nums text-white">
                               {formatINR(isCard ? (account.card_limit ?? 0) : account.opening_balance)}
                             </span>
                           </span>
@@ -225,7 +247,7 @@ export function AccountsClient({
                 <span key={account.id} className={`h-1.5 rounded-full transition-all duration-300 ${account.id === selected.id ? 'w-5 bg-[#2c2731]' : 'w-1.5 bg-[#c9c4cc]'}`} />
               ))}
             </div>
-            <p className="mt-2 text-center text-[10px] font-semibold tracking-[0.12em] text-[#99939e] uppercase">Swipe left or right</p>
+            <p className="mt-2 text-center text-[10px] font-semibold tracking-[0.12em] text-[color:var(--text-faint)] uppercase">Swipe left or right</p>
           </div>
 
           <section className="flex min-h-0 flex-1 flex-col pt-1">
@@ -236,7 +258,7 @@ export function AccountsClient({
                   {selected.name} activity
                 </h2>
               </div>
-              <span className="rounded-full bg-white/65 px-3 py-1.5 text-xs font-semibold text-[#777180] shadow-sm">
+              <span className="rounded-full bg-white/65 px-3 py-1.5 text-xs font-semibold text-[color:var(--text-muted)] shadow-sm">
                 {selectedTransactions.length} {selectedTransactions.length === 1 ? 'transaction' : 'transactions'}
               </span>
             </div>
@@ -249,7 +271,7 @@ export function AccountsClient({
               </ul>
             ) : (
               <div className="surface-card min-h-0 flex-1 rounded-[28px] px-5 py-7 text-center">
-                <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[15px] bg-[#f1eff3] text-[#777180]">
+                <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[15px] bg-[#f1eff3] text-[color:var(--text-muted)]">
                   <ReceiptIcon className="h-5 w-5" />
                 </span>
                 <p className="mt-3 text-sm font-semibold text-[#403946]">No activity this month</p>
