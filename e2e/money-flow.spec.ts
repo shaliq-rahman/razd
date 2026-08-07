@@ -97,7 +97,7 @@ test('every bottom-nav tab reaches its screen', async ({ page }) => {
   for (const [tab, heading] of [
     ['Accounts', 'Accounts'],
     ['Add', 'Add transaction'],
-    ['Stats', 'Spending'],
+    ['Bills', 'Recurring payments'],
     ['Profile', 'Profile'],
     ['Home', 'Your money'],
   ] as const) {
@@ -110,6 +110,8 @@ test('deleting an account removes its balance from the total', async ({ page }) 
   await login(page, user)
   await page.goto('/accounts')
 
+  // The wallet is a carousel: pick the account, then edit the selected one.
+  await page.getByRole('button', { name: 'Select Cash' }).click()
   await page.getByRole('button', { name: 'Edit Cash' }).click()
   await page.getByRole('button', { name: 'Delete account' }).click()
   await page.getByRole('button', { name: 'Delete', exact: true }).click()

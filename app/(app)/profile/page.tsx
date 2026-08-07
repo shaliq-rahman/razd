@@ -1,6 +1,9 @@
+import Link from 'next/link'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { signOut } from '@/app/(auth)/actions'
 import { ProfileForm } from './profile-form'
+import { ChartIcon } from '@/components/icons'
+import { focusRing } from '@/lib/ui'
 
 export default async function ProfilePage() {
   const supabase = await createServerSupabase()
@@ -36,6 +39,20 @@ export default async function ProfilePage() {
             <dd className="font-medium text-slate-900">{profile?.currency ?? 'INR'}</dd>
           </div>
         </dl>
+      </section>
+
+      <section>
+        <p className="eyebrow mb-2 px-1">Insights</p>
+        <Link href="/stats" className={`surface-card flex min-h-[76px] items-center gap-3 rounded-[24px] px-4 transition hover:-translate-y-0.5 ${focusRing}`}>
+          <span className="flex h-11 w-11 items-center justify-center rounded-[15px] bg-violet-100 text-violet-700">
+            <ChartIcon className="h-5 w-5" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-semibold text-[#29242f]">Spending statistics</span>
+            <span className="mt-0.5 block text-xs text-[#777180]">Monthly category breakdown and trends</span>
+          </span>
+          <svg viewBox="0 0 24 24" className="h-5 w-5 text-[#9a949f]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
+        </Link>
       </section>
 
       <form action={signOut}>

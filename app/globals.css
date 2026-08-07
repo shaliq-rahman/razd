@@ -195,6 +195,24 @@ select {
   opacity: 0.82;
 }
 
+.accounts-viewport {
+  display: flex;
+  height: calc(100dvh - max(1.25rem, env(safe-area-inset-top)) - 6.5rem);
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  margin-bottom: -7rem;
+}
+
+.accounts-transactions-scroll {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.accounts-transactions-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 @media (min-width: 640px) {
   .account-carousel {
     margin-inline: -1.5rem;

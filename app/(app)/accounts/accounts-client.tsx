@@ -5,32 +5,35 @@ import { formatINR } from '@/lib/format'
 import { AccountTypeIcon, accountTypeLabel } from '@/lib/account-types'
 import { focusRing } from '@/lib/ui'
 import { EmptyState } from '@/components/empty-state'
-import { BankIcon } from '@/components/icons'
+import { BankIcon, ReceiptIcon } from '@/components/icons'
+import { TransactionRow } from '@/components/transaction-row'
 import { AccountFormSheet } from './account-form-sheet'
-import type { AccountBalance, CardPortfolioItem } from '@/lib/types'
+import type { AccountBalance, AccountMonthActivity, CardPortfolioItem } from '@/lib/types'
+
+const CARD_GRADIENTS = [
+  ['#bbf7d0', '#67e8f9'],
+  ['#fde68a', '#fdba74'],
+  ['#bfdbfe', '#c4b5fd'],
+  ['#fbcfe8', '#ddd6fe'],
+  ['#a7f3d0', '#bae6fd'],
+  ['#fed7aa', '#fda4af'],
+  ['#d9f99d', '#99f6e4'],
+  ['#e9d5ff', '#f0abfc'],
+] as const
 
 type SheetState =
   | { mode: 'create'; seq: number }
   | { mode: 'edit'; account: AccountBalance; seq: number }
   | null
 
-function ordinal(day: number) {
-  const suffix = day % 10 === 1 && day % 100 !== 11
-    ? 'st'
-    : day % 10 === 2 && day % 100 !== 12
-      ? 'nd'
-      : day % 10 === 3 && day % 100 !== 13
-        ? 'rd'
-        : 'th'
-  return `${day}${suffix}`
-}
-
 export function AccountsClient({
   accounts,
   cards,
+  monthActivity,
 }: {
   accounts: AccountBalance[]
   cards: CardPortfolioItem[]
+  monthActivity: AccountMonthActivity
 }) {
   const [sheet, setSheet] = useState<SheetState>(null)
   const [seq, setSeq] = useState(0)
@@ -54,6 +57,7 @@ export function AccountsClient({
   const cardLimit = selected?.card_limit ?? selectedCard?.opening_balance ?? 0
   const utilized = selectedCard?.utilized ?? 0
   const utilization = cardLimit > 0 ? Math.min(100, (utilized / cardLimit) * 100) : 0
+  const selectedTransactions = monthActivity[selected?.id] ?? []
 
   const selectAccount = (id: string) => {
     setSelectedId(id)
@@ -87,21 +91,34 @@ export function AccountsClient({
 
   return (
     <>
-      <header className="mb-5 flex items-end justify-between gap-3 pt-1">
+      <div className="accounts-viewport">
+      <header className="mb-4 flex shrink-0 items-end justify-between gap-3 pt-1">
         <div>
           <p className="eyebrow mb-1">Your portfolio</p>
           <h1 className="text-[1.75rem] font-bold tracking-[-0.035em] text-[#1d1a24]">Accounts</h1>
         </div>
-        {accounts.length > 0 && (
-          <button
-            onClick={openCreate}
-            className={`flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-[16px] bg-[#1d1a24] px-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/15 transition hover:-translate-y-0.5 active:scale-95 ${focusRing}`}
-          >
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-            New
-          </button>
+        {accounts.length > 0 && selected && (
+          <div className="flex gap-2">
+            <button
+              onClick={() => openEdit(selected)}
+              aria-label={`Edit ${selected.name}`}
+              className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-[16px] bg-white/70 text-[#655f6b] shadow-sm transition hover:-translate-y-0.5 ${focusRing}`}
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="m4 20 4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10L4 20Z" />
+                <path d="m13.5 8 3 3" />
+              </svg>
+            </button>
+            <button
+              onClick={openCreate}
+              className={`flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-[16px] bg-[#1d1a24] px-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/15 transition hover:-translate-y-0.5 active:scale-95 ${focusRing}`}
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              New
+            </button>
+          </div>
         )}
       </header>
 
@@ -120,8 +137,8 @@ export function AccountsClient({
           }
         />
       ) : (
-        <>
-          <div className="text-center">
+        <div className="flex min-h-0 flex-1 flex-col">
+          <div className="shrink-0 text-center">
             <p className="eyebrow">{selected.type === 'card' ? 'Available on card' : 'Available balance'}</p>
             <p className="mt-2 text-[2.35rem] font-bold tracking-[-0.045em] tabular-nums text-[#24202a]">
               {formatINR(selected.balance)}
@@ -133,13 +150,14 @@ export function AccountsClient({
             </p>
           </div>
 
-          <div className="account-carousel" aria-label="Accounts and cards">
+          <div className="account-carousel shrink-0" aria-label="Accounts and cards">
             <ul ref={walletRef} className="account-carousel-scroll" onScroll={syncSelectionToScroll}>
               {accounts.map((account, index) => {
                 const isCard = account.type === 'card'
                 const card = cards.find((item) => item.id === account.id)
                 const active = account.id === selected.id
                 const position = index < selectedIndex ? 'left' : index > selectedIndex ? 'right' : 'center'
+                const [gradientFrom, gradientTo] = CARD_GRADIENTS[index % CARD_GRADIENTS.length]
 
                 return (
                   <li
@@ -158,11 +176,9 @@ export function AccountsClient({
                       aria-pressed={active}
                       className={`relative h-[224px] w-full cursor-pointer overflow-hidden rounded-[30px] border border-white/85 p-5 text-left text-[#25212b] transition-all duration-500 active:scale-[0.98] ${active ? 'ring-2 ring-white/90' : ''} ${focusRing}`}
                       style={{
-                        background: isCard
-                          ? `radial-gradient(100% 100% at 0% 0%, color-mix(in srgb, ${account.color} 38%, white) 0%, transparent 66%), linear-gradient(145deg, color-mix(in srgb, ${account.color} 52%, white), color-mix(in srgb, ${account.color} 22%, white))`
-                          : `radial-gradient(100% 110% at 100% 0%, color-mix(in srgb, ${account.color} 26%, white) 0%, transparent 66%), linear-gradient(145deg, #ffffff, color-mix(in srgb, ${account.color} 13%, #f5f3f6))`,
+                        background: `radial-gradient(110% 100% at ${index % 2 === 0 ? '0% 0%' : '100% 0%'}, rgba(255,255,255,.72) 0%, transparent 58%), linear-gradient(${125 + (index % 4) * 12}deg, ${gradientFrom}, ${gradientTo})`,
                         boxShadow: active
-                          ? `0 26px 54px -24px color-mix(in srgb, ${account.color} 46%, #4a4251)`
+                          ? `0 26px 54px -24px color-mix(in srgb, ${account.color} 54%, #4a4251)`
                           : '0 15px 32px -24px rgba(42,36,48,.4)',
                       }}
                     >
@@ -212,66 +228,38 @@ export function AccountsClient({
             <p className="mt-2 text-center text-[10px] font-semibold tracking-[0.12em] text-[#99939e] uppercase">Swipe left or right</p>
           </div>
 
-          {selected.type === 'card' ? (
-            <section className="animate-rise overflow-hidden rounded-[30px] bg-[#201c26] p-5 text-white shadow-[0_22px_48px_-28px_rgba(29,24,37,.75)]" aria-live="polite">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-[10px] font-bold tracking-[0.16em] text-white/45 uppercase">Card overview</p>
-                  <h2 className="mt-1 text-xl font-bold tracking-tight">{selected.name}</h2>
-                </div>
-                <button onClick={() => openEdit(selected)} className={`min-h-[40px] rounded-[14px] bg-white/10 px-3 text-xs font-semibold text-white/80 transition hover:bg-white/15 ${focusRing}`}>Edit</button>
+          <section className="flex min-h-0 flex-1 flex-col pt-1">
+            <div className="mb-3 flex shrink-0 items-end justify-between gap-3">
+              <div>
+                <p className="eyebrow">This month</p>
+                <h2 className="mt-0.5 text-lg font-bold tracking-tight text-[#24202a]">
+                  {selected.name} activity
+                </h2>
               </div>
+              <span className="rounded-full bg-white/65 px-3 py-1.5 text-xs font-semibold text-[#777180] shadow-sm">
+                {selectedTransactions.length} {selectedTransactions.length === 1 ? 'transaction' : 'transactions'}
+              </span>
+            </div>
 
-              <div className="mt-5 grid grid-cols-2 gap-3">
-                <div className="rounded-[20px] bg-white/8 p-4">
-                  <p className="text-[10px] font-semibold tracking-wide text-white/45 uppercase">Used amount</p>
-                  <p className="mt-1.5 text-lg font-bold tabular-nums">{formatINR(utilized)}</p>
-                </div>
-                <div className="rounded-[20px] bg-white/8 p-4">
-                  <p className="text-[10px] font-semibold tracking-wide text-white/45 uppercase">Total limit</p>
-                  <p className="mt-1.5 text-lg font-bold tabular-nums">{formatINR(cardLimit)}</p>
-                </div>
-                <div className="rounded-[20px] bg-white/8 p-4">
-                  <p className="text-[10px] font-semibold tracking-wide text-white/45 uppercase">Balance</p>
-                  <p className="mt-1.5 text-lg font-bold tabular-nums">{formatINR(selected.balance)}</p>
-                </div>
-                <div className="rounded-[20px] bg-white/8 p-4">
-                  <p className="text-[10px] font-semibold tracking-wide text-white/45 uppercase">Due date</p>
-                  <p className="mt-1.5 text-lg font-bold">{selected.due_day ? `${ordinal(selected.due_day)} monthly` : 'Not set'}</p>
-                </div>
+            {selectedTransactions.length > 0 ? (
+              <ul className="accounts-transactions-scroll surface-card min-h-0 flex-1 divide-y divide-[#dedbe3]/70 overflow-y-auto overscroll-contain rounded-[28px] px-4">
+                {selectedTransactions.map((transaction) => (
+                  <TransactionRow key={transaction.id} transaction={transaction} />
+                ))}
+              </ul>
+            ) : (
+              <div className="surface-card min-h-0 flex-1 rounded-[28px] px-5 py-7 text-center">
+                <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[15px] bg-[#f1eff3] text-[#777180]">
+                  <ReceiptIcon className="h-5 w-5" />
+                </span>
+                <p className="mt-3 text-sm font-semibold text-[#403946]">No activity this month</p>
+                <p className="mt-1 text-xs text-[#88818e]">Transactions for this account will appear here.</p>
               </div>
-
-              <div className="mt-5">
-                <div className="mb-2 flex justify-between text-xs font-medium text-white/55">
-                  <span>Utilized</span>
-                  <span>{Math.round(utilization)}%</span>
-                </div>
-                <div className="h-2 overflow-hidden rounded-full bg-white/10">
-                  <div className="h-full rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-400 transition-all duration-500" style={{ width: `${utilization}%` }} />
-                </div>
-              </div>
-            </section>
-          ) : (
-            <section className="surface-card animate-rise rounded-[30px] p-5" aria-live="polite">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="eyebrow">{accountTypeLabel(selected.type)} account</p>
-                  <h2 className="mt-1 text-xl font-bold tracking-tight text-[#29242f]">{selected.name}</h2>
-                </div>
-                <button onClick={() => openEdit(selected)} className={`min-h-[40px] rounded-[14px] bg-[#eeeaf1] px-3 text-xs font-semibold text-[#5d5664] transition hover:bg-[#e6e1e9] ${focusRing}`}>Edit</button>
-              </div>
-              <div className="mt-6 rounded-[24px] bg-[#f1eff3] p-5">
-                <p className="text-xs font-medium text-[#777180]">Available balance</p>
-                <p className={`mt-1 text-3xl font-bold tracking-[-0.03em] tabular-nums ${selected.balance < 0 ? 'text-rose-700' : 'text-[#29242f]'}`}>{formatINR(selected.balance)}</p>
-                <div className="mt-4 flex items-center justify-between border-t border-[#dfdbe2] pt-4 text-sm">
-                  <span className="text-[#777180]">Opening balance</span>
-                  <span className="font-semibold tabular-nums text-[#403946]">{formatINR(selected.opening_balance)}</span>
-                </div>
-              </div>
-            </section>
-          )}
-        </>
+            )}
+          </section>
+        </div>
       )}
+      </div>
 
       {sheet && (
         <AccountFormSheet

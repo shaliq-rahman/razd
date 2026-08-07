@@ -1,7 +1,12 @@
 import 'server-only'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { sumAmounts } from '@/lib/money'
-import type { AccountBalance, CardPortfolioItem, TransactionWithRefs } from '@/lib/types'
+import type {
+  AccountBalance,
+  AccountMonthActivity,
+  CardPortfolioItem,
+  TransactionWithRefs,
+} from '@/lib/types'
 
 /**
  * Reads every non-archived account with its derived balance, richest first.
@@ -86,4 +91,27 @@ export async function getCardPortfolio(): Promise<CardPortfolioItem[]> {
       recent: activity.slice(0, 3),
     }
   })
+}
+
+/** Current-month transactions grouped by account for the wallet carousel. */
+export async function getAccountMonthActivity(): Promise<AccountMonthActivity> {
+  const now = new Date()
+  const start = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`
+  const supabase = await createServerSupabase()
+  const { data, error } = await supabase
+    .from('transactions')
+    .select('*, accounts(name, color, type), categories(name, icon)')
+    .gte('occurred_at', start)
+    .order('occurred_at', { ascending: false })
+    .order('created_at', { ascending: false })
+
+  if (error) throw new Error(`Failed to load account activity: ${error.message}`)
+
+  const grouped: AccountMonthActivity = {}
+  for (const row of data ?? []) {
+    const transaction = { ...row, amount: Number(row.amount) } as TransactionWithRefs
+    grouped[transaction.account_id] ??= []
+    grouped[transaction.account_id].push(transaction)
+  }
+  return grouped
 }

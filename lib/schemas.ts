@@ -45,3 +45,20 @@ export const transactionSchema = z.object({
 export const profileSchema = z.object({
   display_name: z.string().trim().min(1, 'Name is required').max(50),
 })
+
+export const recurringPaymentSchema = z.object({
+  name: z.string().trim().min(1, 'Payment name is required').max(60),
+  amount: z.coerce.number('Enter a valid amount').positive('Amount must be greater than zero'),
+  // Repeats monthly on this day, e.g. 5 means the 5th of every month.
+  due_day: z.coerce
+    .number('Choose a due day')
+    .int('Choose a due day')
+    .min(1, 'Due day must be between 1 and 31')
+    .max(31, 'Due day must be between 1 and 31'),
+  end_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Choose an end date'),
+  // Optional: which account the payment settles against.
+  account_id: z
+    .union([z.uuid(), z.literal('')])
+    .optional()
+    .transform((value) => (value ? value : null)),
+})

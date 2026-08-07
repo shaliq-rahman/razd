@@ -80,6 +80,9 @@ export async function login(page: Page, user: TestUser): Promise<void> {
   await page.getByPlaceholder('Password').fill(user.password)
   await page.getByRole('button', { name: 'Sign in' }).click()
   await page.waitForURL('/')
+  // The sign-in action redirects server-side. Let that settle before the caller
+  // navigates, otherwise the in-flight redirect lands back on Home and wins.
+  await page.waitForLoadState('networkidle')
 }
 
 export async function addAccount(

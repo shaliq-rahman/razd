@@ -16,7 +16,7 @@ const TABS = [
     icon: 'M3 7h18v12H3zM3 7l2-3h14l2 3M7 13h4',
   },
   { href: '/add', label: 'Add', icon: 'M12 5v14M5 12h14' },
-  { href: '/stats', label: 'Stats', icon: 'M4 20V10M10 20V4M16 20v-7M22 20H2' },
+  { href: '/recurring', label: 'Bills', icon: 'M5 3v18l2-1.5L9 21l2-1.5L13 21l2-1.5L17 21l2-1.5V3l-2 1.5L15 3l-2 1.5L11 3 9 4.5 7 3 5 4.5ZM9 10h6M9 14h4' },
   {
     href: '/profile',
     label: 'Profile',
@@ -25,6 +25,7 @@ const TABS = [
 ] as const
 
 function isActive(pathname: string, href: string) {
+  if (href === '/profile') return pathname.startsWith('/profile') || pathname.startsWith('/stats')
   return href === '/' ? pathname === '/' : pathname.startsWith(href)
 }
 

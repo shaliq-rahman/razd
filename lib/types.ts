@@ -64,3 +64,28 @@ export type CardPortfolioItem = AccountBalance & {
   transactionCount: number
   recent: TransactionWithRefs[]
 }
+
+export type AccountMonthActivity = Record<string, TransactionWithRefs[]>
+
+export type RecurringPayment = {
+  id: string
+  user_id: string
+  name: string
+  amount: number
+  /** Day of the month this repeats on, 1-31. */
+  due_day: number
+  /** When the commitment finishes; nothing is owed after this. */
+  end_date: string
+  /** First of the month this was last settled for, or null if never. */
+  paid_month: string | null
+  /** Account the payment settles against, if any. */
+  account_id: string | null
+  /** Transaction created when it was marked paid, so it can be undone. */
+  paid_transaction_id: string | null
+  created_at: string
+}
+
+/** A recurring payment joined with the account it settles against. */
+export type RecurringPaymentWithAccount = RecurringPayment & {
+  accounts: Pick<Account, 'name' | 'color' | 'type'> | null
+}

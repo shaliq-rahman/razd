@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { credentialsSchema, accountSchema, transactionSchema } from './schemas'
+import {
+  credentialsSchema,
+  accountSchema,
+  recurringPaymentSchema,
+  transactionSchema,
+} from './schemas'
 
 describe('credentialsSchema', () => {
   it('accepts a valid email and password', () => {
@@ -87,5 +92,48 @@ describe('transactionSchema', () => {
 
   it('rejects a malformed date', () => {
     expect(transactionSchema.safeParse({ ...valid, occurred_at: '07/08/2026' }).success).toBe(false)
+  })
+})
+
+describe('recurringPaymentSchema', () => {
+  const valid = {
+    name: 'Home loan EMI',
+    amount: '24500',
+    due_day: '5',
+    end_date: '2027-08-12',
+    account_id: '',
+  }
+
+  it('accepts a payment that repeats on a day of the month', () => {
+    const r = recurringPaymentSchema.safeParse(valid)
+    expect(r.success && r.data.due_day).toBe(5)
+  })
+
+  it('treats an unlinked account as null rather than invalid', () => {
+    const r = recurringPaymentSchema.safeParse(valid)
+    expect(r.success && r.data.account_id).toBeNull()
+  })
+
+  it('keeps a linked account id', () => {
+    const id = '9f1c2b3a-4d5e-4f60-9a71-2b3c4d5e6f70'
+    const r = recurringPaymentSchema.safeParse({ ...valid, account_id: id })
+    expect(r.success && r.data.account_id).toBe(id)
+  })
+
+  it('rejects a zero amount', () => {
+    expect(recurringPaymentSchema.safeParse({ ...valid, amount: '0' }).success).toBe(false)
+  })
+
+  it('rejects a due day outside 1 to 31', () => {
+    expect(recurringPaymentSchema.safeParse({ ...valid, due_day: '0' }).success).toBe(false)
+    expect(recurringPaymentSchema.safeParse({ ...valid, due_day: '32' }).success).toBe(false)
+  })
+
+  it('rejects a fractional due day', () => {
+    expect(recurringPaymentSchema.safeParse({ ...valid, due_day: '5.5' }).success).toBe(false)
+  })
+
+  it('rejects a malformed end date', () => {
+    expect(recurringPaymentSchema.safeParse({ ...valid, end_date: '12/08/2026' }).success).toBe(false)
   })
 })

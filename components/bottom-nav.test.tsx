@@ -8,7 +8,7 @@ describe('BottomNav', () => {
   it('renders all five tabs in order', () => {
     render(<BottomNav />)
     const labels = screen.getAllByRole('link').map((l) => l.textContent)
-    expect(labels).toEqual(['Home', 'Accounts', 'Add', 'Stats', 'Profile'])
+    expect(labels).toEqual(['Home', 'Accounts', 'Add', 'Bills', 'Profile'])
   })
 
   it('marks the tab matching the current path as current', () => {
@@ -23,7 +23,7 @@ describe('BottomNav', () => {
 
   it('gives every tab an accessible name, including the icon-only Add button', () => {
     render(<BottomNav />)
-    for (const name of ['Home', 'Accounts', 'Add', 'Stats', 'Profile']) {
+    for (const name of ['Home', 'Accounts', 'Add', 'Bills', 'Profile']) {
       expect(screen.getByRole('link', { name })).toBeInTheDocument()
     }
   })

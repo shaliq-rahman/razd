@@ -59,6 +59,22 @@ export async function getMonthTotals(): Promise<{ income: number; expense: numbe
   }
 }
 
+/** Itemized current-month expenses with their source account or card. */
+export async function getMonthExpenseTransactions(): Promise<TransactionWithRefs[]> {
+  const supabase = await createServerSupabase()
+  const { data, error } = await supabase
+    .from('transactions')
+    .select(WITH_REFS)
+    .eq('kind', 'expense')
+    .gte('occurred_at', monthStart(new Date()))
+    .order('occurred_at', { ascending: false })
+    .order('created_at', { ascending: false })
+    .limit(250)
+
+  if (error) throw new Error(`Failed to load item spends: ${error.message}`)
+  return normalise(data ?? [])
+}
+
 /** Current-month expenses paid specifically from card-type accounts. */
 export async function getCardExpenseSummary(): Promise<CardExpenseSummary> {
   const supabase = await createServerSupabase()

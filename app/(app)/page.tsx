@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { getAccountBalances } from '@/lib/queries/balances'
 import {
   getCardExpenseSummary,
+  getMonthExpenseTransactions,
   getRecentTransactions,
   getMonthTotals,
 } from '@/lib/queries/transactions'
@@ -12,13 +13,15 @@ import { focusRing } from '@/lib/ui'
 import { TransactionRow } from '@/components/transaction-row'
 import { formatINR } from '@/lib/format'
 import { CardExpenses } from '@/components/card-expenses'
+import { ItemSpends } from '@/components/item-spends'
 
 export default async function HomePage() {
-  const [accounts, recent, month, cardExpenses] = await Promise.all([
+  const [accounts, recent, month, cardExpenses, itemSpends] = await Promise.all([
     getAccountBalances(),
     getRecentTransactions(5),
     getMonthTotals(),
     getCardExpenseSummary(),
+    getMonthExpenseTransactions(),
   ])
 
   const now = new Date()
@@ -36,8 +39,11 @@ export default async function HomePage() {
           <p className="eyebrow mb-1">{today}</p>
           <h1 className="text-[1.75rem] font-bold tracking-[-0.035em] text-[#1d1a24]">Your money</h1>
         </div>
-        <div className="flex h-10 w-10 items-center justify-center rounded-[15px] bg-[#1d1a24] text-[11px] font-bold tracking-[0.08em] text-white shadow-lg shadow-slate-900/15" aria-label="Razd">
-          R
+        <div className="flex items-center gap-2">
+          <ItemSpends transactions={itemSpends} compact />
+          <div className="flex h-10 w-10 items-center justify-center rounded-[15px] bg-[#1d1a24] text-[11px] font-bold tracking-[0.08em] text-white shadow-lg shadow-slate-900/15" aria-label="Razd profile">
+            R
+          </div>
         </div>
       </header>
 
