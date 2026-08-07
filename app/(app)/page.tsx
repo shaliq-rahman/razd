@@ -14,8 +14,15 @@ import { TransactionRow } from '@/components/transaction-row'
 import { formatINR } from '@/lib/format'
 import { CardExpenses } from '@/components/card-expenses'
 import { ItemSpends } from '@/components/item-spends'
+import { createServerSupabase } from '@/lib/supabase/server'
 
 export default async function HomePage() {
+  const supabase = await createServerSupabase()
+  const { data: { user } } = await supabase.auth.getUser()
+  const { data: profile } = user
+    ? await supabase.from('profiles').select('display_name').eq('id', user.id).maybeSingle()
+    : { data: null }
+
   const [accounts, recent, month, cardExpenses, itemSpends] = await Promise.all([
     getAccountBalances(),
     getRecentTransactions(5),
@@ -31,18 +38,26 @@ export default async function HomePage() {
     day: 'numeric',
     month: 'short',
   }).format(now)
+  const displayName = profile?.display_name?.trim() || user?.email?.split('@')[0] || 'there'
+  const profileInitial = displayName.charAt(0).toLocaleUpperCase('en-IN')
 
   return (
-    <div className="space-y-7">
-      <header className="flex items-end justify-between pt-1">
-        <div>
+    <div className="space-y-6">
+      <header className="relative flex items-end justify-between pt-1">
+        {/* Beautiful vector gradients behind the header */}
+        <div className="vector-blur bg-violet-400 w-48 h-48 rounded-full top-[-2rem] left-[-2rem]"></div>
+        <div className="vector-blur bg-cyan-400 w-40 h-40 rounded-full top-[-1rem] right-[20%]"></div>
+        
+        <div className="relative z-10">
           <p className="eyebrow mb-1">{today}</p>
-          <h1 className="text-[1.75rem] font-bold tracking-[-0.035em] text-[#1d1a24]">Your money</h1>
+          <h1 className="text-[1.75rem] font-bold tracking-[-0.04em] text-compact text-[#1d1a24]">
+            Hi, {displayName}
+          </h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 relative z-10">
           <ItemSpends transactions={itemSpends} compact />
-          <div className="flex h-10 w-10 items-center justify-center rounded-[15px] bg-[#1d1a24] text-[11px] font-bold tracking-[0.08em] text-white shadow-lg shadow-slate-900/15" aria-label="Razd profile">
-            R
+          <div className="flex h-10 w-10 items-center justify-center rounded-[15px] bg-[#1d1a24] text-sm font-bold text-white shadow-lg shadow-slate-900/15" aria-label={`${displayName} profile`}>
+            {profileInitial}
           </div>
         </div>
       </header>
@@ -65,8 +80,8 @@ export default async function HomePage() {
         <BalanceCard accounts={accounts} />
       )}
 
-      <section className="grid grid-cols-2 gap-3">
-        <div className="surface-card animate-rise rounded-[24px] px-4 py-4 [animation-delay:60ms]">
+      <section className="grid grid-cols-2 gap-3 relative">
+        <div className="surface-card compact-card animate-rise rounded-[24px] [animation-delay:60ms]">
           <p className="flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[#777281] uppercase">
             <span className="flex h-7 w-7 items-center justify-center rounded-[10px] bg-emerald-100 text-emerald-700">
               <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -75,11 +90,11 @@ export default async function HomePage() {
             </span>
             In · {monthName}
           </p>
-          <p className="mt-2 text-[17px] font-bold tracking-tight tabular-nums text-[#25212b]">
+          <p className="mt-1.5 text-[17px] font-bold tracking-tight text-compact tabular-nums text-[#25212b]">
             {formatINR(month.income)}
           </p>
         </div>
-        <div className="surface-card animate-rise rounded-[24px] px-4 py-4 [animation-delay:110ms]">
+        <div className="surface-card compact-card animate-rise rounded-[24px] [animation-delay:110ms]">
           <p className="flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[#777281] uppercase">
             <span className="flex h-7 w-7 items-center justify-center rounded-[10px] bg-rose-100 text-rose-700">
               <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -88,7 +103,7 @@ export default async function HomePage() {
             </span>
             Out · {monthName}
           </p>
-          <p className="mt-2 text-[17px] font-bold tracking-tight tabular-nums text-[#25212b]">
+          <p className="mt-1.5 text-[17px] font-bold tracking-tight text-compact tabular-nums text-[#25212b]">
             {formatINR(month.expense)}
           </p>
         </div>

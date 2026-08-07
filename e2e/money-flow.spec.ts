@@ -99,11 +99,13 @@ test('every bottom-nav tab reaches its screen', async ({ page }) => {
     ['Add', 'Add transaction'],
     ['Bills', 'Recurring payments'],
     ['Profile', 'Profile'],
-    ['Home', 'Your money'],
   ] as const) {
     await page.getByRole('link', { name: tab, exact: true }).click()
     await expect(page.getByRole('heading', { name: heading, level: 1 })).toBeVisible()
   }
+
+  await page.getByRole('link', { name: 'Home', exact: true }).click()
+  await expect(page.getByRole('heading', { name: /^Hi,/, level: 1 })).toBeVisible()
 })
 
 test('deleting an account removes its balance from the total', async ({ page }) => {

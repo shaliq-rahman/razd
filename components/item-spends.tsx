@@ -25,9 +25,9 @@ export function ItemSpends({
           type="button"
           onClick={() => setOpen(true)}
           aria-label={`Item spends: ${transactions.length} expenses, ${formatINR(total)}`}
-          className={`surface-card flex h-10 w-10 cursor-pointer items-center justify-center rounded-[15px] text-amber-700 transition hover:-translate-y-0.5 active:scale-90 ${focusRing}`}
+          className={`surface-card flex h-9 w-9 cursor-pointer items-center justify-center rounded-[13px] text-amber-700 transition hover:-translate-y-0.5 active:scale-90 ${focusRing}`}
         >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M5 3v18l2-1.5L9 21l2-1.5L13 21l2-1.5L17 21l2-1.5V3l-2 1.5L15 3l-2 1.5L11 3 9 4.5 7 3 5 4.5Z" />
             <path d="M9 9h6M9 13h4" />
           </svg>
