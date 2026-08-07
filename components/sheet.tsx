@@ -34,11 +34,13 @@ export function Sheet({
         onClick={onClose}
         className="animate-scrim-in absolute inset-0 bg-slate-900/25 backdrop-blur-[2px]"
       />
+      {/* Opaque, not translucent: the bottom nav sits behind the sheet and would
+          otherwise read through the panel. */}
       <div
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="animate-sheet-in relative w-full max-w-[480px] rounded-t-[28px] border-t border-white/80 bg-white/95 px-5 pt-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-[0_-20px_60px_-20px_rgba(30,41,59,0.45)] backdrop-blur-2xl"
+        className="animate-sheet-in relative w-full max-w-[480px] rounded-t-[28px] border-t border-white/80 bg-white px-5 pt-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-[0_-20px_60px_-20px_rgba(30,41,59,0.45)]"
       >
         <div className="mx-auto mb-4 h-1.5 w-11 rounded-full bg-slate-300" />
         <h2 className="mb-4 text-lg font-bold text-slate-900">{title}</h2>

@@ -1,0 +1,60 @@
+import 'server-only'
+import { createServerSupabase } from '@/lib/supabase/server'
+import { sumAmounts } from '@/lib/money'
+import type { TransactionWithRefs } from '@/lib/types'
+
+const WITH_REFS = '*, accounts(name, color), categories(name, icon)'
+
+function normalise(rows: unknown[]): TransactionWithRefs[] {
+  return (rows as TransactionWithRefs[]).map((t) => ({ ...t, amount: Number(t.amount) }))
+}
+
+/** Most recent transactions, newest first, with account and category display fields. */
+export async function getRecentTransactions(limit = 5): Promise<TransactionWithRefs[]> {
+  const supabase = await createServerSupabase()
+  const { data, error } = await supabase
+    .from('transactions')
+    .select(WITH_REFS)
+    .order('occurred_at', { ascending: false })
+    .order('created_at', { ascending: false })
+    .limit(limit)
+
+  if (error) throw new Error(`Failed to load transactions: ${error.message}`)
+  return normalise(data ?? [])
+}
+
+/** Every transaction, newest first, capped so one query cannot grow unbounded. */
+export async function getAllTransactions(limit = 500): Promise<TransactionWithRefs[]> {
+  const supabase = await createServerSupabase()
+  const { data, error } = await supabase
+    .from('transactions')
+    .select(WITH_REFS)
+    .order('occurred_at', { ascending: false })
+    .order('created_at', { ascending: false })
+    .limit(limit)
+
+  if (error) throw new Error(`Failed to load transactions: ${error.message}`)
+  return normalise(data ?? [])
+}
+
+/** First day of the month containing `date`, as YYYY-MM-DD. */
+export function monthStart(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-01`
+}
+
+/** Income and expense totals for the current calendar month. */
+export async function getMonthTotals(): Promise<{ income: number; expense: number }> {
+  const supabase = await createServerSupabase()
+  const { data, error } = await supabase
+    .from('transactions')
+    .select('amount, kind')
+    .gte('occurred_at', monthStart(new Date()))
+
+  if (error) throw new Error(`Failed to load month totals: ${error.message}`)
+
+  const rows = data ?? []
+  return {
+    income: sumAmounts(rows.filter((r) => r.kind === 'income').map((r) => Number(r.amount))),
+    expense: sumAmounts(rows.filter((r) => r.kind === 'expense').map((r) => Number(r.amount))),
+  }
+}
