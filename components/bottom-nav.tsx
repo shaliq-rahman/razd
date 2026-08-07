@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { focusRing } from '@/lib/ui'
 
 const TABS = [
   {
@@ -37,7 +38,7 @@ export function BottomNav() {
       aria-label="Primary"
       className="glass-nav fixed bottom-0 left-1/2 z-30 w-full max-w-[480px] -translate-x-1/2 border-t border-white/60 pb-[env(safe-area-inset-bottom)] sm:absolute sm:left-0 sm:translate-x-0 sm:rounded-b-[36px]"
     >
-      <ul className="flex items-end justify-around px-2 pt-2 pb-1">
+      <ul className="flex items-end justify-around gap-1 px-2 pt-1.5 pb-1">
         {TABS.map((tab) => {
           const active = isActive(pathname, tab.href)
 
@@ -47,21 +48,19 @@ export function BottomNav() {
                 <Link
                   href={tab.href}
                   aria-current={active ? 'page' : undefined}
-                  className="flex flex-col items-center"
+                  className={`flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 text-white shadow-lg shadow-indigo-500/40 transition active:scale-95 ${focusRing}`}
                 >
-                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 text-white shadow-lg shadow-indigo-500/40 transition active:scale-95">
-                    <svg
-                      viewBox="0 0 24 24"
-                      className="h-7 w-7"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      aria-hidden="true"
-                    >
-                      <path d={tab.icon} />
-                    </svg>
-                  </span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-7 w-7"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    aria-hidden="true"
+                  >
+                    <path d={tab.icon} />
+                  </svg>
                   <span className="sr-only">Add</span>
                 </Link>
               </li>
@@ -73,23 +72,27 @@ export function BottomNav() {
               <Link
                 href={tab.href}
                 aria-current={active ? 'page' : undefined}
-                className={`flex w-16 flex-col items-center gap-1 rounded-xl py-1.5 transition ${
-                  active ? 'text-indigo-600' : 'text-slate-400'
-                }`}
+                // min-h-[44px] keeps the tap area at the platform minimum even
+                // though the icon and label are smaller than that.
+                className={`flex min-h-[44px] w-16 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-xl transition ${
+                  active ? 'text-indigo-700' : 'text-slate-600'
+                } ${focusRing}`}
               >
                 <svg
                   viewBox="0 0 24 24"
                   className="h-6 w-6"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="1.9"
+                  strokeWidth="1.75"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   aria-hidden="true"
                 >
                   <path d={tab.icon} />
                 </svg>
-                <span className="text-[10px] font-medium tracking-wide">{tab.label}</span>
+                <span className={`text-[11px] tracking-wide ${active ? 'font-semibold' : 'font-medium'}`}>
+                  {tab.label}
+                </span>
               </Link>
             </li>
           )

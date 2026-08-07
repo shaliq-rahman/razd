@@ -3,10 +3,13 @@
 import { useActionState, useState } from 'react'
 import { SubmitButton } from '@/components/submit-button'
 import { createTransaction, type ActionState } from './actions'
+import { focusRing } from '@/lib/ui'
 import type { Category, TxKind } from '@/lib/types'
 
 const field =
-  'w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100'
+  'w-full min-h-[48px] rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100'
+
+const labelClass = 'mb-1.5 block text-xs font-semibold text-slate-600'
 
 /** Today as YYYY-MM-DD in local time — toISOString() would shift the date in IST. */
 function todayIso() {
@@ -46,9 +49,9 @@ export function AddForm({
               setKind(k)
               setCategoryId('')
             }}
-            className={`rounded-xl py-2.5 text-sm font-semibold capitalize transition ${
-              kind === k ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'
-            }`}
+            className={`min-h-[44px] cursor-pointer rounded-xl text-sm font-semibold capitalize transition ${
+              kind === k ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'
+            } ${focusRing}`}
           >
             {k}
           </button>
@@ -56,11 +59,11 @@ export function AddForm({
       </div>
 
       <div className="glass rounded-3xl px-5 py-6 text-center">
-        <label htmlFor="amount" className="text-xs font-medium text-slate-500">
+        <label htmlFor="amount" className="text-xs font-semibold text-slate-600">
           Amount
         </label>
         <div className="mt-1 flex items-center justify-center gap-1">
-          <span className="text-2xl font-bold text-slate-400">₹</span>
+          <span className="text-2xl font-bold text-slate-600" aria-hidden="true">₹</span>
           <input
             id="amount"
             name="amount"
@@ -71,27 +74,27 @@ export function AddForm({
             placeholder="0.00"
             required
             autoFocus
-            className="w-full max-w-[220px] bg-transparent text-center text-4xl font-bold tabular-nums text-slate-900 outline-none placeholder:text-slate-300"
+            className="min-h-[44px] w-full max-w-[220px] bg-transparent text-center text-4xl font-bold tabular-nums text-slate-900 outline-none placeholder:text-slate-500"
           />
         </div>
       </div>
 
       <div className="space-y-2">
-        <p className="text-xs font-medium text-slate-500">Category</p>
-        <div className="flex flex-wrap gap-2">
+        <p id="category-label" className={labelClass}>Category</p>
+        <div className="flex flex-wrap gap-2" role="group" aria-labelledby="category-label">
           {visible.map((c) => (
             <button
               key={c.id}
               type="button"
               aria-pressed={categoryId === c.id}
               onClick={() => setCategoryId(c.id)}
-              className={`rounded-full border px-3.5 py-2 text-sm transition ${
+              className={`min-h-[44px] cursor-pointer rounded-full border px-4 text-sm transition ${
                 categoryId === c.id
-                  ? 'border-indigo-500 bg-indigo-50 font-semibold text-indigo-700'
-                  : 'border-slate-200 bg-white text-slate-600'
-              }`}
+                  ? 'border-indigo-600 bg-indigo-50 font-semibold text-indigo-800'
+                  : 'border-slate-300 bg-white text-slate-700'
+              } ${focusRing}`}
             >
-              <span className="mr-1">{c.icon}</span>
+              <span className="mr-1" aria-hidden="true">{c.icon}</span>
               {c.name}
             </button>
           ))}
@@ -99,7 +102,7 @@ export function AddForm({
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="account_id" className="text-xs font-medium text-slate-500">
+        <label htmlFor="account_id" className={labelClass}>
           Account
         </label>
         <select
@@ -118,7 +121,7 @@ export function AddForm({
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="occurred_at" className="text-xs font-medium text-slate-500">
+        <label htmlFor="occurred_at" className={labelClass}>
           Date
         </label>
         <input
@@ -134,7 +137,7 @@ export function AddForm({
       <input name="note" className={field} placeholder="Note (optional)" maxLength={120} />
 
       {state.error && (
-        <p role="alert" className="rounded-xl bg-rose-50 px-4 py-2.5 text-sm text-rose-600">
+        <p role="alert" className="rounded-xl bg-rose-50 px-4 py-2.5 text-sm text-rose-700">
           {state.error}
         </p>
       )}

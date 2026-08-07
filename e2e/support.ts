@@ -90,12 +90,12 @@ export async function addAccount(
 ): Promise<void> {
   await page.goto('/accounts')
   await page
-    .getByRole('button', { name: /^\+ New$|Add your first account/ })
+    .getByRole('button', { name: /^New$|Add your first account/ })
     .first()
     .click()
-  await page.getByPlaceholder('Account name').fill(name)
+  await page.getByLabel('Account name').fill(name)
   await page.locator('select[name=type]').selectOption(type)
-  await page.getByLabel(/Opening balance/).fill(openingBalance)
+  await page.getByLabel('Opening balance').fill(openingBalance)
   await page.getByRole('button', { name: 'Add account' }).click()
   await page.getByRole('dialog').waitFor({ state: 'detached' })
 }

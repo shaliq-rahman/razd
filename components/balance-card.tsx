@@ -10,6 +10,7 @@ import {
   setHideAmounts,
 } from '@/lib/hide-amounts'
 import { AccountBreakdownSheet } from './account-breakdown-sheet'
+import { focusRing } from '@/lib/ui'
 import type { AccountBalance } from '@/lib/types'
 
 export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
@@ -20,16 +21,18 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
 
   return (
     <>
-      <section className="glass relative overflow-hidden rounded-[28px] px-6 py-7">
+      <section className="glass relative overflow-hidden rounded-[28px] px-6 pt-5 pb-5">
         <div className="pointer-events-none absolute -top-20 -right-16 h-52 w-52 rounded-full bg-gradient-to-br from-indigo-400/35 to-violet-400/25 blur-2xl" />
 
-        <div className="relative flex items-start justify-between">
-          <p className="text-sm font-medium text-slate-500">Total balance</p>
-          <div className="flex gap-1">
+        <div className="relative -mt-1.5 flex items-start justify-between">
+          <p className="mt-2.5 text-sm font-medium text-slate-600">Total balance</p>
+          {/* 44px tap targets with an 8px gap, per platform minimums. */}
+          <div className="-mr-2 flex gap-2">
             <button
               onClick={() => setHideAmounts(!hidden)}
               aria-label={hidden ? 'Show amounts' : 'Hide amounts'}
-              className="rounded-full p-1.5 text-slate-400 transition active:scale-90"
+              aria-pressed={hidden}
+              className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-slate-600 transition hover:bg-white/70 active:scale-90 ${focusRing}`}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -47,7 +50,8 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
             <button
               onClick={() => setOpen(true)}
               aria-label="Show balance by account"
-              className="rounded-full p-1.5 text-slate-400 transition active:scale-90"
+              aria-haspopup="dialog"
+              className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-slate-600 transition hover:bg-white/70 active:scale-90 ${focusRing}`}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -66,8 +70,8 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
 
         <p
           data-testid="total-balance"
-          className={`relative mt-2 font-bold tracking-tight tabular-nums ${
-            total < 0 ? 'text-rose-500' : 'text-slate-900'
+          className={`relative -mt-1 font-bold tracking-tight tabular-nums ${
+            total < 0 ? 'text-rose-700' : 'text-slate-900'
           } ${hidden ? 'text-3xl' : 'text-[clamp(1.9rem,9vw,2.6rem)]'}`}
         >
           {hidden ? '••••••' : formatINR(total)}
@@ -75,10 +79,22 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
 
         <button
           onClick={() => setOpen(true)}
-          className="relative mt-4 inline-flex items-center gap-1.5 rounded-full bg-white/70 px-3.5 py-1.5 text-xs font-medium text-slate-600 transition active:scale-95"
+          aria-haspopup="dialog"
+          className={`relative -mb-1 -ml-2 inline-flex min-h-[44px] cursor-pointer items-center gap-1 rounded-full px-2 text-xs font-medium text-slate-700 transition hover:bg-white/70 active:scale-95 ${focusRing}`}
         >
           Across {accounts.length} {accounts.length === 1 ? 'account' : 'accounts'}
-          <span aria-hidden>›</span>
+          <svg
+            viewBox="0 0 24 24"
+            className="h-3.5 w-3.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="m9 6 6 6-6 6" />
+          </svg>
         </button>
       </section>
 

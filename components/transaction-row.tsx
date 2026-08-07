@@ -19,14 +19,17 @@ export function TransactionRow({
 
   return (
     <li className="flex items-center gap-3 py-3.5">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-lg">
-        {t.categories?.icon ?? '📦'}
+      <span
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-lg"
+        aria-hidden="true"
+      >
+        {t.categories?.icon ?? '•'}
       </span>
       <span className="min-w-0 flex-1">
         <span className="block truncate font-medium text-slate-900">
           {t.note || t.categories?.name || 'Transaction'}
         </span>
-        <span className="block truncate text-xs text-slate-400">{meta}</span>
+        <span className="block truncate text-xs text-slate-600">{meta}</span>
       </span>
       <Amount value={t.amount} kind={t.kind} />
     </li>

@@ -110,7 +110,7 @@ test('deleting an account removes its balance from the total', async ({ page }) 
   await login(page, user)
   await page.goto('/accounts')
 
-  await page.getByText('Cash', { exact: true }).click()
+  await page.getByRole('button', { name: 'Edit Cash' }).click()
   await page.getByRole('button', { name: 'Delete account' }).click()
   await page.getByRole('button', { name: 'Delete', exact: true }).click()
   await page.getByRole('dialog').waitFor({ state: 'detached' })

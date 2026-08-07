@@ -3,6 +3,8 @@ import { getAccountBalances } from '@/lib/queries/balances'
 import { getRecentTransactions, getMonthTotals } from '@/lib/queries/transactions'
 import { BalanceCard } from '@/components/balance-card'
 import { EmptyState } from '@/components/empty-state'
+import { BankIcon, ReceiptIcon } from '@/components/icons'
+import { focusRing } from '@/lib/ui'
 import { TransactionRow } from '@/components/transaction-row'
 import { formatINR } from '@/lib/format'
 
@@ -24,19 +26,19 @@ export default async function HomePage() {
   return (
     <div className="space-y-6">
       <header>
-        <p className="text-sm text-slate-500">{today}</p>
+        <p className="text-sm text-slate-600">{today}</p>
         <h1 className="text-2xl font-bold tracking-tight text-slate-900">Your money</h1>
       </header>
 
       {accounts.length === 0 ? (
         <EmptyState
-          icon="🏦"
+          icon={<BankIcon className="h-7 w-7" />}
           title="No accounts yet"
           body="Add your first account to see your total balance here."
           action={
             <Link
               href="/accounts"
-              className="inline-block rounded-2xl bg-indigo-600 px-5 py-3 font-semibold text-white"
+              className={`inline-flex min-h-[48px] items-center rounded-2xl bg-indigo-600 px-5 font-semibold text-white transition active:scale-95 ${focusRing}`}
             >
               Add an account
             </Link>
@@ -48,14 +50,14 @@ export default async function HomePage() {
 
       <section className="grid grid-cols-2 gap-3">
         <div className="glass rounded-3xl px-4 py-4">
-          <p className="text-xs font-medium text-slate-500">In · {monthName}</p>
-          <p className="mt-1 text-lg font-bold tabular-nums text-emerald-600">
+          <p className="text-xs font-medium text-slate-600">In · {monthName}</p>
+          <p className="mt-1 text-lg font-bold tabular-nums text-emerald-700">
             {formatINR(month.income)}
           </p>
         </div>
         <div className="glass rounded-3xl px-4 py-4">
-          <p className="text-xs font-medium text-slate-500">Out · {monthName}</p>
-          <p className="mt-1 text-lg font-bold tabular-nums text-rose-500">
+          <p className="text-xs font-medium text-slate-600">Out · {monthName}</p>
+          <p className="mt-1 text-lg font-bold tabular-nums text-rose-700">
             {formatINR(month.expense)}
           </p>
         </div>
@@ -65,7 +67,7 @@ export default async function HomePage() {
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-semibold text-slate-900">Recent</h2>
           {recent.length > 0 && (
-            <Link href="/transactions" className="text-sm font-medium text-indigo-600">
+            <Link href="/transactions" className={`-mr-2 inline-flex min-h-[44px] items-center rounded-xl px-2 text-sm font-semibold text-indigo-700 ${focusRing}`}>
               See all
             </Link>
           )}
@@ -73,7 +75,7 @@ export default async function HomePage() {
 
         {recent.length === 0 ? (
           <EmptyState
-            icon="🧾"
+            icon={<ReceiptIcon className="h-7 w-7" />}
             title="Nothing logged yet"
             body="Tap the + button to add your first transaction."
           />
