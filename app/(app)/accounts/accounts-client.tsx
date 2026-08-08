@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { formatINR } from '@/lib/format'
-import { cardAlertClass } from '@/lib/card-alert'
+import { cardAlertClass, isMinimumDueCovered } from '@/lib/card-alert'
 import { dueAlertClass } from '@/lib/due-alert'
 import { occurrenceInMonth } from '@/lib/recurring'
 import { sumAmounts } from '@/lib/money'
@@ -14,6 +14,7 @@ import { WalletScene } from '@/components/illustrations'
 import { TransactionRow } from '@/components/transaction-row'
 import { AccountFormSheet } from './account-form-sheet'
 import { CardPaymentSheet } from './card-payment-sheet'
+import { setCardMinimumDuePaid } from './actions'
 import type { AccountBalance, AccountMonthActivity, CardPortfolioItem } from '@/lib/types'
 
 /**
@@ -95,10 +96,24 @@ export function AccountsClient({
   const cardLimit = selected?.card_limit ?? selectedCard?.opening_balance ?? 0
   const utilized = selectedCard?.utilized ?? 0
   const today = localToday()
+  const currentMonth = `${today.slice(0, 7)}-01`
+  const selectedMinimumPaid = isMinimumDueCovered(
+    selected?.minimum_due_paid_month,
+    selected?.due_day,
+    today
+  )
   const selectedDueDate = selected?.due_day
     ? occurrenceInMonth(selected.due_day, today)
     : null
   const totalCardPending = sumAmounts(cards.map((card) => card.utilized))
+  const alertableCardPending = sumAmounts(
+    cards
+      .filter(
+        (card) =>
+          !isMinimumDueCovered(card.minimum_due_paid_month, card.due_day, today)
+      )
+      .map((card) => card.utilized)
+  )
   const utilization = cardLimit > 0 ? Math.min(100, (utilized / cardLimit) * 100) : 0
   const selectedTransactions = monthActivity[selected?.id] ?? []
 
@@ -255,7 +270,7 @@ export function AccountsClient({
             {view === 'card' && (
               <p className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/45 px-3 py-1 text-[10px] font-bold tracking-[0.1em] text-[color:var(--text-muted)] uppercase">
                 Total pending
-                <span className={`text-xs tracking-normal tabular-nums ${cardAlertClass(totalCardPending) || 'text-[#29242f]'}`}>
+                <span className={`text-xs tracking-normal tabular-nums ${cardAlertClass(alertableCardPending) || 'text-[#29242f]'}`}>
                   {formatINR(totalCardPending)}
                 </span>
               </p>
@@ -267,17 +282,23 @@ export function AccountsClient({
             <p className="mt-1 text-sm text-[color:var(--text-muted)]">
               {selected.type === 'card' ? (
                 <>
-                  <span className={cardAlertClass(utilized)}>{formatINR(utilized)} used</span>
+                  <span className={selectedMinimumPaid ? '' : cardAlertClass(utilized)}>{formatINR(utilized)} used</span>
                   {' · '}{Math.round(utilization)}% utilized · {formatINR(Math.max(0, cardLimit - utilized))} available
                 </>
               ) : (
                 `${accountTypeLabel(selected.type)} · ${selected.name}`
               )}
             </p>
-            {selected.type === 'card' && selectedDueDate && utilized > 0 && (
-              <p className={`mx-auto mt-2 text-xs ${dueAlertClass(selectedDueDate, today) || 'text-[color:var(--text-muted)]'}`}>
-                {selectedDueDate < today ? 'Payment overdue' : 'Payment due'} · {formatDueDate(selectedDueDate)}
-              </p>
+            {selected.type === 'card' && utilized > 0 && (
+              selectedMinimumPaid ? (
+                <p className="mx-auto mt-2 inline-flex rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-700">
+                  Minimum due paid for this month
+                </p>
+              ) : selectedDueDate ? (
+                <p className={`mx-auto mt-2 text-xs ${dueAlertClass(selectedDueDate, today) || 'text-[color:var(--text-muted)]'}`}>
+                  {selectedDueDate < today ? 'Payment overdue' : 'Payment due'} · {formatDueDate(selectedDueDate)}
+                </p>
+              ) : null
             )}
           </div>
 
@@ -293,6 +314,11 @@ export function AccountsClient({
                   ? occurrenceInMonth(account.due_day, today)
                   : null
                 const cardPending = card?.utilized ?? 0
+                const minimumPaid = isMinimumDueCovered(
+                  account.minimum_due_paid_month,
+                  account.due_day,
+                  today
+                )
 
                 return (
                   <li
@@ -309,7 +335,7 @@ export function AccountsClient({
                       onClick={() => selectAccount(account.id)}
                       aria-label={`Select ${account.name}`}
                       aria-pressed={active}
-                      className={`press relative h-[212px] w-full cursor-pointer overflow-hidden rounded-[13px] border border-white/25 p-5 text-left text-white transition-all duration-500 ${active ? 'ring-2 ring-white/70' : ''} ${focusRing}`}
+                      className={`press relative h-[212px] w-full cursor-pointer overflow-hidden rounded-[36px] border border-white/25 p-5 text-left text-white transition-all duration-500 ${active ? 'ring-2 ring-white/70' : ''} ${focusRing}`}
                       style={{
                         background: `radial-gradient(110% 100% at ${index % 2 === 0 ? '0% 0%' : '100% 0%'}, rgba(255,255,255,.72) 0%, transparent 58%), linear-gradient(${125 + (index % 4) * 12}deg, ${gradientFrom}, ${gradientTo})`,
                         boxShadow: active
@@ -332,19 +358,24 @@ export function AccountsClient({
                             </span>
                             <span className="mt-2 block max-w-[13rem] truncate text-xl font-black tracking-[-0.03em] uppercase">{account.name}</span>
                             {isCard && (
-                              <span className="mt-1 block text-[10px] font-semibold text-white/75">
-                                Limit {formatINR(account.card_limit ?? 0)}
+                              <span className="mt-1 flex items-center gap-2 text-[10px] font-semibold text-white/75">
+                                <span>Limit {formatINR(account.card_limit ?? 0)}</span>
+                                {minimumPaid && (
+                                  <span className="rounded-full bg-emerald-300/90 px-2 py-0.5 font-black text-emerald-950">
+                                    Minimum paid
+                                  </span>
+                                )}
                               </span>
                             )}
                           </span>
-                          <span className="flex h-11 w-11 items-center justify-center rounded-[13px] bg-white/20 text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.4)] backdrop-blur-sm">
+                          <span className="flex h-11 w-11 items-center justify-center rounded-[18px] bg-white/20 text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.4)] backdrop-blur-sm">
                             <AccountTypeIcon type={account.type} className="h-5 w-5" />
                           </span>
                         </span>
 
                         <span
                           aria-hidden="true"
-                          className="flex h-7 w-10 items-center justify-center rounded-[7px] bg-gradient-to-br from-amber-200/90 to-amber-400/80 shadow-[inset_0_0_0_1px_rgba(255,255,255,.35)]"
+                          className="flex h-7 w-10 items-center justify-center rounded-[10px] bg-gradient-to-br from-amber-200/90 to-amber-400/80 shadow-[inset_0_0_0_1px_rgba(255,255,255,.35)]"
                         >
                           <svg viewBox="0 0 24 16" className="h-3.5 w-5" fill="none" stroke="rgba(120,80,10,.55)" strokeWidth="1.2">
                             <rect x="0.6" y="0.6" width="22.8" height="14.8" rx="2.4" />
@@ -357,7 +388,7 @@ export function AccountsClient({
                             <span className="block text-[10px] font-semibold tracking-[0.12em] text-white uppercase">
                               {isCard ? 'Pending payment' : 'Balance'}
                             </span>
-                            <span className={`mt-1 text-lg font-bold tabular-nums ${isCard ? cardAlertClass(card?.utilized ?? 0) || 'text-white' : 'block text-white'}`}>
+                            <span className={`mt-1 text-lg font-bold tabular-nums ${isCard && !minimumPaid ? cardAlertClass(card?.utilized ?? 0) || 'text-white' : 'block text-white'}`}>
                               {formatINR(isCard ? (card?.utilized ?? 0) : account.balance)}
                             </span>
                           </span>
@@ -366,7 +397,7 @@ export function AccountsClient({
                               {isCard ? (cardDueDate && cardDueDate < today ? 'Past due' : 'Due date') : 'Opening'}
                             </span>
                             <span className={`mt-1 text-lg font-bold tabular-nums ${
-                              isCard && cardDueDate && cardPending > 0
+                              isCard && !minimumPaid && cardDueDate && cardPending > 0
                                 ? dueAlertClass(cardDueDate, today) || 'block text-white'
                                 : 'block text-white'
                             }`}>
@@ -399,17 +430,35 @@ export function AccountsClient({
                 </h2>
               </div>
               {selected.type === 'card' ? (
-                <button
-                  type="button"
-                  onClick={() => setPaymentCard({ card: selected, utilized })}
-                  disabled={utilized <= 0}
-                  className={`inline-flex min-h-[38px] cursor-pointer items-center gap-1.5 rounded-full bg-violet-600 px-3.5 text-xs font-bold text-white shadow-[0_8px_18px_-10px_rgba(91,47,224,0.7)] transition hover:bg-violet-700 active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none ${focusRing}`}
-                >
-                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
-                    <path d="M12 5v14M5 12h14" />
-                  </svg>
-                  Add payment
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <form action={setCardMinimumDuePaid}>
+                    <input type="hidden" name="id" value={selected.id} />
+                    <input type="hidden" name="month" value={currentMonth} />
+                    <input type="hidden" name="paid" value={selectedMinimumPaid ? 'false' : 'true'} />
+                    <button
+                      type="submit"
+                      disabled={utilized <= 0}
+                      className={`inline-flex min-h-[38px] cursor-pointer items-center rounded-full px-3 text-[11px] font-bold transition active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 ${
+                        selectedMinimumPaid
+                          ? 'bg-emerald-100 text-emerald-700'
+                          : 'bg-white/75 text-violet-700 shadow-sm'
+                      } ${focusRing}`}
+                    >
+                      {selectedMinimumPaid ? 'Minimum paid ✓' : 'Mark minimum paid'}
+                    </button>
+                  </form>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentCard({ card: selected, utilized })}
+                    disabled={utilized <= 0}
+                    className={`inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-full bg-violet-600 px-3 text-[11px] font-bold text-white shadow-[0_8px_18px_-10px_rgba(91,47,224,0.7)] transition hover:bg-violet-700 active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none ${focusRing}`}
+                  >
+                    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
+                    Payment
+                  </button>
+                </div>
               ) : (
                 <span className="rounded-full bg-white/65 px-3 py-1.5 text-xs font-semibold text-[color:var(--text-muted)] shadow-sm">
                   {selectedTransactions.length} {selectedTransactions.length === 1 ? 'transaction' : 'transactions'}

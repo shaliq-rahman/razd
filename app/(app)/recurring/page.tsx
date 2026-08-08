@@ -21,7 +21,13 @@ export default async function RecurringPage() {
     <RecurringClient
       payments={payments}
       accounts={accounts.map((a) => ({ id: a.id, name: a.name, type: a.type }))}
-      cards={cards.map((c) => ({ id: c.id, name: c.name, outstanding: c.utilized }))}
+      cards={cards.map((c) => ({
+        id: c.id,
+        name: c.name,
+        outstanding: c.utilized,
+        dueDay: c.due_day,
+        minimumDuePaidMonth: c.minimum_due_paid_month,
+      }))}
       today={localDate()}
     />
   )

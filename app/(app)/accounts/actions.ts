@@ -126,3 +126,26 @@ export async function addCardPayment(
   revalidateMoney()
   return { ok: true }
 }
+
+export async function setCardMinimumDuePaid(formData: FormData): Promise<void> {
+  const id = String(formData.get('id') ?? '')
+  const month = String(formData.get('month') ?? '')
+  const paid = formData.get('paid') === 'true'
+  if (!id || !/^\d{4}-\d{2}-01$/.test(month)) return
+
+  const supabase = await createServerSupabase()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return
+
+  await supabase
+    .from('accounts')
+    .update({ minimum_due_paid_month: paid ? month : null })
+    .eq('id', id)
+    .eq('user_id', user.id)
+    .eq('type', 'card')
+
+  revalidateMoney()
+  revalidatePath('/recurring')
+}

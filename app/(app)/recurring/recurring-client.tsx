@@ -5,7 +5,7 @@ import { formatINR } from '@/lib/format'
 import { sumAmounts } from '@/lib/money'
 import { focusRing } from '@/lib/ui'
 import { describeDueDay, paymentTiming } from '@/lib/recurring'
-import { cardAlertClass } from '@/lib/card-alert'
+import { cardAlertClass, isMinimumDueCovered } from '@/lib/card-alert'
 import { dueAlertClass } from '@/lib/due-alert'
 import { Sheet } from '@/components/sheet'
 import { EmptyState } from '@/components/empty-state'
@@ -23,7 +23,13 @@ const field =
   'ios-field min-h-[52px] w-full rounded-[13px] px-4 py-3 text-base text-[#24202a] outline-none transition focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
 
 type AccountOption = { id: string; name: string; type: string }
-type CardSummary = { id: string; name: string; outstanding: number }
+type CardSummary = {
+  id: string
+  name: string
+  outstanding: number
+  dueDay: number | null
+  minimumDuePaidMonth: string | null
+}
 
 function formatShortDate(iso: string) {
   const [y, m, d] = iso.split('-').map(Number)
@@ -133,17 +139,36 @@ export function RecurringClient({
         <section>
           <h2 className="eyebrow mb-2">Card outstanding</h2>
           <ul className="grid grid-cols-2 gap-2">
-            {cards.map((card) => (
-              <li key={card.id} className="surface-card rounded-[13px] px-3 py-2.5">
-                <p className="truncate text-xs text-[color:var(--text-muted)]">{card.name}</p>
-                <p
-                  data-testid={`card-outstanding-${card.id}`}
-                  className={`mt-1 font-bold tabular-nums ${cardAlertClass(card.outstanding) || 'text-[#29242f]'}`}
-                >
-                  {formatINR(card.outstanding)}
-                </p>
-              </li>
-            ))}
+            {cards.map((card) => {
+              const minimumPaid = isMinimumDueCovered(
+                card.minimumDuePaidMonth,
+                card.dueDay,
+                today
+              )
+
+              return (
+                <li key={card.id} className="surface-card rounded-[20px] px-3 py-2.5">
+                  <p className="truncate text-xs text-[color:var(--text-muted)]">{card.name}</p>
+                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                    <p
+                      data-testid={`card-outstanding-${card.id}`}
+                      className={`font-bold tabular-nums ${
+                        minimumPaid
+                          ? 'text-[#29242f]'
+                          : cardAlertClass(card.outstanding) || 'text-[#29242f]'
+                      }`}
+                    >
+                      {formatINR(card.outstanding)}
+                    </p>
+                    {minimumPaid && (
+                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold text-emerald-700">
+                        Minimum paid
+                      </span>
+                    )}
+                  </div>
+                </li>
+              )
+            })}
           </ul>
         </section>
       )}

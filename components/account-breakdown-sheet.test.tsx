@@ -11,6 +11,7 @@ const acct = (name: string, balance: number): AccountBalance => ({
   opening_balance: 0,
   card_limit: null,
   due_day: null,
+  minimum_due_paid_month: null,
   color: '#5B8DEF',
   is_archived: false,
   created_at: '',

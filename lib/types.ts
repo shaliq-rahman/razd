@@ -19,6 +19,7 @@ export type Account = {
   created_at: string
   card_limit: number | null
   due_day: number | null
+  minimum_due_paid_month: string | null
 }
 
 /** An account row plus its derived balance, from the account_balances view. */

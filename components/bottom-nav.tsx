@@ -35,7 +35,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="glass-nav fixed right-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-3 z-30 mx-auto max-w-[448px] rounded-[13px] sm:absolute sm:right-4 sm:bottom-4 sm:left-4"
+      className="glass-nav fixed right-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-3 z-30 mx-auto max-w-[448px] rounded-[34px] sm:absolute sm:right-4 sm:bottom-4 sm:left-4"
     >
       <ul className="flex h-[70px] items-center justify-around gap-1 px-2 py-1.5">
         {TABS.map((tab) => {
@@ -47,7 +47,7 @@ export function BottomNav() {
                 <Link
                   href={tab.href}
                   aria-current={active ? 'page' : undefined}
-                  className={`group relative flex h-[54px] w-[54px] cursor-pointer items-center justify-center rounded-[21px] bg-[#1d1a24] text-white ring-1 ring-white/20 transition-all duration-300 ease-out hover:-translate-y-0.5 active:scale-90 ${focusRing}`}
+                  className={`group relative flex h-[54px] w-[54px] cursor-pointer items-center justify-center rounded-[26px] bg-[#1d1a24] text-white ring-1 ring-white/20 transition-all duration-300 ease-out hover:-translate-y-0.5 active:scale-90 ${focusRing}`}
                   style={{
                     boxShadow: '0 10px 22px -10px rgba(29,26,36,0.75)',
                   }}
@@ -55,7 +55,7 @@ export function BottomNav() {
                   {/* Light catching the top of the sphere. */}
                   <span
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-px rounded-[12px] bg-gradient-to-b from-white/16 to-transparent"
+                    className="pointer-events-none absolute inset-px rounded-[25px] bg-gradient-to-b from-white/16 to-transparent"
                   />
                   <svg
                     viewBox="0 0 24 24"
@@ -81,14 +81,14 @@ export function BottomNav() {
                 aria-current={active ? 'page' : undefined}
                 // min-h-[44px] keeps the tap area at the platform minimum even
                 // though the icon and label are smaller than that.
-                className={`relative flex min-h-[52px] w-16 cursor-pointer flex-col items-center justify-center gap-1 rounded-[12px] transition-all duration-300 ${
+                className={`relative flex min-h-[52px] w-16 cursor-pointer flex-col items-center justify-center gap-1 rounded-[24px] transition-all duration-300 ${
                   active ? 'text-[#201d28]' : 'text-[color:var(--text-muted)] hover:text-[#302c38]'
                 } ${focusRing}`}
               >
                 {/* Soft pill behind the active tab, the way iOS marks selection. */}
                 <span
                   aria-hidden="true"
-                  className={`absolute inset-x-1 inset-y-0 -z-10 rounded-[13px] bg-white/76 shadow-[inset_0_0_0_0.5px_rgba(255,255,255,0.9),0_4px_12px_-8px_rgba(28,24,38,0.35)] transition-all duration-300 ease-out ${
+                  className={`absolute inset-x-1 inset-y-0 -z-10 rounded-[24px] bg-white/76 shadow-[inset_0_0_0_0.5px_rgba(255,255,255,0.9),0_4px_12px_-8px_rgba(28,24,38,0.35)] transition-all duration-300 ease-out ${
                     active ? 'scale-100 opacity-100' : 'scale-75 opacity-0'
                   }`}
                 />
