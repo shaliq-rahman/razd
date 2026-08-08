@@ -42,6 +42,26 @@ export const transactionSchema = z.object({
   occurred_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Choose a date'),
 })
 
+export const transactionPurposeSchema = z.object({
+  payment_type: z.enum(['regular', 'recurring', 'card_payment']),
+  target_id: z
+    .union([z.uuid(), z.literal('')])
+    .transform((value) => (value ? value : null)),
+})
+
+export const transactionEditSchema = z.object({
+  id: z.uuid('Transaction not found'),
+  amount: z.coerce.number('Enter a valid amount').positive('Enter an amount greater than zero'),
+  occurred_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Choose a date'),
+  note: z.string().trim().max(120, 'Note must be 120 characters or less'),
+})
+
+export const cardPaymentSchema = z.object({
+  account_id: z.uuid('Choose a card'),
+  amount: z.coerce.number('Enter a valid amount').positive('Enter an amount greater than zero'),
+  occurred_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Choose a date'),
+})
+
 export const profileSchema = z.object({
   display_name: z.string().trim().min(1, 'Name is required').max(50),
 })

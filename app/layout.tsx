@@ -1,17 +1,20 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist, Plus_Jakarta_Sans } from 'next/font/google'
+import { Geist, Poppins } from 'next/font/google'
 import './globals.css'
 
 /**
- * Two faces, each doing one job. Plus Jakarta Sans is the display voice —
- * geometric and a little characterful, which is what makes the product feel
- * designed rather than defaulted. Geist carries body copy and every figure,
- * because its tabular numerals keep currency columns from shifting.
+ * Poppins is the voice of the product — geometric, round, friendly, and the
+ * face you asked for. It carries every heading, label and line of body copy.
+ *
+ * Geist stays for one job only: figures. Poppins has no tabular numerals, so
+ * currency set in it visibly jitters as digits change (a 1 is far narrower
+ * than a 4). Amounts therefore render in Geist's tabular figures via the
+ * .tabular-nums rule below, which keeps columns of rupees locked in place.
  */
-const jakarta = Plus_Jakarta_Sans({
+const poppins = Poppins({
   variable: '--font-display',
   subsets: ['latin'],
-  weight: ['500', '600', '700', '800'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
 })
 
@@ -41,9 +44,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${jakarta.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${poppins.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col font-sans">{children}</body>
+      <body className="flex min-h-full flex-col">{children}</body>
     </html>
   )
 }

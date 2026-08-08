@@ -23,7 +23,7 @@ export function AccountBreakdownSheet({
     <Sheet open={open} onClose={onClose} title="Balance by account">
       <ul className="space-y-1">
         {accounts.map((a) => (
-          <li key={a.id} className="flex items-center gap-3 rounded-2xl px-1 py-3">
+          <li key={a.id} className="flex items-center gap-3 rounded-[14px] px-1 py-3">
             <span
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
               style={{ background: `${a.color}1F`, color: a.color }}

@@ -47,6 +47,7 @@ export async function getMonthlySpend(monthIso: string): Promise<CategorySpend[]
     .from('transactions')
     .select('amount, categories(name, icon)')
     .eq('kind', 'expense')
+    .or('note.is.null,note.not.like.Card payment:%')
     .gte('occurred_at', monthIso)
     .lt('occurred_at', nextMonthStart(monthIso))
 

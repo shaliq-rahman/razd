@@ -8,11 +8,13 @@ export function Sheet({
   open,
   onClose,
   title,
+  scrollable = true,
   children,
 }: {
   open: boolean
   onClose: () => void
   title: string
+  scrollable?: boolean
   children: React.ReactNode
 }) {
   const panelRef = useRef<HTMLDivElement>(null)
@@ -98,7 +100,9 @@ export function Sheet({
             </svg>
           </button>
         </div>
-        <div className="max-h-[70dvh] overflow-y-auto">{children}</div>
+        <div className={scrollable ? 'max-h-[70dvh] overflow-y-auto' : 'overflow-visible'}>
+          {children}
+        </div>
       </div>
     </div>
   )

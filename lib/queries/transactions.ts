@@ -48,6 +48,7 @@ export async function getMonthTotals(): Promise<{ income: number; expense: numbe
   const { data, error } = await supabase
     .from('transactions')
     .select('amount, kind')
+    .or('note.is.null,note.not.like.Card payment:%')
     .gte('occurred_at', monthStart(new Date()))
 
   if (error) throw new Error(`Failed to load month totals: ${error.message}`)
@@ -66,6 +67,7 @@ export async function getMonthExpenseTransactions(): Promise<TransactionWithRefs
     .from('transactions')
     .select(WITH_REFS)
     .eq('kind', 'expense')
+    .or('note.is.null,note.not.like.Card payment:%')
     .gte('occurred_at', monthStart(new Date()))
     .order('occurred_at', { ascending: false })
     .order('created_at', { ascending: false })

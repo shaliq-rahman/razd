@@ -6,11 +6,9 @@
      otherwise the blur has nothing to refract and every card reads as flat
      white. Four stops, offset so no two blooms line up. */
   --app-bg:
-    radial-gradient(105% 85% at 2% -5%, rgba(139, 92, 246, 0.24) 0%, transparent 58%),
-    radial-gradient(95% 80% at 100% 2%, rgba(45, 212, 191, 0.20) 0%, transparent 58%),
-    radial-gradient(80% 70% at 78% 45%, rgba(244, 114, 182, 0.13) 0%, transparent 60%),
-    radial-gradient(110% 90% at 25% 105%, rgba(129, 140, 248, 0.20) 0%, transparent 62%),
-    linear-gradient(180deg, #fbfaff 0%, #f5f4fa 52%, #f7f5fb 100%);
+    radial-gradient(85% 62% at 6% -6%, rgba(139, 92, 246, 0.20) 0%, transparent 62%),
+    radial-gradient(80% 58% at 100% 6%, rgba(45, 212, 191, 0.17) 0%, transparent 62%),
+    linear-gradient(180deg, #fcfbff 0%, #f6f5fb 100%);
 
   /* ── Semantic text ───────────────────────────────────────────────────────
      Every value below meets WCAG AA (4.5:1) against both the app backdrop
@@ -32,19 +30,19 @@
   --grad-sky: linear-gradient(135deg, #60a5fa 0%, #6366f1 100%);
 
   /* ── Surfaces ────────────────────────────────────────────────────────── */
-  --glass-fill: rgba(255, 255, 255, 0.58);
-  --glass-fill-strong: rgba(255, 255, 255, 0.76);
-  --glass-stroke: rgba(255, 255, 255, 0.78);
-  --glass-blur: 28px;
+  --glass-fill: rgba(255, 255, 255, 0.34);
+  --glass-fill-strong: rgba(255, 255, 255, 0.52);
+  --glass-stroke: rgba(255, 255, 255, 0.55);
+  --glass-blur: 18px;
 
   /* Translucent chrome — deliberately lighter than cards so content reads
      through it, the way an iOS tab bar does. */
-  --nav-fill: rgba(248, 248, 250, 0.72);
-  --nav-blur: 30px;
+  --nav-fill: rgba(252, 251, 255, 0.58);
+  --nav-blur: 26px;
 
   /* Elevation scale. One ramp, used everywhere; no ad-hoc shadow values. */
-  --shadow-1: 0 1px 2px rgba(28, 25, 38, 0.04), 0 5px 16px -6px rgba(28, 25, 38, 0.1);
-  --shadow-2: 0 2px 8px rgba(28, 25, 38, 0.05), 0 20px 44px -22px rgba(28, 25, 38, 0.22);
+  --shadow-1: 0 1px 2px rgba(28, 25, 38, 0.03), 0 4px 12px -6px rgba(28, 25, 38, 0.08);
+  --shadow-2: 0 1px 4px rgba(28, 25, 38, 0.04), 0 14px 32px -18px rgba(28, 25, 38, 0.18);
   --shadow-3: 0 12px 30px -12px rgba(28, 25, 38, 0.2), 0 34px 70px -30px rgba(28, 25, 38, 0.34);
   --shadow-brand: 0 8px 20px -6px rgba(109, 63, 240, 0.45), 0 18px 38px -16px rgba(109, 63, 240, 0.35);
 
@@ -57,6 +55,16 @@
   --dur-fast: 160ms;
   --dur-base: 260ms;
   --dur-slow: 420ms;
+
+  /* ── Compact rhythm ──────────────────────────────────────────────────────
+     One radius and spacing ramp. Denser than before, but tap targets stay at
+     44px regardless — visual density and touch density are separate things. */
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 20px;
+  --r-xl: 24px;
+  --pad-card: 0.875rem;
+  --pad-card-x: 1rem;
 }
 
 html,
@@ -87,7 +95,7 @@ select {
 /* The soft noise-free treatment keeps the UI feeling like a real native
    product rather than a collection of white cards on a gradient. */
 .app-surface {
-  background: rgba(250, 249, 248, 0.66);
+  background: rgba(252, 251, 255, 0.5);
   backdrop-filter: blur(18px) saturate(135%);
   -webkit-backdrop-filter: blur(18px) saturate(135%);
 }
@@ -102,11 +110,11 @@ select {
 }
 
 .surface-card {
-  background: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow: var(--shadow-1);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(165%);
+  -webkit-backdrop-filter: blur(18px) saturate(165%);
 }
 
 .compact-card {
@@ -200,9 +208,9 @@ select {
 }
 
 .eyebrow {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
@@ -378,6 +386,43 @@ select {
   }
 }
 
+.due-alert {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.2rem 0.5rem;
+  font-weight: 700;
+  line-height: 1.15;
+  animation: due-alert-blink 1.2s ease-in-out infinite;
+}
+
+.due-alert-yellow {
+  background: #fef08a;
+  color: #713f12 !important;
+}
+
+.due-alert-orange {
+  background: #fb923c;
+  color: #431407 !important;
+}
+
+.due-alert-red {
+  background: #dc2626;
+  color: #ffffff !important;
+}
+
+@keyframes due-alert-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.42; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .due-alert {
+    animation: none !important;
+  }
+}
+
 /* ── Gradient surfaces ──────────────────────────────────────────────────── */
 .grad-brand { background-image: var(--grad-brand); }
 .grad-mint { background-image: var(--grad-mint); }
@@ -473,13 +518,26 @@ select {
 /* ── Type system ────────────────────────────────────────────────────────────
    Display face for headings, Geist for body and every figure. Currency is
    always tabular so columns of amounts stay aligned as values change. */
+/* Poppins is the whole interface voice. */
+body {
+  font-family: var(--font-display), system-ui, -apple-system, sans-serif;
+}
+
 h1, h2, h3, .font-display {
-  font-family: var(--font-display), var(--font-geist-sans), system-ui, sans-serif;
-  font-feature-settings: "ss01";
+  font-family: var(--font-display), system-ui, sans-serif;
+}
+
+/* Figures only. Poppins has no tabular numerals, so amounts would jitter as
+   digits change; Geist's do not. Anything marked tabular renders in Geist. */
+.tabular-nums,
+[class*="tabular-nums"] {
+  font-family: var(--font-geist-sans), var(--font-display), system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.015em;
 }
 
 h1 {
-  letter-spacing: -0.035em;
+  letter-spacing: -0.03em;
   color: var(--text-strong);
 }
 h2, h3 {
@@ -493,6 +551,45 @@ h2, h3 {
 }
 
 /* One display size ramp, fluid between phone and desktop. */
-.display-xl { font-size: clamp(2.1rem, 10vw, 2.9rem); font-weight: 800; letter-spacing: -0.045em; line-height: 1.02; }
-.display-lg { font-size: clamp(1.7rem, 7.5vw, 2.1rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.08; }
-.display-md { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.03em; }
+.display-xl { font-size: clamp(1.85rem, 8.6vw, 2.4rem); font-weight: 700; letter-spacing: -0.035em; line-height: 1.05; }
+.display-lg { font-size: clamp(1.45rem, 6.2vw, 1.75rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+.display-md { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.02em; }
+
+/* Card repayment urgency -------------------------------------------------- */
+.card-alert {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.18rem 0.48rem;
+  line-height: 1.15;
+  box-shadow: 0 3px 10px -7px rgba(25, 20, 30, 0.5);
+}
+
+.card-alert-yellow {
+  background: #fef08a;
+  color: #713f12 !important;
+  animation: card-alert-blink 1.35s ease-in-out infinite;
+}
+
+.card-alert-orange {
+  background: #fed7aa;
+  color: #9a3412 !important;
+}
+
+.card-alert-red {
+  background: #dc2626;
+  color: #ffffff !important;
+  animation: card-alert-blink 0.95s ease-in-out infinite;
+}
+
+@keyframes card-alert-blink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.48; transform: scale(0.97); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-alert-yellow,
+  .card-alert-red {
+    animation: none !important;
+  }
+}

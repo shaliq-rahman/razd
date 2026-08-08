@@ -25,7 +25,7 @@ export function ItemSpends({
           type="button"
           onClick={() => setOpen(true)}
           aria-label={`Item spends: ${transactions.length} expenses, ${formatINR(total)}`}
-          className={`surface-card press flex h-11 w-11 cursor-pointer items-center justify-center rounded-[15px] text-amber-700 ${focusRing}`}
+          className={`surface-card press flex h-11 w-11 cursor-pointer items-center justify-center rounded-[13px] text-amber-700 ${focusRing}`}
         >
           <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M5 3v18l2-1.5L9 21l2-1.5L13 21l2-1.5L17 21l2-1.5V3l-2 1.5L15 3l-2 1.5L11 3 9 4.5 7 3 5 4.5Z" />
@@ -36,9 +36,9 @@ export function ItemSpends({
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className={`surface-card group flex min-h-[68px] w-full cursor-pointer items-center gap-3 rounded-[23px] px-4 text-left transition duration-300 hover:-translate-y-0.5 ${focusRing}`}
+          className={`surface-card group flex min-h-[68px] w-full cursor-pointer items-center gap-3 rounded-[13px] px-4 text-left transition duration-300 hover:-translate-y-0.5 ${focusRing}`}
         >
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[15px] bg-amber-100 text-amber-700">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[13px] bg-amber-100 text-amber-700">
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M5 3v18l2-1.5L9 21l2-1.5L13 21l2-1.5L17 21l2-1.5V3l-2 1.5L15 3l-2 1.5L11 3 9 4.5 7 3 5 4.5Z" />
               <path d="M9 9h6M9 13h4" />
@@ -58,7 +58,7 @@ export function ItemSpends({
       )}
 
       <Sheet open={open} onClose={() => setOpen(false)} title="Item spends">
-        <div className="mb-4 flex items-end justify-between rounded-[20px] bg-[#f1eff3] px-4 py-3">
+        <div className="mb-4 flex items-end justify-between rounded-[12px] bg-[#f1eff3] px-4 py-3">
           <span className="text-xs font-medium text-[color:var(--text-muted)]">Spent this month</span>
           <span className="text-lg font-bold tabular-nums text-[#29242f]">{formatINR(total)}</span>
         </div>
@@ -67,7 +67,7 @@ export function ItemSpends({
           <ul className="divide-y divide-[#e6e2e8]">
             {transactions.map((transaction) => (
               <li key={transaction.id} className="flex items-center gap-3 py-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-[#f1eff3] text-lg" aria-hidden="true">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[#f1eff3] text-lg" aria-hidden="true">
                   {transaction.categories?.icon ?? '•'}
                 </span>
                 <span className="min-w-0 flex-1">

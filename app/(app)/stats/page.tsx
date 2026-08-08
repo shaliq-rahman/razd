@@ -33,7 +33,7 @@ export default async function StatsPage() {
         />
       ) : (
         <>
-          <section className="hero-card animate-rise relative overflow-hidden rounded-[32px] px-6 py-7 text-white">
+          <section className="hero-card animate-rise relative overflow-hidden rounded-[32px] px-3.5 py-3 text-white">
             <div aria-hidden="true" className="absolute -right-16 -bottom-20 h-52 w-52 rounded-full bg-violet-400/30 blur-3xl" />
             <p className="relative text-[11px] font-semibold tracking-[0.14em] text-white/55 uppercase">Total spent</p>
             <p
@@ -54,11 +54,11 @@ export default async function StatsPage() {
             </div>
           </section>
 
-          <ul className="surface-card animate-rise divide-y divide-[#dedbe3]/70 rounded-[28px] px-4 [animation-delay:80ms]">
+          <ul className="surface-card animate-rise divide-y divide-[#dedbe3]/70 rounded-[13px] px-4 [animation-delay:80ms]">
             {spend.map((s, i) => (
               <li key={s.name} className="flex items-center gap-3 py-3.5">
                 <span
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[15px] bg-[#f1eff3] text-lg"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[13px] bg-[#f1eff3] text-lg"
                   aria-hidden="true"
                 >
                   {s.icon}

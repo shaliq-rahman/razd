@@ -5,7 +5,7 @@ import { BottomNav } from './bottom-nav'
 vi.mock('next/navigation', () => ({ usePathname: () => '/accounts' }))
 
 describe('BottomNav', () => {
-  it('renders all five tabs in order', () => {
+  it('renders all navigation items in order', () => {
     render(<BottomNav />)
     const labels = screen.getAllByRole('link').map((l) => l.textContent)
     expect(labels).toEqual(['Home', 'Accounts', 'Add', 'Bills', 'Profile'])

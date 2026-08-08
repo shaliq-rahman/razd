@@ -7,7 +7,7 @@ import { SubmitButton } from '@/components/submit-button'
 import { focusRing } from '@/lib/ui'
 
 const field =
-  'ios-field w-full min-h-[52px] rounded-[18px] px-4 py-3.5 text-base text-[#24202a] outline-none transition placeholder:text-[color:var(--text-faint)] focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
+  'ios-field w-full min-h-[52px] rounded-[13px] px-4 py-3.5 text-base text-[#24202a] outline-none transition placeholder:text-[color:var(--text-faint)] focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
 
 export default function SignupPage() {
   const [state, action] = useActionState<AuthState, FormData>(signUp, {})

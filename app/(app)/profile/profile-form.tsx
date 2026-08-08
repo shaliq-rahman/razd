@@ -5,7 +5,7 @@ import { SubmitButton } from '@/components/submit-button'
 import { updateProfile, type ProfileState } from './actions'
 
 const field =
-  'ios-field w-full min-h-[52px] rounded-[18px] px-4 py-3 text-base text-[#24202a] outline-none transition focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
+  'ios-field w-full min-h-[52px] rounded-[13px] px-4 py-3 text-base text-[#24202a] outline-none transition focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
 
 export function ProfileForm({ displayName }: { displayName: string }) {
   const [state, action] = useActionState<ProfileState, FormData>(updateProfile, {})

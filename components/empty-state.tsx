@@ -17,8 +17,8 @@ export function EmptyState({
 }) {
   return (
     <div
-      className={`surface-card animate-rise relative overflow-hidden rounded-[30px] px-6 text-center ${
-        art ? 'py-7' : 'py-10'
+      className={`surface-card animate-rise relative overflow-hidden rounded-[13px] px-6 text-center ${
+        art ? 'py-7' : 'py-6'
       }`}
     >
       {/* Faint bloom so the panel is not an empty white box. */}
@@ -30,7 +30,7 @@ export function EmptyState({
       {art ? (
         <div className="animate-pop relative mx-auto mb-4 flex justify-center">{art}</div>
       ) : (
-        <div className="animate-pop relative mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-[22px] bg-gradient-to-br from-violet-100 to-fuchsia-50 text-violet-700 shadow-[inset_0_0_0_1px_rgba(109,75,246,0.08)]">
+        <div className="animate-pop relative mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-[13px] bg-gradient-to-br from-violet-100 to-fuchsia-50 text-violet-700 shadow-[inset_0_0_0_1px_rgba(109,75,246,0.08)]">
           {icon}
         </div>
       )}

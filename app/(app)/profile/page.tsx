@@ -4,6 +4,7 @@ import { signOut } from '@/app/(auth)/actions'
 import { ProfileForm } from './profile-form'
 import { ChartIcon } from '@/components/icons'
 import { focusRing } from '@/lib/ui'
+import { ResetDataCard } from './reset-data-card'
 
 export default async function ProfilePage() {
   const supabase = await createServerSupabase()
@@ -18,17 +19,17 @@ export default async function ProfilePage() {
     .maybeSingle()
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <header className="pt-1">
         <p className="eyebrow mb-1">Personal space</p>
         <h1 className="text-[1.75rem] font-bold tracking-[-0.035em] text-[#1d1a24]">Profile</h1>
       </header>
 
-      <section className="surface-card animate-rise rounded-[28px] px-5 py-5">
+      <section className="surface-card animate-rise rounded-[13px] px-4 py-3.5">
         <ProfileForm displayName={profile?.display_name ?? ''} />
       </section>
 
-      <section className="surface-card animate-rise rounded-[28px] px-5 py-5 [animation-delay:70ms]">
+      <section className="surface-card animate-rise rounded-[13px] px-4 py-3.5 [animation-delay:70ms]">
         <dl className="space-y-3 text-sm">
           <div className="flex justify-between gap-4">
             <dt className="text-slate-600">Email</dt>
@@ -44,7 +45,7 @@ export default async function ProfilePage() {
       <section>
         <p className="eyebrow mb-2 px-1">Insights</p>
         <Link href="/stats" className={`surface-card flex min-h-[76px] items-center gap-3 rounded-[24px] px-4 transition hover:-translate-y-0.5 ${focusRing}`}>
-          <span className="flex h-11 w-11 items-center justify-center rounded-[15px] bg-violet-100 text-violet-700">
+          <span className="flex h-11 w-11 items-center justify-center rounded-[13px] bg-violet-100 text-violet-700">
             <ChartIcon className="h-5 w-5" />
           </span>
           <span className="min-w-0 flex-1">
@@ -55,10 +56,15 @@ export default async function ProfilePage() {
         </Link>
       </section>
 
+      <section>
+        <p className="eyebrow mb-2 px-1">Data controls</p>
+        <ResetDataCard />
+      </section>
+
       <form action={signOut}>
         <button
           type="submit"
-          className="min-h-[48px] w-full cursor-pointer rounded-2xl border border-rose-300 bg-rose-50 font-semibold text-rose-700 transition hover:bg-rose-100 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2"
+          className="min-h-[48px] w-full cursor-pointer rounded-[14px] border border-rose-300 bg-rose-50 font-semibold text-rose-700 transition hover:bg-rose-100 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2"
         >
           Sign out
         </button>

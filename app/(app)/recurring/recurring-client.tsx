@@ -5,6 +5,8 @@ import { formatINR } from '@/lib/format'
 import { sumAmounts } from '@/lib/money'
 import { focusRing } from '@/lib/ui'
 import { describeDueDay, paymentTiming } from '@/lib/recurring'
+import { cardAlertClass } from '@/lib/card-alert'
+import { dueAlertClass } from '@/lib/due-alert'
 import { Sheet } from '@/components/sheet'
 import { EmptyState } from '@/components/empty-state'
 import { RepeatScene } from '@/components/illustrations'
@@ -18,7 +20,7 @@ import {
 import type { RecurringPaymentWithAccount } from '@/lib/types'
 
 const field =
-  'ios-field min-h-[52px] w-full rounded-[18px] px-4 py-3 text-base text-[#24202a] outline-none transition focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
+  'ios-field min-h-[52px] w-full rounded-[13px] px-4 py-3 text-base text-[#24202a] outline-none transition focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
 
 type AccountOption = { id: string; name: string; type: string }
 type CardSummary = { id: string; name: string; outstanding: number }
@@ -66,6 +68,8 @@ export function RecurringClient({
   // Owed this month: everything not yet settled and not past its end date.
   const outstandingRows = rows.filter((r) => !r.timing.paid && !r.timing.ended)
   const totalDue = sumAmounts(outstandingRows.map((r) => r.payment.amount))
+  const totalCardOutstanding = sumAmounts(cards.map((card) => card.outstanding))
+  const totalOutstanding = totalDue + totalCardOutstanding
   const overdueCount = outstandingRows.filter((r) => r.timing.overdue).length
   const paidThisMonth = sumAmounts(
     rows.filter((r) => r.timing.paid).map((r) => r.payment.amount)
@@ -91,26 +95,36 @@ export function RecurringClient({
         </div>
         <button
           onClick={openForm}
-          className={`flex min-h-[44px] items-center gap-1.5 rounded-[16px] bg-[#1d1a24] px-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/15 transition active:scale-95 ${focusRing}`}
+          className={`flex min-h-[44px] items-center gap-1.5 rounded-[12px] bg-[#1d1a24] px-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/15 transition active:scale-95 ${focusRing}`}
         >
           <span className="text-lg leading-none">+</span> Add
         </button>
       </header>
 
-      <section className="hero-card relative overflow-hidden rounded-[25px] px-5 py-4 text-white">
+      <section className="hero-card relative overflow-hidden rounded-[25px] px-4 py-3.5 text-white">
         <div
           aria-hidden="true"
           className="absolute -top-14 -right-10 h-40 w-40 rounded-full bg-violet-400/30 blur-3xl"
         />
         <p className="relative text-[10px] font-semibold tracking-[0.15em] text-white/50 uppercase">
-          Still due in {monthName}
+          Total outstanding
         </p>
         <div className="relative mt-1.5 flex items-end justify-between gap-3">
-          <p data-testid="total-due" className="text-[1.7rem] font-bold tracking-tight tabular-nums">{formatINR(totalDue)}</p>
+          <p data-testid="total-outstanding" className="text-[1.7rem] font-bold tracking-tight tabular-nums">{formatINR(totalOutstanding)}</p>
           <p className="pb-1 text-right text-[11px] leading-tight text-white/55">
             {outstandingRows.length} unpaid
             {overdueCount > 0 && ` · ${overdueCount} overdue`}
             {paidThisMonth > 0 && ` · ${formatINR(paidThisMonth)} paid`}
+          </p>
+        </div>
+        <div className="relative mt-3 grid grid-cols-2 gap-2 border-t border-white/15 pt-3 text-[11px] text-white/60">
+          <p className="flex items-center justify-between gap-2 rounded-full bg-white/8 px-3 py-1.5">
+            <span>Recurring</span>
+            <strong data-testid="total-due" className="tabular-nums text-white">{formatINR(totalDue)}</strong>
+          </p>
+          <p className="flex items-center justify-between gap-2 rounded-full bg-white/8 px-3 py-1.5">
+            <span>Cards</span>
+            <strong data-testid="total-card-outstanding" className="tabular-nums text-white">{formatINR(totalCardOutstanding)}</strong>
           </p>
         </div>
       </section>
@@ -120,11 +134,11 @@ export function RecurringClient({
           <h2 className="eyebrow mb-2">Card outstanding</h2>
           <ul className="grid grid-cols-2 gap-2">
             {cards.map((card) => (
-              <li key={card.id} className="surface-card rounded-[18px] px-3 py-2.5">
+              <li key={card.id} className="surface-card rounded-[13px] px-3 py-2.5">
                 <p className="truncate text-xs text-[color:var(--text-muted)]">{card.name}</p>
                 <p
                   data-testid={`card-outstanding-${card.id}`}
-                  className="mt-1 font-bold tabular-nums text-[#29242f]"
+                  className={`mt-1 font-bold tabular-nums ${cardAlertClass(card.outstanding) || 'text-[#29242f]'}`}
                 >
                   {formatINR(card.outstanding)}
                 </p>
@@ -138,6 +152,9 @@ export function RecurringClient({
         <ul className="space-y-2">
           {rows.map(({ payment, timing }) => {
             const due = timing.overdue || timing.occurrence <= today
+            const dueClass = !timing.paid && !timing.ended
+              ? dueAlertClass(timing.occurrence, today)
+              : ''
             const tone = timing.paid
               ? 'bg-emerald-100 text-emerald-700'
               : timing.ended
@@ -155,7 +172,7 @@ export function RecurringClient({
               >
                 <div className="flex items-center gap-2.5">
                   <span
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] ${tone}`}
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] ${tone}`}
                   >
                     <PaymentIcon name={payment.name} paid={timing.paid} />
                   </span>
@@ -168,11 +185,7 @@ export function RecurringClient({
                     >
                       {payment.name}
                     </span>
-                    <span
-                      className={`mt-0.5 block truncate text-[11px] ${
-                        timing.overdue ? 'font-semibold text-rose-700' : 'text-[color:var(--text-muted)]'
-                      }`}
-                    >
+                    <span className={`mt-0.5 text-[11px] ${dueClass || (timing.overdue ? 'block font-semibold text-rose-700' : 'block text-[color:var(--text-muted)]')}`}>
                       {timing.paid
                         ? `Paid for ${monthName}`
                         : timing.ended
@@ -202,7 +215,7 @@ export function RecurringClient({
                         />
                         <button
                           type="submit"
-                          className={`mt-1 min-h-[28px] rounded-full px-2.5 text-[10px] font-semibold transition ${
+                          className={`mt-1 inline-flex min-h-[44px] items-center rounded-full px-3 text-[11px] font-semibold transition ${
                             timing.paid
                               ? 'bg-[#eeeaf1] text-[#655f6b]'
                               : due
@@ -221,7 +234,7 @@ export function RecurringClient({
                   <input type="hidden" name="id" value={payment.id} />
                   <button
                     type="submit"
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-medium text-[#aaa4ae] transition hover:text-rose-700 ${focusRing}`}
+                    className={`inline-flex min-h-[44px] items-center rounded-full px-2 text-[11px] font-medium text-[color:var(--text-muted)] transition hover:text-rose-700 ${focusRing}`}
                   >
                     Remove
                   </button>

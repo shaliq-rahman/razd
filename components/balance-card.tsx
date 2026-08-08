@@ -21,7 +21,7 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
 
   return (
     <>
-      <section className="hero-card animate-rise relative overflow-hidden rounded-[32px] px-6 pt-6 pb-6 text-white">
+      <section className="hero-card animate-rise relative overflow-hidden rounded-[24px] px-5 pt-4 pb-4 text-white">
         {/* Two offset colour blooms give the pane something to refract, which is
             what makes frosted glass read as glass rather than as flat white. */}
         <div
@@ -35,7 +35,7 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
 
         <div className="relative -mt-1.5 flex items-start justify-between">
           <p className="mt-2.5 text-[11px] font-semibold tracking-[0.14em] text-white/55 uppercase">
-            Total balance
+            Bank balance
           </p>
           {/* 44px tap targets with an 8px gap, per platform minimums. */}
           <div className="-mr-2 flex gap-2">
@@ -83,7 +83,7 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
           data-testid="total-balance"
           className={`relative -mt-1 font-bold tracking-[-0.02em] tabular-nums ${
             total < 0 ? 'text-rose-300' : 'text-white'
-          } ${hidden ? 'text-3xl' : 'text-[clamp(2rem,9.5vw,2.75rem)]'}`}
+          } ${hidden ? 'text-3xl' : 'text-[clamp(1.75rem,8vw,2.25rem)]'}`}
         >
           {hidden ? '••••••' : formatINR(total)}
         </p>
@@ -93,7 +93,7 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
           aria-haspopup="dialog"
           className={`relative -mb-1 -ml-2 inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-full px-2 text-xs font-medium text-white/60 transition hover:bg-white/10 hover:text-white active:scale-95 ${focusRing}`}
         >
-          Across {accounts.length} {accounts.length === 1 ? 'account' : 'accounts'}
+          Across {accounts.length} {accounts.length === 1 ? 'bank account' : 'bank accounts'}
           <svg
             viewBox="0 0 24 24"
             className="h-3.5 w-3.5"

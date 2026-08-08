@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getAccountBalances } from '@/lib/queries/balances'
+import { getRecurringPayments } from '@/lib/queries/recurring'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { EmptyState } from '@/components/empty-state'
 import { WalletScene } from '@/components/illustrations'
@@ -8,9 +9,10 @@ import type { Category } from '@/lib/types'
 
 export default async function AddPage() {
   const supabase = await createServerSupabase()
-  const [accounts, categoriesResult] = await Promise.all([
+  const [accounts, categoriesResult, recurringPayments] = await Promise.all([
     getAccountBalances(),
     supabase.from('categories').select('*').order('name'),
+    getRecurringPayments(),
   ])
 
   if (accounts.length === 0) {
@@ -22,7 +24,7 @@ export default async function AddPage() {
         action={
           <Link
             href="/accounts"
-            className="inline-flex min-h-[48px] items-center rounded-2xl bg-indigo-600 px-5 font-semibold text-white transition active:scale-95"
+            className="inline-flex min-h-[48px] items-center rounded-[14px] bg-indigo-600 px-5 font-semibold text-white transition active:scale-95"
           >
             Go to accounts
           </Link>
@@ -33,8 +35,21 @@ export default async function AddPage() {
 
   return (
     <AddForm
-      accounts={accounts.map((a) => ({ id: a.id, name: a.name }))}
+      accounts={accounts.map((a) => ({
+        id: a.id,
+        name: a.name,
+        type: a.type,
+        balance: a.balance,
+        card_limit: a.card_limit,
+      }))}
       categories={(categoriesResult.data ?? []) as Category[]}
+      recurringPayments={recurringPayments.map((payment) => ({
+        id: payment.id,
+        name: payment.name,
+        amount: payment.amount,
+        end_date: payment.end_date,
+        paid_month: payment.paid_month,
+      }))}
     />
   )
 }

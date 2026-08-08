@@ -9,7 +9,7 @@ import { createAccount, updateAccount, deleteAccount, type ActionState } from '.
 import type { AccountBalance } from '@/lib/types'
 
 const field =
-  'ios-field w-full min-h-[52px] rounded-[18px] px-4 py-3 text-base text-[#24202a] outline-none transition focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
+  'ios-field w-full min-h-[52px] rounded-[13px] px-4 py-3 text-base text-[#24202a] outline-none transition focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
 
 const label = 'eyebrow mb-2 block'
 
@@ -38,8 +38,13 @@ export function AccountFormSheet({
   }, [done, onClose])
 
   return (
-    <Sheet open={open} onClose={onClose} title={editing ? 'Edit account' : 'New account'}>
-      <form action={action} className="space-y-4 pb-2">
+    <Sheet
+      open={open}
+      onClose={onClose}
+      title={editing ? 'Edit account' : 'New account'}
+      scrollable={!editing}
+    >
+      <form action={action} className={editing ? 'space-y-3 pb-1' : 'space-y-4 pb-2'}>
         {editing && <input type="hidden" name="id" value={account!.id} />}
         <input type="hidden" name="color" value={color} />
 
@@ -78,7 +83,7 @@ export function AccountFormSheet({
         </div>
 
         {accountType === 'card' && (
-          <div className="grid grid-cols-2 gap-3 rounded-[22px] border border-violet-100 bg-violet-50/60 p-4">
+          <div className="grid grid-cols-2 gap-3 rounded-[13px] border border-violet-100 bg-violet-50/60 p-4">
             <div>
               <label htmlFor="card_limit" className={label}>Total limit</label>
               <input
@@ -207,13 +212,13 @@ export function AccountFormSheet({
                 <button
                   type="button"
                   onClick={() => setConfirmDelete(false)}
-                  className={`min-h-[48px] flex-1 cursor-pointer rounded-2xl border border-slate-300 font-medium text-slate-700 transition active:scale-[0.98] ${focusRing}`}
+                  className={`min-h-[48px] flex-1 cursor-pointer rounded-[14px] border border-slate-300 font-medium text-slate-700 transition active:scale-[0.98] ${focusRing}`}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className={`min-h-[48px] flex-1 cursor-pointer rounded-2xl bg-rose-600 font-semibold text-white transition active:scale-[0.98] ${focusRing}`}
+                  className={`min-h-[48px] flex-1 cursor-pointer rounded-[14px] bg-rose-600 font-semibold text-white transition active:scale-[0.98] ${focusRing}`}
                 >
                   Delete
                 </button>
@@ -223,7 +228,7 @@ export function AccountFormSheet({
             <button
               type="button"
               onClick={() => setConfirmDelete(true)}
-              className={`min-h-[44px] w-full cursor-pointer rounded-2xl text-sm font-semibold text-rose-700 transition hover:bg-rose-50 ${focusRing}`}
+              className={`min-h-[44px] w-full cursor-pointer rounded-[14px] text-sm font-semibold text-rose-700 transition hover:bg-rose-50 ${focusRing}`}
             >
               Delete account
             </button>

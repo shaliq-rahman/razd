@@ -30,13 +30,13 @@ export function CardExpenses({
         )}
       </div>
 
-      <div className="animate-rise overflow-hidden rounded-[28px] border border-violet-200/45 bg-[linear-gradient(135deg,rgba(239,234,255,0.92),rgba(255,255,255,0.76))] shadow-[0_14px_34px_-24px_rgba(79,55,143,0.45)] [animation-delay:130ms]">
-        <div className="relative flex items-center gap-4 px-5 py-5">
+      <div className="animate-rise overflow-hidden rounded-[13px] border border-violet-200/45 bg-[linear-gradient(135deg,rgba(239,234,255,0.92),rgba(255,255,255,0.76))] shadow-[0_14px_34px_-24px_rgba(79,55,143,0.45)] [animation-delay:130ms]">
+        <div className="relative flex items-center gap-4 px-4 py-3.5">
           <div
             aria-hidden="true"
             className="absolute -top-12 -right-8 h-36 w-36 rounded-full bg-violet-300/30 blur-3xl"
           />
-          <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-[17px] bg-[#27222f] text-white shadow-lg shadow-violet-950/15">
+          <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-[12px] bg-[#27222f] text-white shadow-lg shadow-violet-950/15">
             <CardIcon className="h-5 w-5" />
           </span>
           <div className="relative min-w-0 flex-1">

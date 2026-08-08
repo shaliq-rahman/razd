@@ -40,9 +40,10 @@ export default async function HomePage() {
   }).format(now)
   const displayName = profile?.display_name?.trim() || user?.email?.split('@')[0] || 'there'
   const profileInitial = displayName.charAt(0).toLocaleUpperCase('en-IN')
+  const bankAccounts = accounts.filter((account) => account.type !== 'card')
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <header className="relative flex items-end justify-between pt-1">
         {/* Beautiful vector gradients behind the header */}
         <div className="vector-blur bg-violet-400 w-48 h-48 rounded-full top-[-2rem] left-[-2rem]"></div>
@@ -56,7 +57,16 @@ export default async function HomePage() {
         </div>
         <div className="flex items-center gap-2 relative z-10">
           <ItemSpends transactions={itemSpends} compact />
-          <div className="flex h-11 w-11 items-center justify-center rounded-[15px] bg-[#1d1a24] text-sm font-bold text-white shadow-lg shadow-slate-900/15" aria-label={`${displayName} profile`}>
+          <Link
+            href="/transactions"
+            aria-label="Transaction history"
+            className={`surface-card press flex h-11 w-11 cursor-pointer items-center justify-center rounded-[13px] text-violet-700 ${focusRing}`}
+          >
+            <svg viewBox="0 0 24 24" className="h-[19px] w-[19px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5M12 7v5l3 2" />
+            </svg>
+          </Link>
+          <div className="flex h-11 w-11 items-center justify-center rounded-[13px] bg-[#1d1a24] text-sm font-bold text-white shadow-lg shadow-slate-900/15" aria-label={`${displayName} profile`}>
             {profileInitial}
           </div>
         </div>
@@ -70,40 +80,40 @@ export default async function HomePage() {
           action={
             <Link
               href="/accounts"
-              className={`inline-flex min-h-[48px] items-center rounded-2xl bg-indigo-600 px-5 font-semibold text-white transition active:scale-95 ${focusRing}`}
+              className={`inline-flex min-h-[48px] items-center rounded-[14px] bg-indigo-600 px-5 font-semibold text-white transition active:scale-95 ${focusRing}`}
             >
               Add an account
             </Link>
           }
         />
       ) : (
-        <BalanceCard accounts={accounts} />
+        <BalanceCard accounts={bankAccounts} />
       )}
 
       <section className="grid grid-cols-2 gap-3 relative">
         <div className="surface-card compact-card animate-rise rounded-[24px] [animation-delay:60ms]">
           <p className="flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[color:var(--text-muted)] uppercase">
-            <span className="flex h-7 w-7 items-center justify-center rounded-[10px] bg-emerald-100 text-emerald-700">
+            <span className="flex h-6 w-6 items-center justify-center rounded-[9px] bg-emerald-100 text-emerald-700">
               <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M12 19V5M5 12l7-7 7 7" />
               </svg>
             </span>
             In · {monthName}
           </p>
-          <p className="mt-1.5 text-[17px] font-bold tracking-tight text-compact tabular-nums text-[#25212b]">
+          <p className="mt-1 text-[16px] font-bold tracking-tight text-compact tabular-nums text-[#25212b]">
             {formatINR(month.income)}
           </p>
         </div>
         <div className="surface-card compact-card animate-rise rounded-[24px] [animation-delay:110ms]">
           <p className="flex items-center gap-2 text-[11px] font-semibold tracking-wide text-[color:var(--text-muted)] uppercase">
-            <span className="flex h-7 w-7 items-center justify-center rounded-[10px] bg-rose-100 text-rose-700">
+            <span className="flex h-6 w-6 items-center justify-center rounded-[9px] bg-rose-100 text-rose-700">
               <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M12 5v14M5 12l7 7 7-7" />
               </svg>
             </span>
             Out · {monthName}
           </p>
-          <p className="mt-1.5 text-[17px] font-bold tracking-tight text-compact tabular-nums text-[#25212b]">
+          <p className="mt-1 text-[16px] font-bold tracking-tight text-compact tabular-nums text-[#25212b]">
             {formatINR(month.expense)}
           </p>
         </div>
@@ -131,7 +141,7 @@ export default async function HomePage() {
             body="Tap the + button to add your first transaction."
           />
         ) : (
-          <ul className="surface-card animate-rise divide-y divide-[#dedbe3]/70 rounded-[28px] px-4 [animation-delay:160ms]">
+          <ul className="surface-card animate-rise divide-y divide-[#dedbe3]/70 rounded-[13px] px-4 [animation-delay:160ms]">
             {recent.map((t) => (
               <TransactionRow key={t.id} transaction={t} />
             ))}

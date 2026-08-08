@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createServerSupabase } from '@/lib/supabase/server'
-import { accountSchema } from '@/lib/schemas'
+import { accountSchema, cardPaymentSchema } from '@/lib/schemas'
 
 export type ActionState = { error?: string; ok?: boolean }
 
@@ -74,6 +74,54 @@ export async function deleteAccount(
   const supabase = await createServerSupabase()
   const { error } = await supabase.from('accounts').delete().eq('id', id)
   if (error) return { error: 'Could not delete the account. Please try again.' }
+
+  revalidateMoney()
+  return { ok: true }
+}
+
+export async function addCardPayment(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const parsed = cardPaymentSchema.safeParse({
+    account_id: formData.get('account_id'),
+    amount: formData.get('amount'),
+    occurred_at: formData.get('occurred_at'),
+  })
+  if (!parsed.success) return { error: parsed.error.issues[0].message }
+
+  const supabase = await createServerSupabase()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return { error: 'Your session expired. Please sign in again.' }
+
+  const { data: card, error: cardError } = await supabase
+    .from('account_balances')
+    .select('id, name, balance, card_limit')
+    .eq('id', parsed.data.account_id)
+    .eq('user_id', user.id)
+    .eq('type', 'card')
+    .maybeSingle()
+
+  if (cardError || !card) return { error: 'Card not found. Please refresh and try again.' }
+
+  const utilized = Math.max(0, Number(card.card_limit ?? 0) - Number(card.balance))
+  if (utilized <= 0) return { error: 'This card has no used balance to repay.' }
+  if (parsed.data.amount > utilized + 0.001) {
+    return { error: 'Payment cannot be greater than the used amount.' }
+  }
+
+  const { error } = await supabase.from('transactions').insert({
+    user_id: user.id,
+    account_id: card.id,
+    category_id: null,
+    amount: parsed.data.amount,
+    kind: 'income',
+    note: `Card payment: ${card.name}`,
+    occurred_at: parsed.data.occurred_at,
+  })
+  if (error) return { error: 'Could not add the card payment. Please try again.' }
 
   revalidateMoney()
   return { ok: true }
