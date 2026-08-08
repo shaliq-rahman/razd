@@ -438,13 +438,15 @@ export function AccountsClient({
                     <button
                       type="submit"
                       disabled={utilized <= 0}
-                      className={`inline-flex min-h-[38px] cursor-pointer items-center rounded-full px-3 text-[11px] font-bold transition active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 ${
+                      aria-label={selectedMinimumPaid ? 'Unmark minimum payment' : 'Mark minimum payment paid'}
+                      title={selectedMinimumPaid ? 'Minimum payment marked paid' : 'Mark minimum payment paid'}
+                      className={`inline-flex h-8 cursor-pointer items-center rounded-full px-2.5 text-[10px] font-bold transition active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 ${
                         selectedMinimumPaid
                           ? 'bg-emerald-100 text-emerald-700'
                           : 'bg-white/75 text-violet-700 shadow-sm'
                       } ${focusRing}`}
                     >
-                      {selectedMinimumPaid ? 'Minimum paid ✓' : 'Mark minimum paid'}
+                      Min pay{selectedMinimumPaid ? ' ✓' : ''}
                     </button>
                   </form>
                   <button

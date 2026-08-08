@@ -25,9 +25,13 @@ const geistSans = Geist({
 })
 
 export const metadata: Metadata = {
-  title: 'Razd — Money, tracked',
+  title: 'Razd رصد — Money, tracked',
   description: 'Track balances and spending across all your accounts.',
   appleWebApp: { capable: true, statusBarStyle: 'default', title: 'Razd' },
+  icons: {
+    icon: [{ url: '/razd-app-icon.png', type: 'image/png' }],
+    apple: '/razd-app-icon.png',
+  },
 }
 
 export const viewport: Viewport = {

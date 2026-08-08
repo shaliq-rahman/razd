@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { getAccountBalances } from '@/lib/queries/balances'
 import {
   getCardExpenseSummary,
@@ -50,7 +51,20 @@ export default async function HomePage() {
         <div className="vector-blur bg-cyan-400 w-40 h-40 rounded-full top-[-1rem] right-[20%]"></div>
         
         <div className="relative z-10">
-          <p className="eyebrow mb-1">{today}</p>
+          <div className="mb-1.5 flex items-center gap-1.5">
+            <Image
+              src="/razd-app-icon.png"
+              alt=""
+              width={22}
+              height={22}
+              priority
+              className="h-[22px] w-[22px] rounded-[7px] ring-1 ring-black/5"
+            />
+            <span className="text-[11px] font-black tracking-[-0.02em] text-[#211d27]">Razd</span>
+            <span className="text-[11px] font-black text-emerald-600" dir="rtl" lang="ar">رصد</span>
+            <span className="text-[10px] text-[#aaa3ae]">•</span>
+            <span className="eyebrow">{today}</span>
+          </div>
           <h1 className="text-[1.75rem] font-bold tracking-[-0.04em] text-compact text-[#1d1a24]">
             Hi, {displayName}
           </h1>

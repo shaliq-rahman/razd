@@ -16,7 +16,7 @@ export default function LoginPage() {
     <>
       <p className="eyebrow mb-1">Private & simple</p>
       <h1 className="text-[1.75rem] font-bold tracking-[-0.035em] text-[#1d1a24]">Welcome back</h1>
-      <p className="mt-1 mb-6 text-sm text-[color:var(--text-muted)]">Sign in to your Razd account.</p>
+      <p className="mt-1 mb-6 text-sm text-[color:var(--text-muted)]">Sign in to your Razd <span dir="rtl" lang="ar">رصد</span> account.</p>
 
       <form action={action} className="space-y-3">
         <input
