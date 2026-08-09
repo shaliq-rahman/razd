@@ -40,7 +40,7 @@ export function TransactionRow({
             type="button"
             onClick={onEdit}
             aria-label={`Edit ${t.note || t.categories?.name || 'transaction'}`}
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-[color:var(--text-muted)] transition hover:bg-white/70 hover:text-violet-700 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+            className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full text-[color:var(--text-muted)] transition hover:bg-white/70 hover:text-violet-700 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
           >
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="m4 20 4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10L4 20Z" />

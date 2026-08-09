@@ -70,6 +70,19 @@
 html,
 body {
   height: 100%;
+  /* Safari only shipped overscroll-behavior in 16, so on iOS 15 and earlier a
+     sideways drag inside the card deck rubber-bands the whole page. Clipping
+     the horizontal axis at the root stops that leak without affecting the
+     deck's own scrolling. `clip` does not create a scroll container the way
+     `hidden` does, so position: sticky keeps working. */
+  overflow-x: clip;
+}
+
+@supports not (overflow: clip) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
 }
 
 body {
@@ -239,7 +252,10 @@ select {
   scroll-behavior: smooth;
   scrollbar-width: none;
   padding: 1.2rem calc(50% - 140px) 1.8rem;
-  touch-action: pan-x;
+  /* pan-x alone stopped the page scrolling whenever a finger started on a card.
+     Allowing both axes lets the browser pick per gesture: the deck scrolls
+     sideways, the page still scrolls up and down. */
+  touch-action: pan-x pan-y;
 }
 
 .account-carousel-scroll::-webkit-scrollbar {
@@ -277,13 +293,23 @@ select {
   opacity: 0.82;
 }
 
+/* The wallet screen is a fixed-height, non-scrolling column so the card deck
+   sits still. That only works when the device is tall enough to hold it: on a
+   667px iPhone the content needed 612px inside a 543px box, so 69px — the whole
+   transaction list — was clipped away with no way to scroll to it.
+   Below 780px the screen becomes an ordinary scrolling column instead. */
 .accounts-viewport {
   display: flex;
-  height: calc(100dvh - max(1.25rem, env(safe-area-inset-top)) - 6.5rem);
-  min-height: 0;
   flex-direction: column;
-  overflow: hidden;
-  margin-bottom: -7rem;
+  min-height: 0;
+}
+
+@media (min-height: 780px) {
+  .accounts-viewport {
+    height: calc(100dvh - max(1.25rem, env(safe-area-inset-top)) - 6.5rem);
+    overflow: hidden;
+    margin-bottom: -7rem;
+  }
 }
 
 .accounts-transactions-scroll {
