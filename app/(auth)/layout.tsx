@@ -18,7 +18,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <p className="text-2xl font-black tracking-[-0.04em] text-[#211d27]">
             Razd <span className="text-emerald-600" dir="rtl" lang="ar">رصد</span>
           </p>
-          <p className="mt-1 text-[10px] font-bold tracking-[0.18em] text-[#8a8390] uppercase">
+          <p className="mt-1 text-[11px] font-bold tracking-[0.18em] text-[#8a8390] uppercase">
             Money, clearly tracked
           </p>
         </div>

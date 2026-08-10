@@ -215,7 +215,7 @@ export function AddForm({
                 <path d="M3 10h18M5 10v8M9 10v8M15 10v8M19 10v8M3 18h18M12 3l9 5H3l9-5Z" />
               </svg>
               Bank
-              <span className="text-[9px] opacity-60">{bankAccounts.length}</span>
+              <span className="text-[11px] opacity-60">{bankAccounts.length}</span>
             </button>
             <button
               type="button"
@@ -230,7 +230,7 @@ export function AddForm({
                 <path d="M3 10h18" />
               </svg>
               Card
-              <span className="text-[9px] opacity-60">{cardAccounts.length}</span>
+              <span className="text-[11px] opacity-60">{cardAccounts.length}</span>
             </button>
           </div>
         </div>
@@ -353,7 +353,18 @@ export function AddForm({
       </div>
 
       {paymentType === 'regular' && (
-        <input name="note" className={field} placeholder="Note (optional)" maxLength={120} />
+        <div>
+          <label htmlFor="transaction-note" className={labelClass}>
+            Note <span className="font-normal normal-case">(optional)</span>
+          </label>
+          <input
+            id="transaction-note"
+            name="note"
+            className={field}
+            placeholder="e.g. Lunch with team"
+            maxLength={120}
+          />
+        </div>
       )}
 
       {state.error && (

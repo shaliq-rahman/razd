@@ -112,7 +112,7 @@ export function RecurringClient({
           aria-hidden="true"
           className="absolute -top-14 -right-10 h-40 w-40 rounded-full bg-violet-400/30 blur-3xl"
         />
-        <p className="relative text-[10px] font-semibold tracking-[0.15em] text-white/50 uppercase">
+        <p className="relative text-[11px] font-semibold tracking-[0.15em] text-white/50 uppercase">
           Total outstanding
         </p>
         <div className="relative mt-1.5 flex items-end justify-between gap-3">
@@ -161,7 +161,7 @@ export function RecurringClient({
                       {formatINR(card.outstanding)}
                     </p>
                     {minimumPaid && (
-                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold text-emerald-700">
+                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
                         Minimum paid
                       </span>
                     )}

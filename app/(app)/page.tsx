@@ -62,7 +62,7 @@ export default async function HomePage() {
             />
             <span className="text-[11px] font-black tracking-[-0.02em] text-[#211d27]">Razd</span>
             <span className="text-[11px] font-black text-emerald-600" dir="rtl" lang="ar">رصد</span>
-            <span className="text-[10px] text-[#aaa3ae]">•</span>
+            <span className="text-[11px] text-[#aaa3ae]">•</span>
             <span className="eyebrow">{today}</span>
           </div>
           <h1 className="text-[1.75rem] font-bold tracking-[-0.04em] text-compact text-[#1d1a24]">

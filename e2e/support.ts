@@ -113,7 +113,9 @@ export async function addTransaction(
   }
   await page.getByLabel('Amount').fill(opts.amount)
   await page.getByRole('button', { name: new RegExp(opts.category) }).click()
-  if (opts.note) await page.getByPlaceholder('Note (optional)').fill(opts.note)
+  // Target the label, not the placeholder: placeholder copy is presentational
+  // and changing it should not break the suite.
+  if (opts.note) await page.getByLabel(/^Note/).fill(opts.note)
   await page.getByRole('button', { name: 'Save transaction' }).click()
   await page.waitForURL('/')
 }

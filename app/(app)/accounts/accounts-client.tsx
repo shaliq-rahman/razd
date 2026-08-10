@@ -227,7 +227,7 @@ export function AccountsClient({
                 <path d="M3 10h18M5 10v8M9 10v8M15 10v8M19 10v8M3 18h18M12 3l9 5H3l9-5Z" />
               </svg>
               Banks
-              <span className="text-[10px] opacity-65">{bankAccounts.length}</span>
+              <span className="text-[11px] opacity-65">{bankAccounts.length}</span>
             </button>
             <button
               type="button"
@@ -244,7 +244,7 @@ export function AccountsClient({
                 <path d="M3 10h18M7 15h3" />
               </svg>
               Cards
-              <span className="text-[10px] opacity-65">{cardAccounts.length}</span>
+              <span className="text-[11px] opacity-65">{cardAccounts.length}</span>
             </button>
           </div>
 
@@ -268,7 +268,7 @@ export function AccountsClient({
             <>
           <div className="shrink-0 text-center">
             {view === 'card' && (
-              <p className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/45 px-3 py-1 text-[10px] font-bold tracking-[0.1em] text-[color:var(--text-muted)] uppercase">
+              <p className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/45 px-3 py-1 text-[11px] font-bold tracking-[0.1em] text-[color:var(--text-muted)] uppercase">
                 Total pending
                 <span className={`text-xs tracking-normal tabular-nums ${cardAlertClass(alertableCardPending) || 'text-[#29242f]'}`}>
                   {formatINR(totalCardPending)}
@@ -353,12 +353,12 @@ export function AccountsClient({
                       <span className="relative flex h-full flex-col justify-between">
                         <span className="flex items-start justify-between gap-3">
                           <span>
-                            <span className="block text-[10px] font-bold tracking-[0.17em] text-white uppercase">
+                            <span className="block text-[11px] font-bold tracking-[0.17em] text-white uppercase">
                               {isCard ? 'Credit card' : accountTypeLabel(account.type)}
                             </span>
                             <span className="mt-2 block max-w-[13rem] truncate text-xl font-black tracking-[-0.03em] uppercase">{account.name}</span>
                             {isCard && (
-                              <span className="mt-1 flex items-center gap-2 text-[10px] font-semibold text-white/75">
+                              <span className="mt-1 flex items-center gap-2 text-[11px] font-semibold text-white/75">
                                 <span>Limit {formatINR(account.card_limit ?? 0)}</span>
                                 {minimumPaid && (
                                   <span className="rounded-full bg-emerald-300/90 px-2 py-0.5 font-black text-emerald-950">
@@ -385,7 +385,7 @@ export function AccountsClient({
 
                         <span className="grid grid-cols-2 gap-4">
                           <span>
-                            <span className="block text-[10px] font-semibold tracking-[0.12em] text-white uppercase">
+                            <span className="block text-[11px] font-semibold tracking-[0.12em] text-white uppercase">
                               {isCard ? 'Pending payment' : 'Balance'}
                             </span>
                             <span className={`mt-1 text-lg font-bold tabular-nums ${isCard && !minimumPaid ? cardAlertClass(card?.utilized ?? 0) || 'text-white' : 'block text-white'}`}>
@@ -393,7 +393,7 @@ export function AccountsClient({
                             </span>
                           </span>
                           <span className="text-right">
-                            <span className="block text-[10px] font-semibold tracking-[0.12em] text-white uppercase">
+                            <span className="block text-[11px] font-semibold tracking-[0.12em] text-white uppercase">
                               {isCard ? (cardDueDate && cardDueDate < today ? 'Past due' : 'Due date') : 'Opening'}
                             </span>
                             <span className={`mt-1 text-lg font-bold tabular-nums ${
@@ -418,7 +418,7 @@ export function AccountsClient({
                 <span key={account.id} className={`h-1.5 rounded-full transition-all duration-300 ${account.id === selected.id ? 'w-5 bg-[#2c2731]' : 'w-1.5 bg-[#c9c4cc]'}`} />
               ))}
             </div>
-            <p className="mt-2 text-center text-[10px] font-semibold tracking-[0.12em] text-[color:var(--text-faint)] uppercase">Swipe left or right</p>
+            <p className="mt-2 text-center text-[11px] font-semibold tracking-[0.12em] text-[color:var(--text-faint)] uppercase">Swipe left or right</p>
           </div>
 
           <section className="flex min-h-0 flex-1 flex-col pt-1">
@@ -440,7 +440,7 @@ export function AccountsClient({
                       disabled={utilized <= 0}
                       aria-label={selectedMinimumPaid ? 'Unmark minimum payment' : 'Mark minimum payment paid'}
                       title={selectedMinimumPaid ? 'Minimum payment marked paid' : 'Mark minimum payment paid'}
-                      className={`inline-flex h-8 cursor-pointer items-center rounded-full px-2.5 text-[10px] font-bold transition active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 ${
+                      className={`inline-flex h-8 cursor-pointer items-center rounded-full px-2.5 text-[11px] font-bold transition active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 ${
                         selectedMinimumPaid
                           ? 'bg-emerald-100 text-emerald-700'
                           : 'bg-white/75 text-violet-700 shadow-sm'
