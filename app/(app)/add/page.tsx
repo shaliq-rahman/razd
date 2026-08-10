@@ -11,7 +11,7 @@ export default async function AddPage() {
   const supabase = await createServerSupabase()
   const [accounts, categoriesResult, recurringPayments] = await Promise.all([
     getAccountBalances(),
-    supabase.from('categories').select('*').order('name'),
+    supabase.from('categories').select('id, user_id, name, icon, kind, is_default').order('name'),
     getRecurringPayments(),
   ])
 

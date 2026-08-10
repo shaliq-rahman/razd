@@ -10,7 +10,7 @@ export async function getRecurringPayments(): Promise<RecurringPaymentWithAccoun
   const supabase = await createServerSupabase()
   const { data, error } = await supabase
     .from('recurring_payments')
-    .select('*, accounts(name, color, type)')
+    .select('id, user_id, name, amount, due_day, end_date, paid_month, account_id, paid_transaction_id, created_at, accounts(name, color, type)')
     .order('due_day', { ascending: true })
     .order('created_at', { ascending: true })
 
@@ -20,5 +20,5 @@ export async function getRecurringPayments(): Promise<RecurringPaymentWithAccoun
     ...row,
     amount: Number(row.amount),
     due_day: Number(row.due_day),
-  })) as RecurringPaymentWithAccount[]
+  })) as unknown as RecurringPaymentWithAccount[]
 }

@@ -4,6 +4,7 @@ import { formatINR } from '@/lib/format'
 import { sumAmounts } from '@/lib/money'
 import { EmptyState } from '@/components/empty-state'
 import { ChartScene } from '@/components/illustrations'
+import { CategoryIcon } from '@/components/icons'
 
 // Non-text contrast >=3:1 against the light surface, and distinguishable
 // without relying on hue alone (each row also shows its value and percentage).
@@ -58,10 +59,10 @@ export default async function StatsPage() {
             {spend.map((s, i) => (
               <li key={s.name} className="flex items-center gap-3 py-3.5">
                 <span
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[13px] bg-[#f1eff3] text-lg"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[13px] bg-violet-100 text-violet-700"
                   aria-hidden="true"
                 >
-                  {s.icon}
+                  <CategoryIcon name={s.name} className="h-5 w-5" />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-semibold text-[#25212b]">{s.name}</span>

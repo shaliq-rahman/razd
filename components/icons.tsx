@@ -3,8 +3,8 @@
  * joins, no fills. Emoji are not used for interface chrome — they render
  * differently per platform and cannot be themed or sized reliably.
  *
- * Category icons remain emoji because they are per-user data stored in the
- * database, closer to an avatar than to interface furniture.
+ * Category icons use the same vector language as the rest of the interface,
+ * so they render consistently across iOS, Android, and desktop platforms.
  */
 type IconProps = { className?: string }
 
@@ -93,6 +93,43 @@ export function AlertIcon(p: IconProps) {
       <path d="M12 10v4m0 3h.01" />
     </Svg>
   )
+}
+
+/** A consistent vector for every built-in category, with a tag fallback. */
+export function CategoryIcon({ name, className = 'h-5 w-5' }: IconProps & { name?: string | null }) {
+  const category = name?.trim().toLowerCase()
+
+  switch (category) {
+    case 'food':
+      return <Svg className={className}><path d="M7 3v7m-2-7v4a2 2 0 0 0 4 0V3M7 10v11M16 3v18m0-18c3 2 4 5 4 8h-4" /></Svg>
+    case 'transport':
+      return <Svg className={className}><rect x="4" y="3" width="16" height="16" rx="3" /><path d="M7 7h10M7 13h10M8 19v2m8-2v2M8 16h.01M16 16h.01" /></Svg>
+    case 'shopping':
+      return <Svg className={className}><path d="M5 8h14l-1 13H6L5 8Z" /><path d="M9 10V6a3 3 0 0 1 6 0v4" /></Svg>
+    case 'bills':
+      return <ReceiptIcon className={className} />
+    case 'health':
+      return <Svg className={className}><path d="M12 21S4 16.5 4 9.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8 3.5C20 16.5 12 21 12 21Z" /><path d="M9 12h6m-3-3v6" /></Svg>
+    case 'entertainment':
+      return <Svg className={className}><rect x="3" y="5" width="18" height="14" rx="3" /><path d="m10 9 5 3-5 3V9Z" /></Svg>
+    case 'salary':
+      return <Svg className={className}><circle cx="9" cy="9" r="5" /><path d="M7 9h4M9 7v4m4 2a5 5 0 1 0 4-4" /></Svg>
+    case 'diapers':
+    case 'diaper':
+      return <Svg className={className}><path d="M5 4v7c0 5 2.5 8 7 9 4.5-1 7-4 7-9V4l-4 3H9L5 4Z" /><path d="M5 11h4l3 3 3-3h4" /></Svg>
+    case 'fruits':
+    case 'fruit':
+    case 'fruits & vegetables':
+    case 'fruits and vegetables':
+      return <Svg className={className}><path d="M12 8c-2-3-7-2-8 3-1 5 3 10 6 10 1 0 1.5-.6 2-.6s1 .6 2 .6c3 0 7-5 6-10-1-5-6-6-8-3Z" /><path d="M12 8c0-3 2-5 5-5M12 6c-2 0-3-1-4-3" /></Svg>
+    case 'vegetables':
+    case 'vegetable':
+      return <Svg className={className}><path d="M8 8c3 0 6 1 8 3-1 5-3 8-6 10-2-4-3-8-2-13Z" /><path d="M9 8 6 4m3 4 1-5m-1 5 5-3m-4 7 4 3m-5 0 3 2" /></Svg>
+    case 'other':
+      return <Svg className={className}><path d="m12 3 1.4 4.1L18 8.5l-4.6 1.4L12 14l-1.4-4.1L6 8.5l4.6-1.4L12 3Z" /><path d="m18.5 15 .8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2Z" /></Svg>
+    default:
+      return <Svg className={className}><path d="M20 13 12 21l-9-9V4h8l9 9Z" /><path d="M7.5 8h.01" /></Svg>
+  }
 }
 
 export function ChevronLeftIcon(p: IconProps) {
