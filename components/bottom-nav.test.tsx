@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { BottomNav } from './bottom-nav'
+import AppLayout from '@/app/(app)/layout'
 
 vi.mock('next/navigation', () => ({ usePathname: () => '/accounts' }))
 
@@ -26,5 +27,17 @@ describe('BottomNav', () => {
     for (const name of ['Home', 'Accounts', 'Add', 'Bills', 'Profile']) {
       expect(screen.getByRole('link', { name })).toBeInTheDocument()
     }
+  })
+
+  it('stays viewport-fixed outside the filtered app surface', () => {
+    const { container } = render(
+      <AppLayout params={Promise.resolve({})}>
+        <p>Screen content</p>
+      </AppLayout>
+    )
+
+    const nav = screen.getByRole('navigation', { name: 'Primary' })
+    expect(nav).toHaveClass('bottom-nav-fixed')
+    expect(container.querySelector('.app-surface nav')).toBeNull()
   })
 })

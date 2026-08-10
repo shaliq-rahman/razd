@@ -201,7 +201,7 @@ export function AccountsClient({
           }
         />
       ) : (
-        <div className="flex min-h-0 flex-1 flex-col">
+        <div className="flex flex-col">
           <div
             className="relative mx-auto mb-4 grid h-11 w-[190px] shrink-0 grid-cols-2 rounded-full bg-white/50 p-1 shadow-[inset_0_0_0_1px_rgba(95,84,110,0.09)] backdrop-blur-xl"
             role="group"
@@ -249,7 +249,7 @@ export function AccountsClient({
           </div>
 
           {!selected ? (
-            <div className="flex min-h-0 flex-1 items-start">
+            <div className="flex items-start">
               <EmptyState
                 art={<WalletScene className="h-24 w-24" />}
                 title={view === 'card' ? 'No cards yet' : 'No bank accounts yet'}
@@ -421,7 +421,7 @@ export function AccountsClient({
             <p className="mt-2 text-center text-[11px] font-semibold tracking-[0.12em] text-[color:var(--text-faint)] uppercase">Swipe left or right</p>
           </div>
 
-          <section className="flex min-h-0 flex-1 flex-col pt-1">
+          <section className="flex flex-col pt-1">
             <div className="mb-3 flex shrink-0 items-end justify-between gap-3">
               <div>
                 <p className="eyebrow">This month</p>
@@ -469,13 +469,13 @@ export function AccountsClient({
             </div>
 
             {selectedTransactions.length > 0 ? (
-              <ul className="accounts-transactions-scroll surface-card min-h-0 flex-1 divide-y divide-[#dedbe3]/70 overflow-y-auto overscroll-contain rounded-[13px] px-4">
+              <ul className="surface-card divide-y divide-[#dedbe3]/70 rounded-[13px] px-4">
                 {selectedTransactions.map((transaction) => (
                   <TransactionRow key={transaction.id} transaction={transaction} />
                 ))}
               </ul>
             ) : (
-              <div className="surface-card min-h-0 flex-1 rounded-[13px] px-5 py-7 text-center">
+              <div className="surface-card rounded-[13px] px-5 py-7 text-center">
                 <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[13px] bg-[#f1eff3] text-[color:var(--text-muted)]">
                   <ReceiptIcon className="h-5 w-5" />
                 </span>

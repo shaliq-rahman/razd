@@ -51,11 +51,13 @@ export function Sheet({
 
     document.addEventListener('keydown', onKey)
     document.body.style.overflow = 'hidden'
+    document.body.classList.add('sheet-open')
     panel?.querySelector<HTMLElement>('input, button, select')?.focus()
 
     return () => {
       document.removeEventListener('keydown', onKey)
       document.body.style.overflow = ''
+      document.body.classList.remove('sheet-open')
       previouslyFocused?.focus?.()
     }
   }, [open, onClose])

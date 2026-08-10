@@ -35,7 +35,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="glass-nav fixed right-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-3 z-30 mx-auto max-w-[448px] rounded-[34px] sm:absolute sm:right-4 sm:bottom-4 sm:left-4"
+      className="glass-nav bottom-nav-fixed z-30 rounded-[34px]"
     >
       <ul className="flex h-[70px] items-center justify-around gap-1 px-2 py-1.5">
         {TABS.map((tab) => {
