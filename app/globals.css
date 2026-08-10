@@ -94,6 +94,17 @@ body {
   overscroll-behavior-y: none;
 }
 
+/* Mobile Safari can repaint fixed backgrounds and fixed descendants against
+   different visual viewports while its browser chrome expands or collapses.
+   The background does not need to be fixed on a handset. */
+@media (max-width: 639px) {
+  body {
+    min-height: 100vh;
+    min-height: 100svh;
+    background-attachment: scroll;
+  }
+}
+
 ::selection {
   background: rgba(108, 77, 246, 0.2);
 }
@@ -111,6 +122,17 @@ select {
   background: rgba(252, 251, 255, 0.5);
   backdrop-filter: blur(18px) saturate(135%);
   -webkit-backdrop-filter: blur(18px) saturate(135%);
+}
+
+/* Keep the viewport-fixed navbar outside this backdrop-filtered element.
+   WebKit otherwise uses the filtered ancestor as the fixed positioning block,
+   which places the navbar at the bottom of long pages on some iPhones. */
+.app-frame {
+  min-width: 0;
+}
+
+.app-content {
+  min-width: 0;
 }
 
 /* Frosted surfaces ------------------------------------------------------- */
@@ -176,6 +198,37 @@ select {
     inset 0 1px 0 rgba(255, 255, 255, 0.72),
     0 10px 32px -12px rgba(31, 26, 48, 0.32),
     0 2px 8px rgba(31, 26, 48, 0.08);
+}
+
+.bottom-nav-fixed {
+  position: fixed;
+  left: 50%;
+  bottom: 0.75rem;
+  width: min(calc(100% - 1.5rem), 448px);
+  transform: translate3d(-50%, 0, 0);
+  will-change: transform;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+/* Sheets live inside the filtered app surface, while the fixed navbar must be
+   its sibling for Safari. Hide the navbar while a modal sheet is open so the
+   sibling stacking context can never intercept the sheet's controls. */
+body.sheet-open .bottom-nav-fixed {
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+
+@supports (bottom: env(safe-area-inset-bottom)) {
+  .bottom-nav-fixed {
+    bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media (min-width: 640px) {
+  .bottom-nav-fixed {
+    bottom: 1rem;
+  }
 }
 
 /* Content dissolves into the bar instead of colliding with it. */
