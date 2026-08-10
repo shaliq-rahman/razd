@@ -319,23 +319,14 @@ input[type="week"].ios-field {
   opacity: 0.82;
 }
 
-/* The wallet screen is a fixed-height, non-scrolling column so the card deck
-   sits still. That only works when the device is tall enough to hold it: on a
-   667px iPhone the content needed 612px inside a 543px box, so 69px — the whole
-   transaction list — was clipped away with no way to scroll to it.
-   Below 780px the screen becomes an ordinary scrolling column instead. */
+/* The wallet screen used to be a fixed-height, non-scrolling column with the
+   transaction list confined to its own inner scroller. That squeezed the list
+   into a 60px sliver on a 1280x800 laptop with 557px hidden inside it, while
+   the page itself would not scroll at all. It is now an ordinary scrolling
+   column like every other screen: one scroll region, no nested one. */
 .accounts-viewport {
   display: flex;
   flex-direction: column;
-  min-height: 0;
-}
-
-@media (min-height: 780px) {
-  .accounts-viewport {
-    height: calc(100dvh - max(1.25rem, env(safe-area-inset-top)) - 6.5rem);
-    overflow: hidden;
-    margin-bottom: -7rem;
-  }
 }
 
 .accounts-transactions-scroll {
