@@ -3,6 +3,31 @@ import { CategoryIcon } from './icons'
 import { formatDayLabel } from '@/lib/format'
 import type { TransactionWithRefs } from '@/lib/types'
 
+const CATEGORY_TONES: Record<string, string> = {
+  food: 'bg-amber-100 text-amber-700 ring-amber-200/70',
+  transport: 'bg-sky-100 text-sky-700 ring-sky-200/70',
+  shopping: 'bg-violet-100 text-violet-700 ring-violet-200/70',
+  bills: 'bg-cyan-100 text-cyan-700 ring-cyan-200/70',
+  health: 'bg-rose-100 text-rose-700 ring-rose-200/70',
+  entertainment: 'bg-fuchsia-100 text-fuchsia-700 ring-fuchsia-200/70',
+  salary: 'bg-emerald-100 text-emerald-700 ring-emerald-200/70',
+  diapers: 'bg-indigo-100 text-indigo-700 ring-indigo-200/70',
+  diaper: 'bg-indigo-100 text-indigo-700 ring-indigo-200/70',
+  fruits: 'bg-lime-100 text-lime-700 ring-lime-200/70',
+  fruit: 'bg-lime-100 text-lime-700 ring-lime-200/70',
+  'fruits & vegetables': 'bg-lime-100 text-lime-700 ring-lime-200/70',
+  'fruits and vegetables': 'bg-lime-100 text-lime-700 ring-lime-200/70',
+  vegetables: 'bg-green-100 text-green-700 ring-green-200/70',
+  vegetable: 'bg-green-100 text-green-700 ring-green-200/70',
+}
+
+function transactionIconTone(t: TransactionWithRefs) {
+  const category = t.categories?.name?.trim().toLowerCase() ?? ''
+  if (CATEGORY_TONES[category]) return CATEGORY_TONES[category]
+  if (t.kind === 'income') return 'bg-emerald-100 text-emerald-700 ring-emerald-200/70'
+  return 'bg-slate-100 text-slate-600 ring-slate-200/80'
+}
+
 /**
  * One transaction line. `showDate` is off in day-grouped lists, where the
  * heading already carries the date.
@@ -23,7 +48,7 @@ export function TransactionRow({
   return (
     <li className="flex items-center gap-3 py-4">
       <span
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[13px] bg-violet-100 text-violet-700 shadow-[inset_0_0_0_1px_rgba(80,72,92,0.04)]"
+        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] ring-1 ${transactionIconTone(t)}`}
         aria-hidden="true"
       >
         <CategoryIcon name={t.categories?.name} className="h-5 w-5" />
