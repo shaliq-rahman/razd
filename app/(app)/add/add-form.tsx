@@ -4,13 +4,13 @@ import { useActionState, useState } from 'react'
 import { SubmitButton } from '@/components/submit-button'
 import { createTransaction, type ActionState } from './actions'
 import { focusRing } from '@/lib/ui'
-import { formatINR } from '@/lib/format'
+import { formatAmountInput, formatINR, normalizeAmountInput } from '@/lib/format'
 import type { AccountType, Category, TxKind } from '@/lib/types'
 
 const field =
   'ios-field w-full min-h-[52px] rounded-[13px] px-4 py-3 text-base text-[#24202a] outline-none transition focus:border-violet-500/50 focus:ring-4 focus:ring-violet-100'
 
-const labelClass = 'eyebrow mb-2 block'
+const labelClass = 'eyebrow mb-1.5 block'
 
 type AccountOption = {
   id: string
@@ -72,6 +72,8 @@ export function AddForm({
     (payment) =>
       payment.end_date >= today && payment.paid_month?.slice(0, 7) !== today.slice(0, 7)
   )
+  const amountDisplay = formatAmountInput(amount)
+  const amountWidth = Math.min(Math.max(amountDisplay.length || 4, 4), 14)
 
   const selectPaymentType = (nextType: PaymentType) => {
     setPaymentType(nextType)
@@ -107,18 +109,19 @@ export function AddForm({
   }
 
   return (
-    <form action={action} className="space-y-5 pt-1">
+    <form action={action} className="space-y-4 pt-1">
       <header>
         <p className="eyebrow mb-1">New entry</p>
-        <h1 className="text-[1.75rem] font-bold tracking-[-0.035em] text-[#1d1a24]">Add transaction</h1>
+        <h1 className="text-[1.6rem] font-bold tracking-[-0.035em] text-[#1d1a24]">Add transaction</h1>
       </header>
 
       <input type="hidden" name="kind" value={kind} />
       <input type="hidden" name="category_id" value={categoryId} />
       <input type="hidden" name="payment_type" value={paymentType} />
       <input type="hidden" name="target_id" value={targetId} />
+      <input type="hidden" name="amount" value={amount} />
 
-      <div className="grid grid-cols-2 gap-1 rounded-[13px] bg-[#e8e6eb]/80 p-1">
+      <div className="grid h-11 grid-cols-2 gap-1 rounded-[13px] bg-[#e8e6eb]/80 p-1">
         {(['expense', 'income'] as const).map((k) => (
           <button
             key={k}
@@ -129,57 +132,56 @@ export function AddForm({
               setCategoryId('')
               if (k === 'income') selectPaymentType('regular')
             }}
-            className={`min-h-[44px] cursor-pointer rounded-[12px] text-sm font-semibold capitalize transition ${
-              kind === k ? 'bg-white text-[#24202a] shadow-sm' : 'text-[color:var(--text-muted)]'
+            className={`flex h-9 cursor-pointer items-center justify-center gap-1.5 rounded-[10px] text-sm font-semibold capitalize transition ${
+              kind === k ? 'bg-[#29242f] text-white shadow-sm' : 'text-[color:var(--text-muted)]'
             } ${focusRing}`}
           >
+            <span className={`h-1.5 w-1.5 rounded-full ${kind === k ? (k === 'expense' ? 'bg-rose-300' : 'bg-emerald-300') : 'bg-[#aaa4ae]'}`} aria-hidden="true" />
             {k}
           </button>
         ))}
       </div>
 
-      <div className="hero-card relative overflow-hidden rounded-[32px] px-5 py-7 text-center text-white">
+      <div className="hero-card relative overflow-hidden rounded-[22px] px-4 py-4 text-center text-white">
         <div aria-hidden="true" className="absolute -top-16 -right-12 h-40 w-40 rounded-full bg-violet-400/30 blur-3xl" />
         <label htmlFor="amount" className="relative text-[11px] font-semibold tracking-[0.14em] text-white/55 uppercase">
           Amount
         </label>
-        <div className="mt-1 flex items-center justify-center gap-1">
-          <span className="relative text-2xl font-bold text-white/60" aria-hidden="true">₹</span>
+        <div className="mt-0.5 flex items-center justify-center gap-1.5">
+          <span className="relative text-xl font-bold text-white/60" aria-hidden="true">₹</span>
           <input
             id="amount"
-            name="amount"
-            type="number"
-            step="0.01"
-            min="0.01"
+            type="text"
             inputMode="decimal"
             placeholder="0.00"
             required
             autoFocus
-            value={amount}
+            value={amountDisplay}
             readOnly={paymentType === 'recurring'}
-            onChange={(event) => setAmount(event.target.value)}
-            className="relative min-h-[44px] w-full max-w-[220px] bg-transparent text-center text-4xl font-bold tracking-tight tabular-nums text-white outline-none placeholder:text-white/30"
+            onChange={(event) => setAmount(normalizeAmountInput(event.target.value))}
+            style={{ width: `${amountWidth}ch` }}
+            className="relative min-h-[42px] max-w-[75vw] bg-transparent text-left text-[2rem] font-bold tracking-tight tabular-nums text-white outline-none placeholder:text-white/30"
           />
         </div>
       </div>
 
       {paymentType === 'regular' && (
-      <div className="space-y-2">
+      <div>
         <p id="category-label" className={labelClass}>Category</p>
-        <div className="flex flex-wrap gap-2" role="group" aria-labelledby="category-label">
+        <div className="compact-chip-scroll -mx-5 flex gap-2 overflow-x-auto px-5 pb-1" role="group" aria-labelledby="category-label">
           {visible.map((c) => (
             <button
               key={c.id}
               type="button"
               aria-pressed={categoryId === c.id}
               onClick={() => setCategoryId(c.id)}
-              className={`min-h-[44px] cursor-pointer rounded-full border px-4 text-sm transition ${
+              className={`flex h-10 shrink-0 cursor-pointer items-center rounded-[12px] border px-3 text-[13px] transition ${
                 categoryId === c.id
-                  ? 'border-violet-500 bg-violet-100/70 font-semibold text-violet-800 shadow-sm'
-                  : 'border-white/80 bg-white/60 text-[#645f6b]'
+                  ? 'border-[#29242f] bg-[#29242f] font-semibold text-white shadow-sm'
+                  : 'border-white/80 bg-white/55 text-[#5f5965]'
               } ${focusRing}`}
             >
-              <span className="mr-1" aria-hidden="true">{c.icon}</span>
+              <span className="mr-1.5 text-sm" aria-hidden="true">{c.icon}</span>
               {c.name}
             </button>
           ))}
@@ -187,42 +189,36 @@ export function AddForm({
       </div>
       )}
 
-      <div className="space-y-2">
-        <div className="flex items-center justify-between gap-3">
+      <div>
+        <div className="mb-1.5 flex items-center justify-between gap-3">
           <label htmlFor="account_id" className="eyebrow">
             Account
           </label>
           <div
-            className="relative grid h-9 w-[176px] shrink-0 grid-cols-2 rounded-full bg-white/50 p-1 shadow-[inset_0_0_0_1px_rgba(95,84,110,0.09)] backdrop-blur-xl"
+            className="grid h-10 w-[164px] shrink-0 grid-cols-2 gap-1 rounded-[12px] bg-[#e8e6eb]/80 p-1"
             role="group"
             aria-label="Choose bank account or card"
           >
-            <span
-              aria-hidden="true"
-              className={`pointer-events-none absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-full bg-white/95 shadow-[0_4px_12px_-7px_rgba(45,38,55,0.5)] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                accountView === 'card' ? 'translate-x-full' : 'translate-x-0'
-              }`}
-            />
             <button
               type="button"
               aria-pressed={accountView === 'bank'}
               onClick={() => changeAccountView('bank')}
-              className={`relative z-10 flex min-h-[44px] cursor-pointer items-center justify-center gap-1 rounded-full px-1 text-[11px] font-bold transition-colors duration-300 active:scale-95 ${
-                accountView === 'bank' ? 'text-violet-700' : 'text-[color:var(--text-muted)]'
+              className={`flex h-8 cursor-pointer items-center justify-center gap-1 rounded-[9px] px-1 text-[11px] font-bold transition ${
+                accountView === 'bank' ? 'bg-white text-violet-700 shadow-sm' : 'text-[color:var(--text-muted)]'
               } ${focusRing}`}
             >
               <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M3 10h18M5 10v8M9 10v8M15 10v8M19 10v8M3 18h18M12 3l9 5H3l9-5Z" />
               </svg>
               Bank
-              <span className="text-[11px] opacity-60">{bankAccounts.length}</span>
+              <span className="opacity-55">{bankAccounts.length}</span>
             </button>
             <button
               type="button"
               aria-pressed={accountView === 'card'}
               onClick={() => changeAccountView('card')}
-              className={`relative z-10 flex min-h-[44px] cursor-pointer items-center justify-center gap-1 rounded-full px-1 text-[11px] font-bold transition-colors duration-300 active:scale-95 ${
-                accountView === 'card' ? 'text-violet-700' : 'text-[color:var(--text-muted)]'
+              className={`flex h-8 cursor-pointer items-center justify-center gap-1 rounded-[9px] px-1 text-[11px] font-bold transition ${
+                accountView === 'card' ? 'bg-white text-violet-700 shadow-sm' : 'text-[color:var(--text-muted)]'
               } ${focusRing}`}
             >
               <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -230,7 +226,7 @@ export function AddForm({
                 <path d="M3 10h18" />
               </svg>
               Card
-              <span className="text-[11px] opacity-60">{cardAccounts.length}</span>
+              <span className="opacity-55">{cardAccounts.length}</span>
             </button>
           </div>
         </div>
@@ -256,9 +252,9 @@ export function AddForm({
       </div>
 
       {kind === 'expense' && accountView === 'bank' && (
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           <p id="payment-type-label" className={labelClass}>Pay towards</p>
-          <div className="grid grid-cols-3 gap-2" role="group" aria-labelledby="payment-type-label">
+          <div className="grid h-11 grid-cols-3 gap-1 rounded-[13px] bg-[#e8e6eb]/80 p-1" role="group" aria-labelledby="payment-type-label">
             {([
               ['regular', 'Regular'],
               ['recurring', 'Recurring'],
@@ -274,10 +270,10 @@ export function AddForm({
                   aria-pressed={paymentType === value}
                   disabled={unavailable}
                   onClick={() => selectPaymentType(value)}
-                  className={`min-h-[44px] cursor-pointer rounded-[13px] px-2 text-xs font-bold transition active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 ${
+                  className={`h-9 cursor-pointer rounded-[10px] px-1 text-[11px] font-bold transition disabled:cursor-not-allowed disabled:opacity-35 ${
                     paymentType === value
-                      ? 'bg-white text-violet-700 shadow-sm'
-                      : 'bg-white/45 text-[color:var(--text-muted)]'
+                      ? 'bg-[#29242f] text-white shadow-sm'
+                      : 'text-[color:var(--text-muted)]'
                   } ${focusRing}`}
                 >
                   {label}
@@ -306,7 +302,7 @@ export function AddForm({
                   </option>
                 ))}
               </select>
-              <p className="mt-2 text-xs text-[color:var(--text-muted)]">
+              <p className="mt-1.5 text-[11px] leading-snug text-[color:var(--text-muted)]">
                 Paying this marks it complete for the current month.
               </p>
             </div>
@@ -330,7 +326,7 @@ export function AddForm({
                   )
                 })}
               </select>
-              <p className="mt-2 text-xs text-[color:var(--text-muted)]">
+              <p className="mt-1.5 text-[11px] leading-snug text-[color:var(--text-muted)]">
                 Moves money from this account and reduces the card’s used limit.
               </p>
             </div>
@@ -338,34 +334,36 @@ export function AddForm({
         </div>
       )}
 
-      <div className="space-y-2">
-        <label htmlFor="occurred_at" className={labelClass}>
-          Date
-        </label>
-        <input
-          id="occurred_at"
-          name="occurred_at"
-          type="date"
-          className={field}
-          defaultValue={todayIso()}
-          required
-        />
-      </div>
-
-      {paymentType === 'regular' && (
+      <div className={`grid gap-3 ${paymentType === 'regular' ? 'min-[360px]:grid-cols-[minmax(155px,0.95fr)_minmax(0,1.05fr)]' : ''}`}>
         <div>
-          <label htmlFor="transaction-note" className={labelClass}>
-            Note <span className="font-normal normal-case">(optional)</span>
+          <label htmlFor="occurred_at" className={labelClass}>
+            Date
           </label>
           <input
-            id="transaction-note"
-            name="note"
+            id="occurred_at"
+            name="occurred_at"
+            type="date"
             className={field}
-            placeholder="e.g. Lunch with team"
-            maxLength={120}
+            defaultValue={todayIso()}
+            required
           />
         </div>
-      )}
+
+        {paymentType === 'regular' && (
+          <div className="min-w-0">
+            <label htmlFor="transaction-note" className={labelClass}>
+              Note <span className="font-normal normal-case">(optional)</span>
+            </label>
+            <input
+              id="transaction-note"
+              name="note"
+              className={field}
+              placeholder="Lunch, groceries…"
+              maxLength={120}
+            />
+          </div>
+        )}
+      </div>
 
       {state.error && (
         <p role="alert" className="rounded-xl bg-rose-50 px-4 py-2.5 text-sm text-rose-700">

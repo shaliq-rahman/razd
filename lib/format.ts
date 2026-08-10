@@ -19,6 +19,37 @@ export function formatSignedINR(amount: number, kind: 'income' | 'expense'): str
   return `${sign}${inr.format(Math.abs(amount))}`
 }
 
+/**
+ * Keeps an editable rupee value numeric for submission while accepting a
+ * comma-formatted value pasted back into the field. At most one decimal point
+ * and two paise digits are retained.
+ */
+export function normalizeAmountInput(value: string): string {
+  const cleaned = value.replace(/,/g, '').replace(/[^\d.]/g, '')
+  const decimalAt = cleaned.indexOf('.')
+
+  if (decimalAt === -1) return cleaned.replace(/^0+(?=\d)/, '')
+
+  const whole = cleaned.slice(0, decimalAt).replace(/^0+(?=\d)/, '') || '0'
+  const fraction = cleaned.slice(decimalAt + 1).replace(/\./g, '').slice(0, 2)
+  return `${whole}.${fraction}`
+}
+
+/** Formats a numeric input string with Indian grouping without losing typing state. */
+export function formatAmountInput(value: string): string {
+  if (!value) return ''
+
+  const normalized = normalizeAmountInput(value)
+  const hasDecimal = normalized.includes('.')
+  const [whole, fraction = ''] = normalized.split('.')
+  const lastThree = whole.slice(-3)
+  const leading = whole.slice(0, -3)
+  const groupedLeading = leading.replace(/\B(?=(\d{2})+(?!\d))/g, ',')
+  const grouped = leading ? `${groupedLeading},${lastThree}` : lastThree
+
+  return hasDecimal ? `${grouped}.${fraction}` : grouped
+}
+
 const dayMonth = new Intl.DateTimeFormat('en-IN', {
   day: 'numeric',
   month: 'short',
