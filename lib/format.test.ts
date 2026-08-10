@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { formatINR, formatSignedINR, formatDayLabel } from './format'
+import {
+  formatAmountInput,
+  formatDayLabel,
+  formatINR,
+  formatSignedINR,
+  normalizeAmountInput,
+} from './format'
 
 describe('formatINR', () => {
   it('formats with Indian digit grouping', () => {
@@ -30,6 +36,26 @@ describe('formatSignedINR', () => {
 
   it('prefixes expense with a minus', () => {
     expect(formatSignedINR(500, 'expense')).toBe('-₹500.00')
+  })
+})
+
+describe('editable amount formatting', () => {
+  it.each([
+    ['100', '100'],
+    ['1000', '1,000'],
+    ['10000', '10,000'],
+    ['100000', '1,00,000'],
+    ['12345678.5', '1,23,45,678.5'],
+  ])('groups %s using the Indian number system', (value, expected) => {
+    expect(formatAmountInput(value)).toBe(expected)
+  })
+
+  it('keeps a trailing decimal point while the user is typing', () => {
+    expect(formatAmountInput('1000.')).toBe('1,000.')
+  })
+
+  it('normalizes pasted commas and limits paise to two digits', () => {
+    expect(normalizeAmountInput('₹1,23,456.789')).toBe('123456.78')
   })
 })
 

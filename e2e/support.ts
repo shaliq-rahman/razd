@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import type { Page } from '@playwright/test'
+import { expect, type Page } from '@playwright/test'
+import { formatAmountInput } from '../lib/format'
 
 /**
  * Reads .env directly. Next.js loads it for the app, but Playwright's own process
@@ -112,6 +113,7 @@ export async function addTransaction(
     await page.getByRole('button', { name: 'income', exact: true }).click()
   }
   await page.getByLabel('Amount').fill(opts.amount)
+  await expect(page.getByLabel('Amount')).toHaveValue(formatAmountInput(opts.amount))
   await page.getByRole('button', { name: new RegExp(opts.category) }).click()
   // Target the label, not the placeholder: placeholder copy is presentational
   // and changing it should not break the suite.

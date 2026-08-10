@@ -78,6 +78,19 @@ body {
   overflow-x: clip;
 }
 
+/* Keep every page and nested scroll region scrollable, but remove browser
+   scrollbar chrome so the installed PWA reads like a native mobile app. */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 @supports not (overflow: clip) {
   html,
   body {
@@ -388,6 +401,18 @@ input[type="week"].ios-field {
 }
 
 .accounts-transactions-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Compact single-line pickers use horizontal space instead of growing the
+   transaction form by several rows. Touch scrolling remains available while
+   the decorative scrollbar stays out of the mobile UI. */
+.compact-chip-scroll {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.compact-chip-scroll::-webkit-scrollbar {
   display: none;
 }
 
