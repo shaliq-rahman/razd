@@ -72,6 +72,7 @@ export default async function HomePage() {
           <ItemSpends transactions={itemSpends} compact />
           <Link
             href="/transactions"
+            prefetch={true}
             aria-label="Transaction history"
             className={`surface-card press flex h-11 w-11 cursor-pointer items-center justify-center rounded-[13px] text-violet-700 ${focusRing}`}
           >
@@ -94,6 +95,7 @@ export default async function HomePage() {
           action={
             <Link
               href="/accounts"
+              prefetch={true}
               className={`inline-flex min-h-[48px] items-center rounded-[14px] bg-indigo-600 px-5 font-semibold text-white transition active:scale-95 ${focusRing}`}
             >
               Add an account
@@ -142,7 +144,7 @@ export default async function HomePage() {
             <h2 className="mt-0.5 text-lg font-bold tracking-tight text-[#201d27]">Recent transactions</h2>
           </div>
           {recent.length > 0 && (
-            <Link href="/transactions" className={`-mr-2 inline-flex min-h-[44px] items-center rounded-xl px-2 text-sm font-semibold text-violet-700 ${focusRing}`}>
+            <Link href="/transactions" prefetch={true} className={`-mr-2 inline-flex min-h-[44px] items-center rounded-xl px-2 text-sm font-semibold text-violet-700 ${focusRing}`}>
               See all
             </Link>
           )}

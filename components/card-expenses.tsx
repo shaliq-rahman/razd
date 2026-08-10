@@ -23,6 +23,7 @@ export function CardExpenses({
         {summary.count > 0 && (
           <Link
             href="/transactions"
+            prefetch={true}
             className={`-mr-2 inline-flex min-h-[44px] items-center rounded-xl px-2 text-sm font-semibold text-violet-700 ${focusRing}`}
           >
             View history

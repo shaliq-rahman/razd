@@ -43,7 +43,7 @@ export default async function ProfilePage() {
 
       <section>
         <p className="eyebrow mb-2 px-1">Insights</p>
-        <Link href="/stats" className={`surface-card flex min-h-[76px] items-center gap-3 rounded-[24px] px-4 transition hover:-translate-y-0.5 ${focusRing}`}>
+        <Link href="/stats" prefetch={true} className={`surface-card flex min-h-[76px] items-center gap-3 rounded-[24px] px-4 transition hover:-translate-y-0.5 ${focusRing}`}>
           <span className="flex h-11 w-11 items-center justify-center rounded-[13px] bg-violet-100 text-violet-700">
             <ChartIcon className="h-5 w-5" />
           </span>

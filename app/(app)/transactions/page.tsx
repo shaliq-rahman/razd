@@ -12,6 +12,7 @@ export default async function TransactionsPage() {
       <header className="flex items-center gap-2">
         <Link
           href="/"
+          prefetch={true}
           aria-label="Back"
           className={`-ml-2 flex h-11 w-11 items-center justify-center rounded-full text-slate-700 transition hover:bg-white/70 ${focusRing}`}
         >

@@ -46,6 +46,7 @@ export function BottomNav() {
               <li key={tab.href}>
                 <Link
                   href={tab.href}
+                  prefetch={true}
                   aria-current={active ? 'page' : undefined}
                   className={`group relative flex h-[54px] w-[54px] cursor-pointer items-center justify-center rounded-[26px] bg-[#1d1a24] text-white ring-1 ring-white/20 transition-all duration-300 ease-out hover:-translate-y-0.5 active:scale-90 ${focusRing}`}
                   style={{
@@ -78,6 +79,7 @@ export function BottomNav() {
             <li key={tab.href}>
               <Link
                 href={tab.href}
+                prefetch={true}
                 aria-current={active ? 'page' : undefined}
                 // min-h-[44px] keeps the tap area at the platform minimum even
                 // though the icon and label are smaller than that.
