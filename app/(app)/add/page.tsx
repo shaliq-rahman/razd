@@ -24,6 +24,7 @@ export default async function AddPage() {
         action={
           <Link
             href="/accounts"
+            prefetch={true}
             className="inline-flex min-h-[48px] items-center rounded-[14px] bg-indigo-600 px-5 font-semibold text-white transition active:scale-95"
           >
             Go to accounts
