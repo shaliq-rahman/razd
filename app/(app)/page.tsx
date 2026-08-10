@@ -35,7 +35,7 @@ export default async function HomePage() {
   const now = new Date()
   const monthName = new Intl.DateTimeFormat('en-IN', { month: 'long' }).format(now)
   const today = new Intl.DateTimeFormat('en-IN', {
-    weekday: 'long',
+    weekday: 'short',
     day: 'numeric',
     month: 'short',
   }).format(now)
@@ -45,31 +45,36 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-5">
-      <header className="relative flex items-end justify-between pt-1">
+      <header className="relative pt-1">
         {/* Beautiful vector gradients behind the header */}
         <div className="vector-blur bg-violet-400 w-48 h-48 rounded-full top-[-2rem] left-[-2rem]"></div>
         <div className="vector-blur bg-cyan-400 w-40 h-40 rounded-full top-[-1rem] right-[20%]"></div>
-        
-        <div className="relative z-10">
-          <div className="mb-1.5 flex items-center gap-1.5">
+
+        {/* The brand line gets a full-width row of its own. Sharing a row with
+            the action buttons left it roughly 130px on a 320px screen, so the
+            date truncated to "MO…" and the marks stacked. */}
+        <div className="relative z-10 mb-2">
+          <div className="flex flex-nowrap items-center gap-1.5 whitespace-nowrap">
             <Image
               src="/razd-app-icon.png"
               alt=""
               width={22}
               height={22}
               priority
-              className="h-[22px] w-[22px] rounded-[7px] ring-1 ring-black/5"
+              className="h-[22px] w-[22px] shrink-0 rounded-[7px] ring-1 ring-black/5"
             />
-            <span className="text-[11px] font-black tracking-[-0.02em] text-[#211d27]">Razd</span>
-            <span className="text-[11px] font-black text-emerald-600" dir="rtl" lang="ar">رصد</span>
-            <span className="text-[11px] text-[#aaa3ae]">•</span>
-            <span className="eyebrow">{today}</span>
+            <span className="shrink-0 text-[11px] font-black tracking-[-0.02em] text-[#211d27]">Razd</span>
+            <span className="shrink-0 text-[11px] font-black text-emerald-600" dir="rtl" lang="ar">رصد</span>
+            <span className="shrink-0 text-[11px] text-[color:var(--text-faint)]" aria-hidden="true">•</span>
+            <span className="eyebrow truncate">{today}</span>
           </div>
-          <h1 className="text-[1.75rem] font-bold tracking-[-0.04em] text-compact text-[#1d1a24]">
+        </div>
+
+        <div className="relative z-10 flex items-end justify-between gap-3">
+          <h1 className="min-w-0 flex-1 truncate text-[1.75rem] font-bold tracking-[-0.04em] text-compact text-[#1d1a24]">
             Hi, {displayName}
           </h1>
-        </div>
-        <div className="flex items-center gap-2 relative z-10">
+          <div className="flex shrink-0 items-center gap-2">
           <ItemSpends transactions={itemSpends} compact />
           <Link
             href="/transactions"
@@ -82,6 +87,7 @@ export default async function HomePage() {
           </Link>
           <div className="flex h-11 w-11 items-center justify-center rounded-[13px] bg-[#1d1a24] text-sm font-bold text-white shadow-lg shadow-slate-900/15" aria-label={`${displayName} profile`}>
             {profileInitial}
+          </div>
           </div>
         </div>
       </header>
