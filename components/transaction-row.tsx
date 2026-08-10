@@ -1,4 +1,5 @@
 import { Amount } from './amount'
+import { CategoryIcon } from './icons'
 import { formatDayLabel } from '@/lib/format'
 import type { TransactionWithRefs } from '@/lib/types'
 
@@ -22,10 +23,10 @@ export function TransactionRow({
   return (
     <li className="flex items-center gap-3 py-4">
       <span
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[13px] bg-[#f1eff3] text-lg shadow-[inset_0_0_0_1px_rgba(80,72,92,0.04)]"
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[13px] bg-violet-100 text-violet-700 shadow-[inset_0_0_0_1px_rgba(80,72,92,0.04)]"
         aria-hidden="true"
       >
-        {t.categories?.icon ?? '•'}
+        <CategoryIcon name={t.categories?.name} className="h-5 w-5" />
       </span>
       <span className="min-w-0 flex-1">
         <span className="block truncate text-[15px] font-semibold text-[#25212b]">

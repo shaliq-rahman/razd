@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { CardIcon } from '@/components/icons'
+import { CardIcon, CategoryIcon } from '@/components/icons'
 import { formatINR } from '@/lib/format'
 import { focusRing } from '@/lib/ui'
 import type { CardExpenseSummary } from '@/lib/types'
@@ -55,10 +55,10 @@ export function CardExpenses({
             {summary.recent.map((transaction) => (
               <li key={transaction.id} className="flex items-center gap-3 py-3">
                 <span
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[11px] bg-white/70 text-sm"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[11px] bg-white/70 text-violet-700"
                   aria-hidden="true"
                 >
-                  {transaction.categories?.icon ?? '•'}
+                  <CategoryIcon name={transaction.categories?.name} className="h-4 w-4" />
                 </span>
                 <span className="min-w-0 flex-1 truncate text-sm font-medium text-[#403946]">
                   {transaction.note || transaction.categories?.name || 'Card payment'}

@@ -1,6 +1,5 @@
 import { getRecurringPayments } from '@/lib/queries/recurring'
-import { getCardPortfolio } from '@/lib/queries/balances'
-import { getAccountBalances } from '@/lib/queries/balances'
+import { buildCardPortfolio, getAccountBalances } from '@/lib/queries/balances'
 import { RecurringClient } from './recurring-client'
 
 function localDate() {
@@ -11,11 +10,11 @@ function localDate() {
 }
 
 export default async function RecurringPage() {
-  const [payments, accounts, cards] = await Promise.all([
+  const [payments, accounts] = await Promise.all([
     getRecurringPayments(),
     getAccountBalances(),
-    getCardPortfolio(),
   ])
+  const cards = buildCardPortfolio(accounts)
 
   return (
     <RecurringClient

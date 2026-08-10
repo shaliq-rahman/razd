@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Sheet } from '@/components/sheet'
 import { AccountTypeIcon, accountTypeLabel } from '@/lib/account-types'
+import { CategoryIcon } from '@/components/icons'
 import { formatDayLabel, formatINR } from '@/lib/format'
 import { sumAmounts } from '@/lib/money'
 import { focusRing } from '@/lib/ui'
@@ -67,8 +68,8 @@ export function ItemSpends({
           <ul className="divide-y divide-[#e6e2e8]">
             {transactions.map((transaction) => (
               <li key={transaction.id} className="flex items-center gap-3 py-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[#f1eff3] text-lg" aria-hidden="true">
-                  {transaction.categories?.icon ?? '•'}
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-violet-100 text-violet-700" aria-hidden="true">
+                  <CategoryIcon name={transaction.categories?.name} className="h-[18px] w-[18px]" />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-semibold text-[#29242f]">

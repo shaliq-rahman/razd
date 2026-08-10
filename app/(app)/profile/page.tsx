@@ -8,15 +8,14 @@ import { ResetDataCard } from './reset-data-card'
 
 export default async function ProfilePage() {
   const supabase = await createServerSupabase()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('display_name, currency')
-    .eq('id', user!.id)
-    .maybeSingle()
+  const [claimsResult, profileResult] = await Promise.all([
+    supabase.auth.getClaims(),
+    supabase.from('profiles').select('display_name, currency').maybeSingle(),
+  ])
+  const profile = profileResult.data
+  const email = typeof claimsResult.data?.claims.email === 'string'
+    ? claimsResult.data.claims.email
+    : undefined
 
   return (
     <div className="space-y-5">
@@ -33,7 +32,7 @@ export default async function ProfilePage() {
         <dl className="space-y-3 text-sm">
           <div className="flex justify-between gap-4">
             <dt className="text-slate-600">Email</dt>
-            <dd className="truncate font-medium text-slate-900">{user?.email}</dd>
+            <dd className="truncate font-medium text-slate-900">{email}</dd>
           </div>
           <div className="flex justify-between gap-4">
             <dt className="text-slate-600">Currency</dt>

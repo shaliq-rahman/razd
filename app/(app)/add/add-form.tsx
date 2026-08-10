@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from 'react'
 import { SubmitButton } from '@/components/submit-button'
+import { CategoryIcon } from '@/components/icons'
 import { createTransaction, type ActionState } from './actions'
 import { focusRing } from '@/lib/ui'
 import { formatAmountInput, formatINR, normalizeAmountInput } from '@/lib/format'
@@ -181,7 +182,7 @@ export function AddForm({
                   : 'border-white/80 bg-white/55 text-[#5f5965]'
               } ${focusRing}`}
             >
-              <span className="mr-1.5 text-sm" aria-hidden="true">{c.icon}</span>
+              <CategoryIcon name={c.name} className="mr-1.5 h-4 w-4" />
               {c.name}
             </button>
           ))}

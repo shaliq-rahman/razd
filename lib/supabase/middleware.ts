@@ -24,20 +24,21 @@ export async function updateSession(request: NextRequest) {
   )
 
   // Do not remove: this call refreshes the auth token cookie.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  // getClaims verifies modern asymmetric JWTs against cached signing keys,
+  // avoiding an Auth API round trip on every page navigation.
+  const { data: claimsData } = await supabase.auth.getClaims()
+  const isAuthenticated = Boolean(claimsData?.claims.sub)
 
   const path = request.nextUrl.pathname
   const isPublic = PUBLIC_PATHS.some((p) => path.startsWith(p))
 
-  if (!user && !isPublic) {
+  if (!isAuthenticated && !isPublic) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
   }
 
-  if (user && (path === '/login' || path === '/signup')) {
+  if (isAuthenticated && (path === '/login' || path === '/signup')) {
     const url = request.nextUrl.clone()
     url.pathname = '/'
     return NextResponse.redirect(url)

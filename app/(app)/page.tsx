@@ -1,12 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { getAccountBalances } from '@/lib/queries/balances'
-import {
-  getCardExpenseSummary,
-  getMonthExpenseTransactions,
-  getRecentTransactions,
-  getMonthTotals,
-} from '@/lib/queries/transactions'
+import { getHomeTransactionData } from '@/lib/queries/transactions'
 import { BalanceCard } from '@/components/balance-card'
 import { EmptyState } from '@/components/empty-state'
 import { WalletScene, ReceiptScene } from '@/components/illustrations'
@@ -19,18 +14,17 @@ import { createServerSupabase } from '@/lib/supabase/server'
 
 export default async function HomePage() {
   const supabase = await createServerSupabase()
-  const { data: { user } } = await supabase.auth.getUser()
-  const { data: profile } = user
-    ? await supabase.from('profiles').select('display_name').eq('id', user.id).maybeSingle()
-    : { data: null }
-
-  const [accounts, recent, month, cardExpenses, itemSpends] = await Promise.all([
+  const [claimsResult, profileResult, accounts, dashboard] = await Promise.all([
+    supabase.auth.getClaims(),
+    supabase.from('profiles').select('display_name').maybeSingle(),
     getAccountBalances(),
-    getRecentTransactions(5),
-    getMonthTotals(),
-    getCardExpenseSummary(),
-    getMonthExpenseTransactions(),
+    getHomeTransactionData(),
   ])
+  const profile = profileResult.data
+  const email = typeof claimsResult.data?.claims.email === 'string'
+    ? claimsResult.data.claims.email
+    : undefined
+  const { recent, month, cardExpenses, itemSpends } = dashboard
 
   const now = new Date()
   const monthName = new Intl.DateTimeFormat('en-IN', { month: 'long' }).format(now)
@@ -39,7 +33,7 @@ export default async function HomePage() {
     day: 'numeric',
     month: 'short',
   }).format(now)
-  const displayName = profile?.display_name?.trim() || user?.email?.split('@')[0] || 'there'
+  const displayName = profile?.display_name?.trim() || email?.split('@')[0] || 'there'
   const profileInitial = displayName.charAt(0).toLocaleUpperCase('en-IN')
   const bankAccounts = accounts.filter((account) => account.type !== 'card')
 
