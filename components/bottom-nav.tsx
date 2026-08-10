@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 import { focusRing } from '@/lib/ui'
 
 const TABS = [
@@ -31,6 +32,22 @@ function isActive(pathname: string, href: string) {
 
 export function BottomNav() {
   const pathname = usePathname()
+  const router = useRouter()
+  const [pendingRoute, setPendingRoute] = useState<{ href: string; from: string } | null>(null)
+
+  // All app pages are personalized Server Components. Warm their complete RSC
+  // payloads as soon as the persistent navigation mounts so the first tap does
+  // not have to wait for Supabase. Add is intentionally first because it has
+  // the largest payload (accounts, categories, and recurring payments).
+  useEffect(() => {
+    const routes = ['/add', '/accounts', '/recurring', '/profile', '/'] as const
+    routes.forEach((route) => router.prefetch(route))
+  }, [router])
+
+  // The optimistic route is valid only while the original pathname is still
+  // committed. Once navigation lands, the real pathname takes over without an
+  // extra state-setting render.
+  const visiblePath = pendingRoute?.from === pathname ? pendingRoute.href : pathname
 
   return (
     <nav
@@ -39,7 +56,7 @@ export function BottomNav() {
     >
       <ul className="flex h-[70px] items-center justify-around gap-1 px-2 py-1.5">
         {TABS.map((tab) => {
-          const active = isActive(pathname, tab.href)
+          const active = isActive(visiblePath, tab.href)
 
           if (tab.label === 'Add') {
             return (
@@ -47,6 +64,7 @@ export function BottomNav() {
                 <Link
                   href={tab.href}
                   prefetch={true}
+                  onClick={() => setPendingRoute({ href: tab.href, from: pathname })}
                   aria-current={active ? 'page' : undefined}
                   className={`group relative flex h-[54px] w-[54px] cursor-pointer items-center justify-center rounded-[26px] bg-[#1d1a24] text-white ring-1 ring-white/20 transition-all duration-300 ease-out hover:-translate-y-0.5 active:scale-90 ${focusRing}`}
                   style={{
@@ -80,6 +98,7 @@ export function BottomNav() {
               <Link
                 href={tab.href}
                 prefetch={true}
+                onClick={() => setPendingRoute({ href: tab.href, from: pathname })}
                 aria-current={active ? 'page' : undefined}
                 // min-h-[44px] keeps the tap area at the platform minimum even
                 // though the icon and label are smaller than that.
