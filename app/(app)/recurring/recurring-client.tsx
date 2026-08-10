@@ -92,22 +92,22 @@ export function RecurringClient({
 
   return (
     <div className="space-y-4 pt-1">
-      <header className="flex items-end justify-between gap-3">
+      <header className="flex items-center justify-between gap-3">
         <div>
           <p className="eyebrow mb-1">Monthly commitments</p>
-          <h1 className="text-[1.75rem] font-bold tracking-[-0.035em] text-[#1d1a24]">
+          <h1 className="text-[1.55rem] font-bold tracking-[-0.035em] text-[#1d1a24]">
             Recurring payments
           </h1>
         </div>
         <button
           onClick={openForm}
-          className={`flex min-h-[44px] items-center gap-1.5 rounded-[12px] bg-[#1d1a24] px-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/15 transition active:scale-95 ${focusRing}`}
+          className={`press flex min-h-[44px] items-center gap-1.5 rounded-[13px] bg-[#1d1a24] px-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/15 ${focusRing}`}
         >
           <span className="text-lg leading-none">+</span> Add
         </button>
       </header>
 
-      <section className="hero-card relative overflow-hidden rounded-[25px] px-4 py-3.5 text-white">
+      <section className="hero-card relative overflow-hidden rounded-[22px] px-4 py-3 text-white">
         <div
           aria-hidden="true"
           className="absolute -top-14 -right-10 h-40 w-40 rounded-full bg-violet-400/30 blur-3xl"
@@ -115,20 +115,20 @@ export function RecurringClient({
         <p className="relative text-[11px] font-semibold tracking-[0.15em] text-white/50 uppercase">
           Total outstanding
         </p>
-        <div className="relative mt-1.5 flex items-end justify-between gap-3">
-          <p data-testid="total-outstanding" className="text-[1.7rem] font-bold tracking-tight tabular-nums">{formatINR(totalOutstanding)}</p>
-          <p className="pb-1 text-right text-[11px] leading-tight text-white/55">
+        <div className="relative mt-1 flex items-end justify-between gap-3">
+          <p data-testid="total-outstanding" className="text-[1.6rem] font-bold tracking-tight tabular-nums">{formatINR(totalOutstanding)}</p>
+          <p className="pb-0.5 text-right text-[11px] leading-tight text-white/60">
             {outstandingRows.length} unpaid
             {overdueCount > 0 && ` · ${overdueCount} overdue`}
             {paidThisMonth > 0 && ` · ${formatINR(paidThisMonth)} paid`}
           </p>
         </div>
-        <div className="relative mt-3 grid grid-cols-2 gap-2 border-t border-white/15 pt-3 text-[11px] text-white/60">
-          <p className="flex items-center justify-between gap-2 rounded-full bg-white/8 px-3 py-1.5">
+        <div className="relative mt-2.5 grid grid-cols-2 gap-2 border-t border-white/15 pt-2.5 text-[11px] text-white/65">
+          <p className="flex items-center justify-between gap-2 rounded-[10px] bg-white/8 px-2.5 py-1.5">
             <span>Recurring</span>
             <strong data-testid="total-due" className="tabular-nums text-white">{formatINR(totalDue)}</strong>
           </p>
-          <p className="flex items-center justify-between gap-2 rounded-full bg-white/8 px-3 py-1.5">
+          <p className="flex items-center justify-between gap-2 rounded-[10px] bg-white/8 px-2.5 py-1.5">
             <span>Cards</span>
             <strong data-testid="total-card-outstanding" className="tabular-nums text-white">{formatINR(totalCardOutstanding)}</strong>
           </p>
@@ -137,8 +137,13 @@ export function RecurringClient({
 
       {cards.length > 0 && (
         <section>
-          <h2 className="eyebrow mb-2">Card outstanding</h2>
-          <ul className="grid grid-cols-2 gap-2">
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="eyebrow">Card outstanding</h2>
+            <span className="text-[11px] font-medium text-[color:var(--text-faint)]">
+              {cards.length} {cards.length === 1 ? 'card' : 'cards'}
+            </span>
+          </div>
+          <ul className="surface-card divide-y divide-[#e7e3e9] overflow-hidden rounded-[18px] px-3">
             {cards.map((card) => {
               const minimumPaid = isMinimumDueCovered(
                 card.minimumDuePaidMonth,
@@ -147,25 +152,33 @@ export function RecurringClient({
               )
 
               return (
-                <li key={card.id} className="surface-card rounded-[20px] px-3 py-2.5">
-                  <p className="truncate text-xs text-[color:var(--text-muted)]">{card.name}</p>
-                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                    <p
+                <li key={card.id} className="flex min-h-[58px] items-center gap-3 py-2.5">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] bg-violet-100 text-violet-700">
+                    <svg viewBox="0 0 24 24" className="h-[17px] w-[17px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 10h18" /></svg>
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-semibold text-[#29242f]">{card.name}</span>
+                    <span className="mt-0.5 block text-[11px] text-[color:var(--text-muted)]">
+                      {card.dueDay ? `Due on the ${describeDueDay(card.dueDay).replace(' of every month', '')}` : 'No due date'}
+                    </span>
+                  </span>
+                  <span className="shrink-0 text-right">
+                    <span
                       data-testid={`card-outstanding-${card.id}`}
-                      className={`font-bold tabular-nums ${
+                      className={`block text-sm font-bold tabular-nums ${
                         minimumPaid
                           ? 'text-[#29242f]'
                           : cardAlertClass(card.outstanding) || 'text-[#29242f]'
                       }`}
                     >
                       {formatINR(card.outstanding)}
-                    </p>
+                    </span>
                     {minimumPaid && (
-                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
+                      <span className="mt-0.5 block text-[10px] font-bold text-emerald-700">
                         Minimum paid
                       </span>
                     )}
-                  </div>
+                  </span>
                 </li>
               )
             })}
@@ -174,61 +187,82 @@ export function RecurringClient({
       )}
 
       {rows.length > 0 ? (
-        <ul className="space-y-2">
-          {rows.map(({ payment, timing }) => {
-            const due = timing.overdue || timing.occurrence <= today
-            const dueClass = !timing.paid && !timing.ended
-              ? dueAlertClass(timing.occurrence, today)
-              : ''
-            const tone = timing.paid
-              ? 'bg-emerald-100 text-emerald-700'
-              : timing.ended
-                ? 'bg-[#eeeaf1] text-[#655f6b]'
-                : timing.overdue
-                  ? 'bg-rose-100 text-rose-700'
-                  : 'bg-violet-100 text-violet-700'
+        <section>
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="eyebrow">Scheduled bills</h2>
+            <span className="text-[11px] font-medium text-[color:var(--text-faint)]">
+              {rows.length} {rows.length === 1 ? 'payment' : 'payments'}
+            </span>
+          </div>
+          <ul className="stagger space-y-2">
+            {rows.map(({ payment, timing }) => {
+              const due = timing.overdue || timing.occurrence <= today
+              const dueClass = !timing.paid && !timing.ended
+                ? dueAlertClass(timing.occurrence, today)
+                : ''
+              const tone = timing.paid
+                ? 'bg-emerald-100 text-emerald-700'
+                : timing.ended
+                  ? 'bg-[#eeeaf1] text-[#655f6b]'
+                  : timing.overdue
+                    ? 'bg-rose-100 text-rose-700'
+                    : 'bg-violet-100 text-violet-700'
 
-            return (
-              <li
-                key={payment.id}
-                className={`surface-card rounded-[21px] px-3.5 py-3 transition ${
-                  timing.paid || timing.ended ? 'opacity-70' : ''
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <span
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] ${tone}`}
-                  >
-                    <PaymentIcon name={payment.name} paid={timing.paid} />
-                  </span>
-
-                  <span className="min-w-0 flex-1">
+              return (
+                <li
+                  key={payment.id}
+                  className={`surface-card overflow-hidden rounded-[18px] px-3 py-2.5 transition ${
+                    timing.paid || timing.ended ? 'opacity-70' : ''
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
                     <span
-                      className={`block truncate text-sm font-semibold text-[#29242f] ${
-                        timing.paid ? 'line-through' : ''
-                      }`}
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] ${tone}`}
                     >
-                      {payment.name}
+                      <PaymentIcon name={payment.name} paid={timing.paid} />
                     </span>
-                    <span className={`mt-0.5 text-[11px] ${dueClass || (timing.overdue ? 'block font-semibold text-rose-700' : 'block text-[color:var(--text-muted)]')}`}>
-                      {timing.paid
-                        ? `Paid for ${monthName}`
-                        : timing.ended
-                          ? `Ended ${formatShortDate(payment.end_date)}`
-                          : timing.overdue
-                            ? `Overdue · was due ${formatShortDate(timing.occurrence)}`
-                            : `Due ${formatShortDate(timing.occurrence)}`}
+
+                    <span className="min-w-0 flex-1">
+                      <span
+                        className={`block truncate text-sm font-semibold text-[#29242f] ${
+                          timing.paid ? 'line-through' : ''
+                        }`}
+                      >
+                        {payment.name}
+                      </span>
+                      <span className={`mt-0.5 text-[11px] ${dueClass || (timing.overdue ? 'block font-semibold text-rose-700' : 'block text-[color:var(--text-muted)]')}`}>
+                        {timing.paid
+                          ? `Paid for ${monthName}`
+                          : timing.ended
+                            ? `Ended ${formatShortDate(payment.end_date)}`
+                            : timing.overdue
+                              ? `Overdue · ${formatShortDate(timing.occurrence)}`
+                              : `Due ${formatShortDate(timing.occurrence)}`}
+                      </span>
                     </span>
-                    <span className="mt-0.5 block text-[11px] text-[color:var(--text-faint)]">
+
+                    <span className="shrink-0 text-sm font-bold tabular-nums text-[#29242f]">
+                      {formatINR(payment.amount)}
+                    </span>
+                  </div>
+
+                  <div className="mt-2 flex min-h-[40px] items-center gap-2 border-t border-[#e7e3e9] pt-2">
+                    <span className="min-w-0 flex-1 truncate text-[10px] text-[color:var(--text-faint)]">
                       {describeDueDay(payment.due_day)}
                       {payment.accounts ? ` · ${payment.accounts.name}` : ''}
                     </span>
-                  </span>
 
-                  <span className="shrink-0 text-right">
-                    <span className="block text-sm font-bold tabular-nums text-[#29242f]">
-                      {formatINR(payment.amount)}
-                    </span>
+                    <form action={deleteRecurringPayment}>
+                      <input type="hidden" name="id" value={payment.id} />
+                      <button
+                        type="submit"
+                        aria-label={`Remove ${payment.name}`}
+                        title="Remove"
+                        className={`flex h-9 w-9 items-center justify-center rounded-[11px] text-[color:var(--text-muted)] transition hover:bg-rose-50 hover:text-rose-700 ${focusRing}`}
+                      >
+                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m-9 0 1 14h8l1-14M10 10v6m4-6v6" /></svg>
+                      </button>
+                    </form>
 
                     {!timing.ended && (
                       <form action={setRecurringPaid}>
@@ -240,34 +274,24 @@ export function RecurringClient({
                         />
                         <button
                           type="submit"
-                          className={`mt-1 inline-flex min-h-[44px] items-center rounded-full px-3 text-[11px] font-semibold transition ${
+                          className={`inline-flex h-9 items-center rounded-[11px] px-3 text-[11px] font-semibold transition ${
                             timing.paid
                               ? 'bg-[#eeeaf1] text-[#655f6b]'
                               : due
-                                ? 'bg-emerald-600 text-white'
-                                : 'bg-[#eeeaf1] text-[#655f6b]'
+                                ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-900/15'
+                                : 'bg-violet-100 text-violet-700'
                           } ${focusRing}`}
                         >
                           {timing.paid ? 'Mark unpaid' : due ? 'Mark paid' : 'Pay early'}
                         </button>
                       </form>
                     )}
-                  </span>
-                </div>
-
-                <form action={deleteRecurringPayment} className="mt-0.5 flex justify-end">
-                  <input type="hidden" name="id" value={payment.id} />
-                  <button
-                    type="submit"
-                    className={`inline-flex min-h-[44px] items-center rounded-full px-2 text-[11px] font-medium text-[color:var(--text-muted)] transition hover:text-rose-700 ${focusRing}`}
-                  >
-                    Remove
-                  </button>
-                </form>
-              </li>
-            )
-          })}
-        </ul>
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
       ) : (
         <EmptyState
           art={<RepeatScene className="h-32 w-32" />}

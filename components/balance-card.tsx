@@ -20,7 +20,7 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
   const total = sumAmounts(accounts.map((a) => a.balance))
 
   return (
-    <>
+    <div>
       <section className="hero-card animate-rise relative overflow-hidden rounded-[24px] px-5 pt-4 pb-4 text-white">
         {/* Two offset colour blooms give the pane something to refract, which is
             what makes frosted glass read as glass rather than as flat white. */}
@@ -110,6 +110,6 @@ export function BalanceCard({ accounts }: { accounts: AccountBalance[] }) {
       </section>
 
       <AccountBreakdownSheet open={open} onClose={() => setOpen(false)} accounts={accounts} />
-    </>
+    </div>
   )
 }
