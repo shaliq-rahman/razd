@@ -20,7 +20,10 @@ export async function updateTransaction(
 ): Promise<EditTransactionState> {
   const parsed = transactionEditSchema.safeParse({
     id: formData.get('id'),
+    account_id: formData.get('account_id'),
+    category_id: formData.get('category_id') ?? '',
     amount: formData.get('amount'),
+    kind: formData.get('kind'),
     occurred_at: formData.get('occurred_at'),
     note: formData.get('note') ?? '',
   })
@@ -46,10 +49,21 @@ export async function updateTransaction(
     return { error: 'Card-payment transfers cannot be edited from history.' }
   }
 
+  const { data: account } = await supabase
+    .from('accounts')
+    .select('id')
+    .eq('id', parsed.data.account_id)
+    .eq('user_id', user.id)
+    .maybeSingle()
+  if (!account) return { error: 'Choose a valid account.' }
+
   const { error } = await supabase
     .from('transactions')
     .update({
+      account_id: parsed.data.account_id,
+      category_id: parsed.data.category_id ?? null,
       amount: parsed.data.amount,
+      kind: parsed.data.kind,
       occurred_at: parsed.data.occurred_at,
       note: parsed.data.note || null,
     })

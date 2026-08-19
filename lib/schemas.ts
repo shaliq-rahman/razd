@@ -51,7 +51,13 @@ export const transactionPurposeSchema = z.object({
 
 export const transactionEditSchema = z.object({
   id: z.uuid('Transaction not found'),
+  account_id: z.uuid('Choose an account'),
+  category_id: z
+    .union([z.uuid(), z.literal('')])
+    .optional()
+    .transform((v) => (v ? v : undefined)),
   amount: z.coerce.number('Enter a valid amount').positive('Enter an amount greater than zero'),
+  kind: z.enum(['income', 'expense']),
   occurred_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Choose a date'),
   note: z.string().trim().max(120, 'Note must be 120 characters or less'),
 })
@@ -64,6 +70,33 @@ export const cardPaymentSchema = z.object({
 
 export const profileSchema = z.object({
   display_name: z.string().trim().min(1, 'Name is required').max(50),
+})
+
+export const freelanceProjectSchema = z.object({
+  title: z.string().trim().min(1, 'Project title is required').max(80),
+  client_name: z.string().trim().min(1, 'Client name is required').max(80),
+  quoted_amount: z.coerce.number('Enter a valid amount').positive('Enter an amount greater than zero'),
+  start_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Choose a start date'),
+  end_date: z.preprocess(
+    (value) => (value === '' || value == null ? null : value),
+    z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Choose a valid end date').nullable()
+  ),
+  description: z.preprocess(
+    (value) => (value === '' || value == null ? null : value),
+    z.string().trim().max(500).nullable()
+  ),
+  status: z.enum(['active', 'on_hold', 'completed', 'cancelled']),
+})
+
+export const freelancePaymentSchema = z.object({
+  project_id: z.uuid('Project not found'),
+  account_id: z.uuid('Choose an account'),
+  amount: z.coerce.number('Enter a valid amount').positive('Enter an amount greater than zero'),
+  occurred_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Choose a date'),
+  note: z.preprocess(
+    (value) => (value === '' || value == null ? undefined : value),
+    z.string().trim().max(120).optional()
+  ),
 })
 
 export const recurringPaymentSchema = z.object({

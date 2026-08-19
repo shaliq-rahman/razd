@@ -127,6 +127,32 @@ export function CategoryIcon({ name, className = 'h-5 w-5' }: IconProps & { name
       return <Svg className={className}><path d="M8 8c3 0 6 1 8 3-1 5-3 8-6 10-2-4-3-8-2-13Z" /><path d="M9 8 6 4m3 4 1-5m-1 5 5-3m-4 7 4 3m-5 0 3 2" /></Svg>
     case 'other':
       return <Svg className={className}><path d="m12 3 1.4 4.1L18 8.5l-4.6 1.4L12 14l-1.4-4.1L6 8.5l4.6-1.4L12 3Z" /><path d="m18.5 15 .8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2Z" /></Svg>
+    case 'freelance':
+      return <Svg className={className}><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18" /></Svg>
+    case 'lend':
+      return <Svg className={className}><path d="M12 2v20M17 5H9.5a2.5 2.5 0 0 0 0 5H14a2.5 2.5 0 0 1 0 5H6" /></Svg>
+    case 'fruits-veggies':
+    case 'fruits & veggies':
+      return <Svg className={className}><path d="M12 8c-2-3-7-2-8 3-1 5 3 10 6 10 1 0 1.5-.6 2-.6s1 .6 2 .6c3 0 7-5 6-10-1-5-6-6-8-3Z" /><path d="M12 8c0-3 2-5 5-5M12 6c-2 0-3-1-4-3" /></Svg>
+    case 'sweets':
+      return <Svg className={className}><circle cx="7" cy="7" r="3" /><circle cx="17" cy="7" r="3" /><path d="M4 7h16l-2 13H6L4 7Z" /></Svg>
+    case 'bakery':
+      return <Svg className={className}><path d="M4 12c0-4 3-8 8-8s8 4 8 8" /><path d="M3 12h18l-1.5 8h-15L3 12Z" /></Svg>
+    case 'evening-tea':
+    case 'evening tea':
+      return <Svg className={className}><path d="M4 9h13a3 3 0 0 1 0 6h-1" /><path d="M4 9v6a4 4 0 0 0 4 4h4a4 4 0 0 0 4-4V9" /><path d="M7 4c0 1.5 1.5 1.5 1.5 3M11 4c0 1.5 1.5 1.5 1.5 3" /></Svg>
+    case 'miscellaneous':
+    case 'misc':
+      return <Svg className={className}><circle cx="5" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="19" cy="12" r="1.5" /></Svg>
+    case 'petrol':
+    case 'fuel':
+      return <Svg className={className}><path d="M4 21V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14" /><path d="M4 11h8M14 8l3 2v6a1.5 1.5 0 0 0 3 0v-4l-2-2M3 21h13" /></Svg>
+    case 'gym':
+    case 'fitness':
+      return <Svg className={className}><path d="M4 8v8M20 8v8" /><path d="M2 10v4M22 10v4" /><path d="M7 12h10" /><path d="M4 8v8M20 8v8" /></Svg>
+    case 'clothing':
+    case 'clothes':
+      return <Svg className={className}><path d="M8 4 4 7l2 3 2-1.5V20h8V8.5L18 10l2-3-4-3-2 2h-4L8 4Z" /></Svg>
     default:
       return <Svg className={className}><path d="M20 13 12 21l-9-9V4h8l9 9Z" /><path d="M7.5 8h.01" /></Svg>
   }

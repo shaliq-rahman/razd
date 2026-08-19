@@ -19,6 +19,11 @@ const TABS = [
   { href: '/add', label: 'Add', icon: 'M12 5v14M5 12h14' },
   { href: '/recurring', label: 'Bills', icon: 'M5 3v18l2-1.5L9 21l2-1.5L13 21l2-1.5L17 21l2-1.5V3l-2 1.5L15 3l-2 1.5L11 3 9 4.5 7 3 5 4.5ZM9 10h6M9 14h4' },
   {
+    href: '/freelance',
+    label: 'Freelance',
+    icon: 'M3 7h18v13H3zM8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18',
+  },
+  {
     href: '/profile',
     label: 'Profile',
     icon: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4 21a8 8 0 0 1 16 0',
@@ -40,7 +45,7 @@ export function BottomNav() {
   // not have to wait for Supabase. Add is intentionally first because it has
   // the largest payload (accounts, categories, and recurring payments).
   useEffect(() => {
-    const routes = ['/add', '/accounts', '/recurring', '/profile', '/'] as const
+    const routes = ['/add', '/accounts', '/recurring', '/freelance', '/profile', '/'] as const
     routes.forEach((route) => router.prefetch(route))
   }, [router])
 

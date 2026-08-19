@@ -90,3 +90,40 @@ export type RecurringPayment = {
 export type RecurringPaymentWithAccount = RecurringPayment & {
   accounts: Pick<Account, 'name' | 'color' | 'type'> | null
 }
+
+export type FreelanceProjectStatus = 'active' | 'on_hold' | 'completed' | 'cancelled'
+
+export type FreelanceProject = {
+  id: string
+  user_id: string
+  title: string
+  client_name: string
+  quoted_amount: number
+  start_date: string
+  end_date: string | null
+  description: string | null
+  status: FreelanceProjectStatus
+  created_at: string
+}
+
+export type FreelancePayment = {
+  id: string
+  user_id: string
+  project_id: string
+  transaction_id: string | null
+  account_id: string
+  amount: number
+  occurred_at: string
+  note: string | null
+  created_at: string
+}
+
+/** A freelance payment joined with the account it was credited to. */
+export type FreelancePaymentWithAccount = FreelancePayment & {
+  accounts: Pick<Account, 'name' | 'color' | 'type'> | null
+}
+
+/** A freelance project with its payments, newest first. */
+export type FreelanceProjectWithPayments = FreelanceProject & {
+  payments: FreelancePaymentWithAccount[]
+}

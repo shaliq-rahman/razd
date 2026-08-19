@@ -7,7 +7,9 @@ import { TransactionRow } from '@/components/transaction-row'
 import { EmptyState } from '@/components/empty-state'
 import { ReceiptScene } from '@/components/illustrations'
 import { EditTransactionSheet } from './edit-transaction-sheet'
-import type { TransactionWithRefs } from '@/lib/types'
+import type { AccountType, Category, TransactionWithRefs } from '@/lib/types'
+
+type AccountOption = { id: string; name: string; type: AccountType }
 
 type AccountView = 'bank' | 'card'
 type Range = 'month' | 'week' | 'date'
@@ -56,7 +58,15 @@ function groupByDay(rows: TransactionWithRefs[]): [string, TransactionWithRefs[]
   return [...groups.entries()]
 }
 
-export function TransactionsClient({ transactions }: { transactions: TransactionWithRefs[] }) {
+export function TransactionsClient({
+  transactions,
+  accounts,
+  categories,
+}: {
+  transactions: TransactionWithRefs[]
+  accounts: AccountOption[]
+  categories: Category[]
+}) {
   const hasBankRows = transactions.some((row) => row.accounts?.type !== 'card')
   const [accountView, setAccountView] = useState<AccountView>(hasBankRows ? 'bank' : 'card')
   const [range, setRange] = useState<Range>('month')
@@ -218,6 +228,8 @@ export function TransactionsClient({ transactions }: { transactions: Transaction
         <EditTransactionSheet
           key={editing.id}
           transaction={editing}
+          accounts={accounts}
+          categories={categories}
           onClose={() => setEditing(null)}
         />
       )}

@@ -1,11 +1,19 @@
 import Link from 'next/link'
 import { getAllTransactions } from '@/lib/queries/transactions'
+import { getAccountBalances } from '@/lib/queries/balances'
+import { createServerSupabase } from '@/lib/supabase/server'
 import { ChevronLeftIcon } from '@/components/icons'
 import { focusRing } from '@/lib/ui'
 import { TransactionsClient } from './transactions-client'
+import type { Category } from '@/lib/types'
 
 export default async function TransactionsPage() {
-  const transactions = await getAllTransactions()
+  const supabase = await createServerSupabase()
+  const [transactions, accounts, categoriesResult] = await Promise.all([
+    getAllTransactions(),
+    getAccountBalances(),
+    supabase.from('categories').select('id, user_id, name, icon, kind, is_default').order('name'),
+  ])
 
   return (
     <div className="space-y-5">
@@ -24,7 +32,11 @@ export default async function TransactionsPage() {
         </div>
       </header>
 
-      <TransactionsClient transactions={transactions} />
+      <TransactionsClient
+        transactions={transactions}
+        accounts={accounts.map((a) => ({ id: a.id, name: a.name, type: a.type }))}
+        categories={(categoriesResult.data ?? []) as Category[]}
+      />
     </div>
   )
 }
